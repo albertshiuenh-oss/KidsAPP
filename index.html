@@ -4,290 +4,199 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>KidsAPP</title>
-
-<!-- PWA -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0e5570">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="KidsAPP">
 <link rel="apple-touch-icon" href="icon-180.png">
-
-<!-- Firebase SDK (compat) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-
 <style>
-/* ── Reset ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-
 :root{
-  --teal:      #0e5570;
-  --teal-dim:  #0a3f54;
-  --teal-light:#e4f2f8;
-  --orange:    #c94010;
-  --orange-lt: #fde8e2;
-  --bg:        #f2f2f7;
-  --card:      #ffffff;
-  --text:      #1c1c1e;
-  --sub:       #8e8e93;
-  --border:    #e5e5ea;
-  --green:     #34c759;
-  --shadow:    0 1px 3px rgba(0,0,0,.08);
+  --teal:#0e5570;--teal-dim:#0a3f54;--teal-light:#e4f2f8;
+  --orange:#c94010;--orange-lt:#fde8e2;
+  --bg:#f2f2f7;--card:#fff;--text:#1c1c1e;--sub:#8e8e93;--border:#e5e5ea;
+  --green:#34c759;--red:#ff3b30;--shadow:0 1px 3px rgba(0,0,0,.08);
 }
-
-body{
-  font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
-  background:var(--bg);color:var(--text);
-  max-width:430px;margin:0 auto;min-height:100vh;
-  -webkit-font-smoothing:antialiased;
-}
-
-/* ── Navbar ── */
-.navbar{
-  background:var(--teal);color:#fff;
-  padding:13px 16px;display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:100;
-  box-shadow:0 2px 8px rgba(0,0,0,.22);
-}
-.navbar-title{font-size:17px;font-weight:700;letter-spacing:-.3px;}
-.nav-btn{
-  width:32px;height:32px;border-radius:9px;border:none;
-  background:rgba(255,255,255,.18);color:#fff;font-size:16px;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-}
+body{font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100vh;-webkit-font-smoothing:antialiased;}
+.screen{display:none;}
+.screen.active{display:block;}
+/* Navbar */
+.navbar{background:var(--teal);color:#fff;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.22);}
+.nav-title{font-size:17px;font-weight:700;letter-spacing:-.3px;}
+.nav-btn{width:32px;height:32px;border-radius:9px;border:none;background:rgba(255,255,255,.18);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .nav-btn:active{background:rgba(255,255,255,.32);}
-
-/* ── Child tabs ── */
+.nav-back{background:none;border:none;color:#fff;font-size:15px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:3px;padding:0;opacity:.9;}
+.nav-center{display:flex;align-items:center;gap:6px;font-size:15px;font-weight:600;}
+.nav-badges{display:flex;gap:4px;margin-left:auto;}
+.nav-badge{background:rgba(255,255,255,.2);color:#fff;font-size:9px;padding:2px 8px;border-radius:8px;white-space:nowrap;}
+/* Tabs */
 .tabs-bar{background:var(--teal-dim);padding:8px 12px;}
-.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;}
 .tabs::-webkit-scrollbar{display:none;}
-.ctab{
-  flex-shrink:0;padding:5px 13px;border-radius:14px;
-  font-size:12px;font-weight:600;
-  border:1.5px solid rgba(255,255,255,.3);
-  background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);
-  cursor:pointer;transition:all .15s;white-space:nowrap;
-}
+.ctab{flex-shrink:0;padding:5px 13px;border-radius:14px;font-size:12px;font-weight:600;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);cursor:pointer;transition:all .15s;white-space:nowrap;}
 .ctab.active{background:#fff;color:var(--teal);border-color:#fff;}
-.ctab-add{
-  flex-shrink:0;padding:5px 10px;border-radius:14px;font-size:15px;
-  border:1.5px dashed rgba(255,255,255,.3);background:transparent;
-  color:rgba(255,255,255,.5);cursor:pointer;margin-left:auto;
-}
-
-/* ── Content ── */
+.ctab-add{flex-shrink:0;padding:5px 10px;border-radius:14px;font-size:15px;border:1.5px dashed rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.5);cursor:pointer;margin-left:auto;}
+/* Content */
 .content{padding:12px 14px 50px;}
-
-/* ── Auditor bar ── */
-.aud-bar{
-  background:var(--card);border-radius:11px;padding:8px 12px;
-  display:flex;align-items:center;gap:6px;margin-bottom:10px;
-  border:1px solid var(--border);box-shadow:var(--shadow);
-}
+/* Auditor bar */
+.aud-bar{background:var(--card);border-radius:11px;padding:8px 12px;display:flex;align-items:center;gap:6px;margin-bottom:10px;border:1px solid var(--border);box-shadow:var(--shadow);}
 .aud-dot{width:7px;height:7px;border-radius:50%;background:var(--sub);flex-shrink:0;}
 .aud-dot.on{background:var(--green);}
 .aud-lbl{font-size:12px;color:var(--sub);}
 .aud-nm{font-size:12px;font-weight:600;color:var(--teal);}
-.aud-switch{
-  margin-left:auto;font-size:11px;padding:3px 9px;
-  background:var(--teal-light);color:var(--teal);
-  border-radius:7px;border:none;cursor:pointer;font-weight:600;
-}
-
-/* ── Profile card ── */
-.profile-card{
-  background:var(--card);border-radius:16px;padding:14px;
-  display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;
-  box-shadow:var(--shadow);border:1px solid var(--border);
-  position:relative;overflow:hidden;
-}
-.profile-card::before{
-  content:'';position:absolute;left:0;top:0;
-  width:4px;height:100%;background:var(--teal);
-}
-.avatar{
-  width:64px;height:64px;border-radius:13px;
-  background:var(--teal-light);border:2px solid var(--teal);
-  flex-shrink:0;display:flex;align-items:center;justify-content:center;
-  font-size:30px;
-}
+.aud-switch{margin-left:auto;font-size:11px;padding:3px 9px;background:var(--teal-light);color:var(--teal);border-radius:7px;border:none;cursor:pointer;font-weight:600;}
+/* Profile card */
+.profile-card{background:var(--card);border-radius:16px;padding:14px;display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid var(--border);position:relative;overflow:hidden;}
+.profile-card::before{content:'';position:absolute;left:0;top:0;width:4px;height:100%;background:var(--teal);}
+.avatar{width:64px;height:64px;border-radius:13px;background:var(--teal-light);border:2px solid var(--teal);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:30px;}
 .p-right{flex:1;min-width:0;}
 .p-name{font-size:16px;font-weight:700;margin-bottom:6px;}
-.bal-ntd{
-  font-size:30px;font-weight:800;color:var(--teal);
-  line-height:1;letter-spacing:-.5px;
-  display:flex;align-items:baseline;gap:4px;
-}
-.bal-mins{
-  font-size:24px;font-weight:800;color:var(--orange);
-  line-height:1.2;margin-top:3px;letter-spacing:-.3px;
-  display:flex;align-items:baseline;gap:4px;
-}
+.bal-ntd{font-size:30px;font-weight:800;color:var(--teal);line-height:1;letter-spacing:-.5px;display:flex;align-items:baseline;gap:4px;}
+.bal-mins{font-size:24px;font-weight:800;color:var(--orange);line-height:1.2;margin-top:3px;letter-spacing:-.3px;display:flex;align-items:baseline;gap:4px;}
 .b-unit{font-size:11px;font-weight:400;color:var(--sub);}
-
-/* ── Section labels ── */
-.sec-lbl{
-  font-size:10px;font-weight:700;color:var(--sub);
-  letter-spacing:.6px;text-transform:uppercase;
-  padding:0 2px;margin-bottom:7px;
-}
-
-/* ── Category grid ── */
+/* Section label */
+.sec-lbl{font-size:10px;font-weight:700;color:var(--sub);letter-spacing:.6px;text-transform:uppercase;padding:0 2px;margin-bottom:7px;}
+/* Category grid */
 .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
-
-/* ── Category tile ── */
-.cat-tile{
-  background:var(--card);border-radius:13px;padding:11px;
-  cursor:pointer;border:1px solid var(--border);
-  box-shadow:var(--shadow);transition:transform .1s,border-color .1s;
-  -webkit-user-select:none;user-select:none;
-}
+.cat-tile{background:var(--card);border-radius:13px;padding:11px;cursor:pointer;border:1px solid var(--border);box-shadow:var(--shadow);transition:transform .1s;-webkit-user-select:none;user-select:none;}
 .cat-tile:active{transform:scale(.96);}
 .tile-emoji{font-size:24px;margin-bottom:5px;}
 .tile-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.2;}
-.tile-ntd{font-size:11px;font-weight:600;}
-.tile-mins{font-size:11px;font-weight:600;}
-
-/* ── Modal ── */
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;
-  display:flex;align-items:flex-end;justify-content:center;
-  opacity:0;pointer-events:none;transition:opacity .2s;
-}
+.tile-ntd,.tile-mins{font-size:11px;font-weight:600;}
+/* Add record button */
+.add-rec-btn{width:100%;padding:13px;background:var(--teal);color:#fff;border:none;border-radius:13px;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:6px;}
+.add-rec-btn:active{background:var(--teal-dim);}
+.add-rec-btn.locked{background:var(--sub);cursor:default;}
+/* Record cards */
+.rec-card{background:var(--card);border-radius:12px;padding:11px 13px;margin-bottom:7px;border:1px solid var(--border);box-shadow:var(--shadow);}
+.rec-top{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.rec-date{font-size:11px;color:var(--sub);font-weight:500;}
+.rec-aud{font-size:11px;color:var(--sub);}
+.rec-badge{font-size:10px;padding:1px 8px;border-radius:6px;font-weight:600;margin-left:auto;}
+.rec-badge.pass{background:#e8f8ef;color:#1a7a40;}
+.rec-badge.fail{background:var(--orange-lt);color:var(--orange);}
+.rec-amts{display:flex;gap:8px;margin-bottom:3px;}
+.rec-amt{font-size:13px;font-weight:700;}
+.pos{color:var(--teal);}
+.neg{color:var(--orange);}
+.rec-note{font-size:11px;color:var(--sub);}
+.empty-state{text-align:center;padding:32px 20px;color:var(--sub);font-size:13px;line-height:1.8;}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
 .modal-overlay.show{opacity:1;pointer-events:all;}
-.modal-sheet{
-  background:var(--card);border-radius:22px 22px 0 0;
-  width:100%;max-width:430px;padding:16px 18px 44px;
-  transform:translateY(100%);
-  transition:transform .28s cubic-bezier(.34,1.2,.64,1);
-}
+.modal-sheet{background:var(--card);border-radius:22px 22px 0 0;width:100%;max-width:430px;padding:16px 18px 44px;transform:translateY(100%);transition:transform .28s cubic-bezier(.34,1.2,.64,1);}
 .modal-overlay.show .modal-sheet{transform:translateY(0);}
-.modal-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 18px;}
-.modal-title{font-size:17px;font-weight:700;text-align:center;margin-bottom:16px;}
-
-/* ── Auditor list ── */
+.modal-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px;}
+.modal-title{font-size:17px;font-weight:700;text-align:center;margin-bottom:14px;}
+/* Auditor list */
 .aud-list{display:flex;flex-direction:column;gap:8px;}
-.aud-item{
-  display:flex;align-items:center;gap:11px;padding:12px 14px;
-  background:var(--card);border:1px solid var(--border);border-radius:13px;cursor:pointer;
-}
+.aud-item{display:flex;align-items:center;gap:11px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:13px;cursor:pointer;}
 .aud-item:active{background:var(--bg);}
-.aud-av{
-  width:40px;height:40px;border-radius:11px;
-  background:var(--teal-light);display:flex;align-items:center;justify-content:center;font-size:20px;
-}
+.aud-av{width:40px;height:40px;border-radius:11px;background:var(--teal-light);display:flex;align-items:center;justify-content:center;font-size:20px;}
 .aud-item-name{font-size:14px;font-weight:600;}
 .aud-item-role{font-size:11px;color:var(--sub);}
 .aud-arrow{margin-left:auto;color:var(--border);font-size:18px;}
-
-/* ── PIN ── */
+/* PIN */
 .pin-section{display:none;}
 .pin-section.show{display:block;}
 .pin-dots{display:flex;gap:10px;justify-content:center;margin-bottom:14px;}
-.pin-dot-el{
-  width:44px;height:44px;border-radius:11px;
-  background:var(--bg);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:24px;color:var(--sub);transition:all .1s;
-}
+.pin-dot-el{width:44px;height:44px;border-radius:11px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--sub);transition:all .1s;}
 .pin-dot-el.filled{background:var(--teal-light);border-color:var(--teal);color:var(--teal);}
-.pin-input{
-  width:100%;padding:13px;border:1.5px solid var(--border);border-radius:13px;
-  font-size:24px;text-align:center;letter-spacing:8px;
-  background:var(--bg);color:var(--text);outline:none;
-}
+.pin-input{width:100%;padding:13px;border:1.5px solid var(--border);border-radius:13px;font-size:24px;text-align:center;letter-spacing:8px;background:var(--bg);color:var(--text);outline:none;}
 .pin-input:focus{border-color:var(--teal);}
-.pin-err{font-size:12px;color:#ff3b30;text-align:center;min-height:18px;margin:6px 0;}
-.pin-ok{
-  width:100%;padding:14px;background:var(--teal);color:#fff;
-  border:none;border-radius:13px;font-size:15px;font-weight:600;cursor:pointer;margin-top:6px;
-}
+.pin-err{font-size:12px;color:var(--red);text-align:center;min-height:18px;margin:6px 0;}
+.pin-ok{width:100%;padding:14px;background:var(--teal);color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:600;cursor:pointer;margin-top:6px;}
 .pin-ok:active{background:var(--teal-dim);}
-.pin-back{
-  width:100%;padding:10px;background:transparent;color:var(--sub);
-  border:none;font-size:13px;cursor:pointer;margin-top:4px;
-}
-
-/* ── Toast ── */
-.toast{
-  position:fixed;bottom:80px;left:50%;
-  transform:translateX(-50%) translateY(16px);
-  background:rgba(28,28,28,.92);color:#fff;
-  padding:10px 20px;border-radius:22px;font-size:13px;font-weight:500;
-  opacity:0;transition:all .22s;pointer-events:none;z-index:999;
-  white-space:nowrap;max-width:calc(100vw - 40px);
-}
+.pin-back{width:100%;padding:10px;background:transparent;color:var(--sub);border:none;font-size:13px;cursor:pointer;margin-top:4px;}
+/* Entry form */
+.form-grp{margin-bottom:12px;}
+.form-lbl{font-size:12px;font-weight:600;color:var(--sub);margin-bottom:5px;display:block;}
+.form-inp{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:11px;font-size:14px;background:var(--bg);color:var(--text);outline:none;}
+.form-inp:focus{border-color:var(--teal);}
+.tog-row{display:flex;gap:6px;}
+.tog-btn{flex:1;padding:9px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);color:var(--sub);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;}
+.tog-btn.active.t-pass{background:#e8f8ef;border-color:#1a7a40;color:#1a7a40;}
+.tog-btn.active.t-fail{background:var(--orange-lt);border-color:var(--orange);color:var(--orange);}
+.tog-btn.active.t-teal{background:var(--teal-light);border-color:var(--teal);color:var(--teal);}
+.tog-btn.active.t-org{background:var(--orange-lt);border-color:var(--orange);color:var(--orange);}
+.amt-row{display:flex;gap:8px;}
+.amt-grp{flex:1;}
+.amt-lbl{font-size:10px;font-weight:600;color:var(--sub);margin-bottom:4px;display:block;}
+.amt-inp{width:100%;padding:10px;border:1.5px solid var(--border);border-radius:10px;font-size:16px;font-weight:600;text-align:center;background:var(--bg);color:var(--text);outline:none;}
+.amt-inp:focus{border-color:var(--teal);}
+.form-aud-row{display:flex;align-items:center;gap:6px;padding:10px 13px;background:var(--bg);border-radius:10px;margin-bottom:12px;font-size:12px;color:var(--sub);}
+.save-btn{width:100%;padding:14px;background:var(--teal);color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:600;cursor:pointer;}
+.save-btn:disabled{background:var(--sub);cursor:not-allowed;}
+.save-btn:not(:disabled):active{background:var(--teal-dim);}
+/* Toast */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(28,28,28,.92);color:#fff;padding:10px 20px;border-radius:22px;font-size:13px;font-weight:500;opacity:0;transition:all .22s;pointer-events:none;z-index:999;white-space:nowrap;max-width:calc(100vw - 40px);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
 
-<!-- Navbar -->
-<div class="navbar">
-  <div class="navbar-title">🏅 KidsAPP</div>
-  <button class="nav-btn" onclick="openSettings()" aria-label="設定">⚙️</button>
-</div>
-
-<!-- Child tabs -->
-<div class="tabs-bar">
-  <div class="tabs" id="childTabs"></div>
-</div>
-
-<!-- Main content -->
-<div class="content">
-
-  <!-- Auditor bar -->
-  <div class="aud-bar">
-    <div class="aud-dot" id="audDot"></div>
-    <span class="aud-lbl">審核人：</span>
-    <span class="aud-nm" id="audName">未登入</span>
-    <button class="aud-switch" onclick="openAuditorModal()">切換 ›</button>
+<!-- ══ SCREEN: HOME ══ -->
+<div id="screenHome" class="screen active">
+  <div class="navbar">
+    <div class="nav-title">🏅 KidsAPP</div>
+    <button class="nav-btn" onclick="openSettings()">⚙️</button>
   </div>
-
-  <!-- Profile card -->
-  <div class="profile-card">
-    <div class="avatar" id="childAvatar">👶</div>
-    <div class="p-right">
-      <div class="p-name" id="childName">連線中…</div>
-      <div class="bal-ntd" id="balNTD"><span>—</span><span class="b-unit">NTD</span></div>
-      <div class="bal-mins" id="balMins"><span>—</span><span class="b-unit">mins</span></div>
+  <div class="tabs-bar"><div class="tabs" id="childTabs"></div></div>
+  <div class="content">
+    <div class="aud-bar">
+      <div class="aud-dot" id="audDot"></div>
+      <span class="aud-lbl">審核人：</span>
+      <span class="aud-nm" id="audName">未登入</span>
+      <button class="aud-switch" onclick="openAuditorModal()">切換 ›</button>
     </div>
+    <div class="profile-card">
+      <div class="avatar" id="childAvatar">👶</div>
+      <div class="p-right">
+        <div class="p-name" id="childName">連線中…</div>
+        <div class="bal-ntd"  id="balNTD"><span>—</span><span class="b-unit">NTD</span></div>
+        <div class="bal-mins" id="balMins"><span>—</span><span class="b-unit">mins</span></div>
+      </div>
+    </div>
+    <div class="sec-lbl">🎯 Learning &amp; Tasks</div>
+    <div class="cat-grid" id="gridTop"></div>
+    <div class="sec-lbl">📤 Deductions</div>
+    <div class="cat-grid" id="gridBot"></div>
   </div>
-
-  <!-- Learning & Tasks (top 4) -->
-  <div class="sec-lbl">🎯 Learning &amp; Tasks</div>
-  <div class="cat-grid" id="gridTop"></div>
-
-  <!-- Deductions (bottom 2) -->
-  <div class="sec-lbl">📤 Deductions</div>
-  <div class="cat-grid" id="gridBot"></div>
-
 </div>
 
-<!-- Auditor Modal -->
-<div class="modal-overlay" id="modalAud" onclick="handleOverlay(event)">
+<!-- ══ SCREEN: DETAIL ══ -->
+<div id="screenDetail" class="screen">
+  <div class="navbar" id="detailNav">
+    <button class="nav-back" onclick="closeDetail()">‹ 返回</button>
+    <div class="nav-center" id="detailTitle"></div>
+    <div class="nav-badges" id="detailBadges"></div>
+  </div>
+  <div class="content">
+    <button class="add-rec-btn" id="addRecBtn" onclick="openAddEntry()">＋ 新增記錄</button>
+    <div class="sec-lbl">紀錄歷史</div>
+    <div id="recordsList"></div>
+  </div>
+</div>
+
+<!-- ══ MODAL: AUDITOR ══ -->
+<div class="modal-overlay" id="modalAud" onclick="handleOverlay(event,'modalAud')">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
-
-    <!-- Step 1: choose auditor -->
     <div id="step1">
       <div class="modal-title">選擇審核人</div>
       <div class="aud-list" id="audList"></div>
     </div>
-
-    <!-- Step 2: PIN -->
     <div class="pin-section" id="step2">
       <div class="modal-title" id="pinTitle">輸入 PIN</div>
       <div class="pin-dots" id="pinDots">
-        <div class="pin-dot-el">•</div>
-        <div class="pin-dot-el">•</div>
-        <div class="pin-dot-el">•</div>
-        <div class="pin-dot-el">•</div>
+        <div class="pin-dot-el">•</div><div class="pin-dot-el">•</div>
+        <div class="pin-dot-el">•</div><div class="pin-dot-el">•</div>
       </div>
-      <input type="password" inputmode="numeric" maxlength="4"
-             class="pin-input" id="pinInput" placeholder="••••"
-             oninput="handlePinInput()">
+      <input type="password" inputmode="numeric" maxlength="4" class="pin-input"
+             id="pinInput" placeholder="••••" oninput="handlePinInput()">
       <div class="pin-err" id="pinErr"></div>
       <button class="pin-ok" onclick="confirmPin()">確認登入</button>
       <button class="pin-back" onclick="backToStep1()">← 返回</button>
@@ -295,314 +204,329 @@ body{
   </div>
 </div>
 
-<!-- Toast -->
+<!-- ══ MODAL: ADD ENTRY ══ -->
+<div class="modal-overlay" id="modalEntry" onclick="handleOverlay(event,'modalEntry')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="entryTitle">新增記錄</div>
+    <div id="entryForm"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
-<!-- ═══════════════════════════════════════
-     SCRIPTS
-═══════════════════════════════════════ -->
 <script>
-/* ── Firebase Config ── */
-const FIREBASE_CONFIG = {
-  apiKey:            "AIzaSyBCuSVVPZGb76D4OKkIklOck50Mm-wbdsA",
-  authDomain:        "kidsapp-e9a8d.firebaseapp.com",
-  databaseURL:       "https://kidsapp-e9a8d-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId:         "kidsapp-e9a8d",
-  storageBucket:     "kidsapp-e9a8d.firebasestorage.app",
-  messagingSenderId: "240270025549",
-  appId:             "1:240270025549:web:98777be0532c7cc97ecd04"
-};
+/* ══ Firebase ══ */
+const FB={apiKey:"AIzaSyBCuSVVPZGb76D4OKkIklOck50Mm-wbdsA",authDomain:"kidsapp-e9a8d.firebaseapp.com",databaseURL:"https://kidsapp-e9a8d-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"kidsapp-e9a8d",storageBucket:"kidsapp-e9a8d.firebasestorage.app",messagingSenderId:"240270025549",appId:"1:240270025549:web:98777be0532c7cc97ecd04"};
+firebase.initializeApp(FB);
+const db=firebase.database();
 
-firebase.initializeApp(FIREBASE_CONFIG);
-const db = firebase.database();
-
-/* ── Categories ── */
-const CATS = [
-  { id:'vocab',    name:'Vocabulary',  emoji:'📚', group:'top' },
-  { id:'school',   name:'School Exam', emoji:'📝', group:'top' },
-  { id:'housework',name:'Housework',   emoji:'🏠', group:'top' },
-  { id:'sport',    name:'Sport',       emoji:'⚽', group:'top' },
-  { id:'withdraw', name:'Withdraw',    emoji:'💸', group:'bot' },
-  { id:'behavior', name:'Behavior',    emoji:'⭐', group:'bot' },
+/* ══ Categories ══ */
+const CATS=[
+  {id:'vocab',    name:'Vocabulary',  emoji:'📚',type:'goal',    group:'top'},
+  {id:'school',   name:'School Exam', emoji:'📝',type:'goal',    group:'top'},
+  {id:'housework',name:'Housework',   emoji:'🏠',type:'goal',    group:'top'},
+  {id:'sport',    name:'Sport',       emoji:'⚽',type:'goal',    group:'top'},
+  {id:'withdraw', name:'Withdraw',    emoji:'💸',type:'withdraw',group:'bot'},
+  {id:'behavior', name:'Behavior',    emoji:'⭐',type:'mixed',   group:'bot'},
 ];
 
-/* ── State ── */
-const S = {
-  children:       {},   // { childId: { name, emoji } }
-  auditors:       {},   // { audId: { name, pin, emoji, role } }
-  entries:        {},   // { childId: { catId: { entryId: {ntd,mins,...} } } }
-  currentChildId: null,
-  currentAuditor: null,
-  pendingAuditor: null,
-  rtListener:     null,
+/* ══ State ══ */
+const S={children:{},auditors:{},entries:{},currentChildId:null,currentCat:null,currentAuditor:null,pendingAuditor:null,rtMain:null};
+
+/* ══ Seed ══ */
+const SEED={
+  auditors:{hang:{name:'Hang',pin:'1234',emoji:'👩',role:'家長'},albert:{name:'Albert',pin:'5678',emoji:'👨',role:'家長'}},
+  children:{child_001:{name:'小明',emoji:'👦'},child_002:{name:'小花',emoji:'👧'}}
 };
 
-/* ── First-time setup (runs once on empty DB) ── */
-const SEED = {
-  auditors: {
-    hang:   { name:'Hang',   pin:'1234', emoji:'👩', role:'家長' },
-    albert: { name:'Albert', pin:'5678', emoji:'👨', role:'家長' },
-  },
-  children: {
-    child_001: { name:'小明', emoji:'👦' },
-    child_002: { name:'小花', emoji:'👧' },
-  }
-};
+/* ══ Helpers ══ */
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtDate(iso){const[y,m,d]=iso.split('-');return `${y}${MON[+m-1]}${d.padStart(2,'0')}`;}
+function todayISO(){return new Date().toISOString().split('T')[0];}
+function amtStr(v,u){return v===0?'':`${v>0?'+':''}${v.toLocaleString()} ${u}`;}
+function amtCls(v){return v>0?'pos':v<0?'neg':'';}
 
-/* ── Init ── */
-async function init() {
-  try {
-    /* Load or seed auditors */
-    let audSnap = await db.ref('/auditors').once('value');
-    if (!audSnap.exists()) {
-      await db.ref('/auditors').set(SEED.auditors);
-      audSnap = await db.ref('/auditors').once('value');
-      showToast('✅ 初次設定完成，PIN: Hang=1234 / Albert=5678');
-    }
-    S.auditors = audSnap.val() || {};
-
-    /* Load or seed children */
-    let childSnap = await db.ref('/children').once('value');
-    if (!childSnap.exists()) {
-      await db.ref('/children').set(SEED.children);
-      childSnap = await db.ref('/children').once('value');
-    }
-    S.children = childSnap.val() || {};
-    S.currentChildId = Object.keys(S.children)[0] || null;
-
-    /* Load entries + set real-time listener */
-    if (S.currentChildId) {
-      await loadEntries(S.currentChildId);
-      attachListener(S.currentChildId);
-    }
-
+/* ══ Init ══ */
+async function init(){
+  try{
+    let as=await db.ref('/auditors').once('value');
+    if(!as.exists()){await db.ref('/auditors').set(SEED.auditors);as=await db.ref('/auditors').once('value');showToast('✅ 初次設定完成 · PIN: Hang=1234 / Albert=5678',4000);}
+    S.auditors=as.val()||{};
+    let cs=await db.ref('/children').once('value');
+    if(!cs.exists()){await db.ref('/children').set(SEED.children);cs=await db.ref('/children').once('value');}
+    S.children=cs.val()||{};
+    S.currentChildId=Object.keys(S.children)[0]||null;
+    if(S.currentChildId){const es=await db.ref(`/entries/${S.currentChildId}`).once('value');S.entries[S.currentChildId]=es.val()||{};attachMainListener(S.currentChildId);}
     renderAll();
-  } catch(err) {
-    console.error('KidsAPP init error:', err);
-    showToast('⚠️ 無法連線 Firebase，請重新整理', 4000);
-    document.getElementById('childName').textContent = '連線失敗';
-  }
+  }catch(e){console.error(e);showToast('⚠️ 連線失敗，請重新整理',4000);document.getElementById('childName').textContent='連線失敗';}
 }
 
-/* ── Load entries ── */
-async function loadEntries(childId) {
-  const snap = await db.ref(`/entries/${childId}`).once('value');
-  S.entries[childId] = snap.val() || {};
-}
-
-/* ── Real-time listener for entries ── */
-function attachListener(childId) {
-  if (S.rtListener) db.ref(`/entries/${S.rtListener}`).off();
-  S.rtListener = childId;
-  db.ref(`/entries/${childId}`).on('value', snap => {
-    S.entries[childId] = snap.val() || {};
+function attachMainListener(cid){
+  if(S.rtMain)db.ref(`/entries/${S.rtMain}`).off();
+  S.rtMain=cid;
+  db.ref(`/entries/${cid}`).on('value',snap=>{
+    S.entries[cid]=snap.val()||{};
     renderDashboard();
+    if(S.currentCat)renderRecords(S.currentCat);
   });
 }
 
-/* ══════════════════════════════
-   RENDER
-══════════════════════════════ */
-function renderAll() {
-  renderTabs();
-  renderAudBar();
-  renderDashboard();
+/* ══ Render home ══ */
+function renderAll(){renderTabs();renderAudBar();renderDashboard();}
+
+function renderTabs(){
+  document.getElementById('childTabs').innerHTML=
+    Object.entries(S.children).map(([id,c])=>
+      `<button class="ctab ${id===S.currentChildId?'active':''}" onclick="selectChild('${id}')">${c.emoji} ${c.name}</button>`
+    ).join('')+`<button class="ctab-add" onclick="addChild()">＋</button>`;
 }
 
-function renderTabs() {
-  const el = document.getElementById('childTabs');
-  el.innerHTML = Object.entries(S.children).map(([id, c]) =>
-    `<button class="ctab ${id===S.currentChildId?'active':''}"
-             onclick="selectChild('${id}')">${c.emoji} ${c.name}</button>`
-  ).join('') +
-  `<button class="ctab-add" onclick="addChild()">＋</button>`;
+function renderAudBar(){
+  const dot=document.getElementById('audDot'),nm=document.getElementById('audName');
+  if(S.currentAuditor){dot.classList.add('on');nm.textContent=`${S.currentAuditor.emoji} ${S.currentAuditor.name}`;}
+  else{dot.classList.remove('on');nm.textContent='未登入';}
 }
 
-function renderAudBar() {
-  const dot  = document.getElementById('audDot');
-  const name = document.getElementById('audName');
-  if (S.currentAuditor) {
-    dot.classList.add('on');
-    name.textContent = `${S.currentAuditor.emoji} ${S.currentAuditor.name}`;
-  } else {
-    dot.classList.remove('on');
-    name.textContent = '未登入';
+function renderDashboard(){
+  const child=S.children[S.currentChildId];if(!child)return;
+  document.getElementById('childAvatar').textContent=child.emoji;
+  document.getElementById('childName').textContent=child.name;
+  const entries=S.entries[S.currentChildId]||{};
+  let ntd=0,mins=0;
+  CATS.forEach(cat=>Object.values(entries[cat.id]||{}).forEach(e=>{ntd+=Number(e.ntd||0);mins+=Number(e.mins||0);}));
+  document.getElementById('balNTD').innerHTML=`<span>${ntd.toLocaleString()}</span><span class="b-unit">NTD</span>`;
+  document.getElementById('balMins').innerHTML=`<span>${mins.toLocaleString()}</span><span class="b-unit">mins</span>`;
+  renderGrid('gridTop','top',entries);
+  renderGrid('gridBot','bot',entries);
+}
+
+function renderGrid(gid,grp,entries){
+  document.getElementById(gid).innerHTML=CATS.filter(c=>c.group===grp).map(cat=>{
+    let ntd=0,mins=0;
+    Object.values(entries[cat.id]||{}).forEach(e=>{ntd+=Number(e.ntd||0);mins+=Number(e.mins||0);});
+    const nc=ntd<0?'#c94010':ntd>0?'#0e5570':'#8e8e93';
+    const mc=mins<0?'#c94010':mins>0?'#0e5570':'#8e8e93';
+    const ns=ntd===0?'— NTD':`${ntd>0?'+':''}${ntd.toLocaleString()} NTD`;
+    const ms=mins===0?'— mins':`${mins>0?'+':''}${mins.toLocaleString()} mins`;
+    return `<div class="cat-tile" onclick="openCat('${cat.id}')">
+      <div class="tile-emoji">${cat.emoji}</div>
+      <div class="tile-name">${cat.name}</div>
+      <div class="tile-ntd" style="color:${nc};">${ns}</div>
+      <div class="tile-mins" style="color:${mc};">${ms}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ══ Detail screen ══ */
+function openCat(catId){
+  S.currentCat=catId;
+  const cat=CATS.find(c=>c.id===catId);
+  const entries=S.entries[S.currentChildId]||{};
+  let ntd=0,mins=0;
+  Object.values(entries[catId]||{}).forEach(e=>{ntd+=Number(e.ntd||0);mins+=Number(e.mins||0);});
+  document.getElementById('detailTitle').innerHTML=`<span>${cat.emoji}</span><span>${cat.name}</span>`;
+  const b=[];
+  if(ntd!==0) b.push(`<span class="nav-badge">${ntd>0?'+':''}${ntd.toLocaleString()} NTD</span>`);
+  if(mins!==0)b.push(`<span class="nav-badge">${mins>0?'+':''}${mins.toLocaleString()} mins</span>`);
+  document.getElementById('detailBadges').innerHTML=b.join('');
+  const btn=document.getElementById('addRecBtn');
+  if(S.currentAuditor){btn.classList.remove('locked');btn.textContent='＋ 新增記錄';}
+  else{btn.classList.add('locked');btn.textContent='🔐 請先登入審核人';}
+  renderRecords(catId);
+  showScreen('screenDetail');
+}
+
+function closeDetail(){S.currentCat=null;showScreen('screenHome');}
+
+function renderRecords(catId){
+  const recs=Object.entries((S.entries[S.currentChildId]||{})[catId]||{})
+    .sort((a,b)=>(b[1].createdAt||0)-(a[1].createdAt||0));
+  if(!recs.length){
+    document.getElementById('recordsList').innerHTML=`<div class="empty-state">📭 尚無記錄<br><span style="font-size:11px;">新增第一筆記錄開始追蹤</span></div>`;return;
   }
+  document.getElementById('recordsList').innerHTML=recs.map(([,e])=>{
+    const ns=amtStr(Number(e.ntd||0),'NTD');
+    const ms=amtStr(Number(e.mins||0),'mins');
+    const nc=amtCls(Number(e.ntd||0));
+    const mc=amtCls(Number(e.mins||0));
+    let badge='';
+    if(e.passed===true)  badge=`<span class="rec-badge pass">✅ Passed</span>`;
+    if(e.passed===false) badge=`<span class="rec-badge fail">❌ Failed</span>`;
+    return `<div class="rec-card">
+      <div class="rec-top">
+        <span class="rec-date">${e.date||'—'}</span>
+        <span class="rec-aud">· ${e.auditor||'—'}</span>
+        ${badge}
+      </div>
+      <div class="rec-amts">
+        ${ns?`<span class="rec-amt ${nc}">${ns}</span>`:''}
+        ${ms?`<span class="rec-amt ${mc}">${ms}</span>`:''}
+      </div>
+      ${e.note?`<div class="rec-note">${e.note}</div>`:''}
+    </div>`;
+  }).join('');
 }
 
-function renderDashboard() {
-  const child = S.children[S.currentChildId];
-  if (!child) { document.getElementById('childName').textContent = '（無資料）'; return; }
-
-  document.getElementById('childAvatar').textContent = child.emoji;
-  document.getElementById('childName').textContent   = child.name;
-
-  /* Totals */
-  const entries = S.entries[S.currentChildId] || {};
-  let ntdTotal = 0, minsTotal = 0;
-  CATS.forEach(cat => {
-    Object.values(entries[cat.id] || {}).forEach(e => {
-      ntdTotal  += Number(e.ntd  || 0);
-      minsTotal += Number(e.mins || 0);
-    });
-  });
-
-  document.getElementById('balNTD').innerHTML =
-    `<span>${ntdTotal.toLocaleString()}</span><span class="b-unit">NTD</span>`;
-  document.getElementById('balMins').innerHTML =
-    `<span>${minsTotal.toLocaleString()}</span><span class="b-unit">mins</span>`;
-
-  /* Grids */
-  renderGrid('gridTop', 'top', entries);
-  renderGrid('gridBot', 'bot', entries);
+/* ══ Add entry ══ */
+function openAddEntry(){
+  if(!S.currentAuditor){showToast('⚠️ 請先點「切換」選擇審核人');openAuditorModal();return;}
+  const cat=CATS.find(c=>c.id===S.currentCat);
+  document.getElementById('entryTitle').textContent=`${cat.emoji} 新增 ${cat.name} 記錄`;
+  document.getElementById('entryForm').innerHTML=buildForm(cat);
+  showModal('modalEntry');
 }
 
-function renderGrid(gridId, group, entries) {
-  document.getElementById(gridId).innerHTML =
-    CATS.filter(c => c.group === group).map(cat => {
-      let ntd = 0, mins = 0;
-      Object.values(entries[cat.id] || {}).forEach(e => {
-        ntd  += Number(e.ntd  || 0);
-        mins += Number(e.mins || 0);
-      });
-      const nc = ntd  < 0 ? '#c94010' : ntd  > 0 ? '#0e5570' : '#8e8e93';
-      const mc = mins < 0 ? '#c94010' : mins > 0 ? '#0e5570' : '#8e8e93';
-      const ns = ntd  === 0 ? '— NTD'  : `${ntd>0?'+':''}${ntd.toLocaleString()} NTD`;
-      const ms = mins === 0 ? '— mins' : `${mins>0?'+':''}${mins.toLocaleString()} mins`;
-      return `<div class="cat-tile" onclick="openCat('${cat.id}')">
-        <div class="tile-emoji">${cat.emoji}</div>
-        <div class="tile-name">${cat.name}</div>
-        <div class="tile-ntd"  style="color:${nc};">${ns}</div>
-        <div class="tile-mins" style="color:${mc};">${ms}</div>
-      </div>`;
-    }).join('');
+function buildForm(cat){
+  const aud=S.currentAuditor;
+  let h='';
+  /* Date */
+  h+=`<div class="form-grp"><label class="form-lbl">📅 日期</label><input type="date" class="form-inp" id="fDate" value="${todayISO()}" max="${todayISO()}"></div>`;
+  /* Type toggle */
+  if(cat.type==='goal'){
+    h+=`<div class="form-grp"><label class="form-lbl">結果</label><div class="tog-row">
+      <button class="tog-btn active t-pass" id="togA" onclick="setTog('pass')">✅ Passed</button>
+      <button class="tog-btn t-fail"        id="togB" onclick="setTog('fail')">❌ Failed</button>
+    </div></div>`;
+  } else if(cat.type==='withdraw'){
+    h+=`<div class="form-grp"><label class="form-lbl">提領類型</label><div class="tog-row">
+      <button class="tog-btn active t-teal" id="togA" onclick="setWTog('money')">💰 金錢</button>
+      <button class="tog-btn t-org"         id="togB" onclick="setWTog('time')">⏱ 時間</button>
+    </div></div>`;
+  } else {
+    h+=`<div class="form-grp"><label class="form-lbl">記錄類型</label><div class="tog-row">
+      <button class="tog-btn active t-teal" id="togA" onclick="setBTog('reward')">👍 嘉獎</button>
+      <button class="tog-btn t-org"         id="togB" onclick="setBTog('punish')">👎 懲罰</button>
+    </div></div>`;
+  }
+  /* Amounts */
+  if(cat.type==='withdraw'){
+    h+=`<div class="form-grp"><label class="form-lbl">金額（自動扣除）</label>
+      <div class="amt-row">
+        <div class="amt-grp" id="wMoney"><span class="amt-lbl">NTD</span><input type="number" class="amt-inp" id="fNTD" placeholder="0" min="0" step="10"></div>
+        <div class="amt-grp" id="wTime" style="display:none;"><span class="amt-lbl">Mins</span><input type="number" class="amt-inp" id="fMins" placeholder="0" min="0" step="10"></div>
+      </div></div>`;
+  } else {
+    h+=`<div class="form-grp"><label class="form-lbl">金額${cat.type==='goal'?' （正數＝獲得，負數＝扣除）':''}</label>
+      <div class="amt-row">
+        <div class="amt-grp"><span class="amt-lbl">NTD</span><input type="number" class="amt-inp" id="fNTD" placeholder="0" step="10"></div>
+        <div class="amt-grp"><span class="amt-lbl">Mins</span><input type="number" class="amt-inp" id="fMins" placeholder="0" step="10"></div>
+      </div></div>`;
+  }
+  /* Note */
+  h+=`<div class="form-grp"><label class="form-lbl">📝 備註（選填）</label><input type="text" class="form-inp" id="fNote" placeholder="例：主動完成、買樂高…"></div>`;
+  /* Auditor */
+  h+=`<div class="form-aud-row">審核人：${aud.emoji} ${aud.name}</div>`;
+  /* Save */
+  h+=`<button class="save-btn" onclick="saveEntry('${cat.id}')">💾 儲存記錄</button>`;
+  return h;
 }
 
-/* ══════════════════════════════
-   ACTIONS
-══════════════════════════════ */
-function selectChild(id) {
-  if (id === S.currentChildId) return;
-  S.currentChildId = id;
-  loadEntries(id).then(() => { renderAll(); attachListener(id); });
+/* Toggle helpers */
+function setTog(v){
+  document.getElementById('togA').className=`tog-btn ${v==='pass'?'active ':''}t-pass`;
+  document.getElementById('togB').className=`tog-btn ${v==='fail'?'active ':''}t-fail`;
+}
+function setWTog(v){
+  document.getElementById('togA').className=`tog-btn ${v==='money'?'active ':''}t-teal`;
+  document.getElementById('togB').className=`tog-btn ${v==='time'?'active ':''}t-org`;
+  document.getElementById('wMoney').style.display=v==='money'?'block':'none';
+  document.getElementById('wTime').style.display=v==='time'?'block':'none';
+}
+function setBTog(v){
+  document.getElementById('togA').className=`tog-btn ${v==='reward'?'active ':''}t-teal`;
+  document.getElementById('togB').className=`tog-btn ${v==='punish'?'active ':''}t-org`;
 }
 
-function addChild()       { showToast('➕ 新增孩子（Phase 4 實作）'); }
-function openSettings()   { showToast('⚙️ 設定頁面（Phase 4 實作）'); }
-function openCat(catId) {
-  const cat = CATS.find(c => c.id === catId);
-  showToast(`${cat.emoji} ${cat.name} — 詳細記錄（Phase 2 實作）`);
+/* Save */
+async function saveEntry(catId){
+  if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}
+  const cat=CATS.find(c=>c.id===catId);
+  const dateVal=document.getElementById('fDate').value;
+  if(!dateVal){showToast('請選擇日期');return;}
+  let ntd=0,mins=0;
+  const note=(document.getElementById('fNote')?.value||'').trim();
+  if(cat.type==='withdraw'){
+    const isMoney=document.getElementById('togA').classList.contains('active');
+    const raw=parseFloat(document.getElementById(isMoney?'fNTD':'fMins').value)||0;
+    if(isMoney)ntd=-Math.abs(raw); else mins=-Math.abs(raw);
+    if(ntd===0&&mins===0){showToast('請輸入金額');return;}
+  } else {
+    ntd=parseFloat(document.getElementById('fNTD').value)||0;
+    mins=parseFloat(document.getElementById('fMins').value)||0;
+    if(cat.type==='mixed'){
+      const isPunish=document.getElementById('togB').classList.contains('active');
+      if(isPunish){ntd=-Math.abs(ntd);mins=-Math.abs(mins);}
+      else{ntd=Math.abs(ntd);mins=Math.abs(mins);}
+    }
+    if(ntd===0&&mins===0){showToast('請至少輸入一個金額');return;}
+  }
+  const entry={date:fmtDate(dateVal),ntd,mins,auditor:S.currentAuditor.name,note,createdAt:Date.now()};
+  if(cat.type==='goal') entry.passed=document.getElementById('togA').classList.contains('active');
+  try{
+    await db.ref(`/entries/${S.currentChildId}/${catId}`).push(entry);
+    closeModal('modalEntry');
+    showToast('✅ 記錄已儲存！');
+  }catch(e){console.error(e);showToast('❌ 儲存失敗，請重試');}
 }
 
-/* ══════════════════════════════
-   AUDITOR MODAL
-══════════════════════════════ */
-function openAuditorModal() {
-  document.getElementById('audList').innerHTML =
-    Object.entries(S.auditors).map(([id, a]) =>
-      `<div class="aud-item" onclick="selectAuditor('${id}')">
-        <div class="aud-av">${a.emoji}</div>
-        <div>
-          <div class="aud-item-name">${a.name}</div>
-          <div class="aud-item-role">${a.role}</div>
-        </div>
-        <div class="aud-arrow">›</div>
-      </div>`
-    ).join('');
-  document.getElementById('step1').style.display = 'block';
+/* ══ Child / Settings ══ */
+function selectChild(id){
+  if(id===S.currentChildId)return;
+  S.currentChildId=id;
+  db.ref(`/entries/${id}`).once('value').then(s=>{S.entries[id]=s.val()||{};attachMainListener(id);renderAll();});
+}
+function addChild(){showToast('➕ 新增孩子（Phase 4 實作）');}
+function openSettings(){showToast('⚙️ 設定頁面（Phase 4 實作）');}
+
+/* ══ Auditor modal ══ */
+function openAuditorModal(){
+  document.getElementById('audList').innerHTML=Object.entries(S.auditors).map(([id,a])=>
+    `<div class="aud-item" onclick="selectAuditor('${id}')">
+      <div class="aud-av">${a.emoji}</div>
+      <div><div class="aud-item-name">${a.name}</div><div class="aud-item-role">${a.role}</div></div>
+      <div class="aud-arrow">›</div>
+    </div>`).join('');
+  document.getElementById('step1').style.display='block';
   document.getElementById('step2').classList.remove('show');
   showModal('modalAud');
 }
-
-function selectAuditor(id) {
-  const a = S.auditors[id];
-  S.pendingAuditor = { id, ...a };
-  document.getElementById('pinTitle').textContent = `${a.emoji} ${a.name}`;
-  document.getElementById('pinInput').value = '';
-  document.getElementById('pinErr').textContent = '';
-  updateDots(0);
-  document.getElementById('step1').style.display = 'none';
-  document.getElementById('step2').classList.add('show');
-  setTimeout(() => document.getElementById('pinInput').focus(), 120);
+function selectAuditor(id){
+  const a=S.auditors[id];S.pendingAuditor={id,...a};
+  document.getElementById('pinTitle').textContent=`${a.emoji} ${a.name}`;
+  document.getElementById('pinInput').value='';document.getElementById('pinErr').textContent='';updateDots(0);
+  document.getElementById('step1').style.display='none';document.getElementById('step2').classList.add('show');
+  setTimeout(()=>document.getElementById('pinInput').focus(),120);
 }
-
-function handlePinInput() {
-  const val = document.getElementById('pinInput').value;
-  document.getElementById('pinErr').textContent = '';
-  updateDots(val.length);
-  if (val.length === 4) setTimeout(confirmPin, 160);
+function handlePinInput(){
+  const v=document.getElementById('pinInput').value;
+  document.getElementById('pinErr').textContent='';updateDots(v.length);
+  if(v.length===4)setTimeout(confirmPin,160);
 }
-
-function updateDots(n) {
-  document.querySelectorAll('#pinDots .pin-dot-el').forEach((d, i) => {
-    d.textContent = i < n ? '●' : '•';
-    d.classList.toggle('filled', i < n);
-  });
-}
-
-function confirmPin() {
-  const pin = document.getElementById('pinInput').value;
-  if (pin !== S.pendingAuditor.pin) {
-    document.getElementById('pinErr').textContent = '❌ PIN 錯誤，請再試一次';
-    document.getElementById('pinInput').value = '';
-    updateDots(0);
-    return;
-  }
-  S.currentAuditor = { ...S.pendingAuditor };
-  S.pendingAuditor = null;
-  closeModal('modalAud');
-  renderAudBar();
+function updateDots(n){document.querySelectorAll('#pinDots .pin-dot-el').forEach((d,i)=>{d.textContent=i<n?'●':'•';d.classList.toggle('filled',i<n);});}
+function confirmPin(){
+  const pin=document.getElementById('pinInput').value;
+  if(pin!==S.pendingAuditor.pin){document.getElementById('pinErr').textContent='❌ PIN 錯誤，請再試一次';document.getElementById('pinInput').value='';updateDots(0);return;}
+  S.currentAuditor={...S.pendingAuditor};S.pendingAuditor=null;
+  closeModal('modalAud');renderAudBar();
   showToast(`✅ 歡迎，${S.currentAuditor.name}！`);
+  if(S.currentCat){const btn=document.getElementById('addRecBtn');btn.classList.remove('locked');btn.textContent='＋ 新增記錄';}
 }
+function backToStep1(){document.getElementById('step2').classList.remove('show');document.getElementById('step1').style.display='block';S.pendingAuditor=null;}
+function handleOverlay(e,id){if(e.target.classList.contains('modal-overlay'))closeModal(id);}
 
-function backToStep1() {
-  document.getElementById('step2').classList.remove('show');
-  document.getElementById('step1').style.display = 'block';
-  S.pendingAuditor = null;
-}
+/* ══ Screen/Modal helpers ══ */
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function showModal(id){const el=document.getElementById(id);el.style.display='flex';requestAnimationFrame(()=>el.classList.add('show'));}
+function closeModal(id){const el=document.getElementById(id);el.classList.remove('show');setTimeout(()=>{el.style.display='none';},300);}
 
-function handleOverlay(e) {
-  if (e.target.classList.contains('modal-overlay')) closeModal('modalAud');
-}
-
-/* ══════════════════════════════
-   MODAL HELPERS
-══════════════════════════════ */
-function showModal(id) {
-  const el = document.getElementById(id);
-  el.style.display = 'flex';
-  requestAnimationFrame(() => el.classList.add('show'));
-}
-function closeModal(id) {
-  const el = document.getElementById(id);
-  el.classList.remove('show');
-  setTimeout(() => { el.style.display = 'none'; }, 300);
-}
-
-/* ══════════════════════════════
-   TOAST
-══════════════════════════════ */
+/* ══ Toast ══ */
 let _tt;
-function showToast(msg, ms = 2600) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(_tt);
-  _tt = setTimeout(() => t.classList.remove('show'), ms);
-}
+function showToast(msg,ms=2600){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),ms);}
 
-/* ══════════════════════════════
-   SERVICE WORKER
-══════════════════════════════ */
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(r => console.log('KidsAPP SW:', r.scope))
-      .catch(e => console.error('KidsAPP SW error:', e));
-  });
-}
+/* ══ Service Worker ══ */
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>console.log('KidsAPP SW:',r.scope)).catch(e=>console.error(e));});}
 
-/* ── Boot ── */
 init();
 </script>
 </body>

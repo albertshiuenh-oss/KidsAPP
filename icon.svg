@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="100" fill="#0e5570"/>
+
+  <!-- Gold 5-pointed star -->
+  <!-- Outer r=190, inner r=76, center (256,256), top point at -90° -->
+  <polygon
+    points="
+      256,66
+      298,194  426,194
+      326,276  362,404
+      256,326  150,404
+      186,276   86,194
+      214,194
+    "
+    fill="#FFD700"
+  />
+
+  <!-- Subtle inner highlight -->
+  <polygon
+    points="
+      256,108
+      285,197  378,197
+      308,251  334,340
+      256,288  178,340
+      204,251  134,197
+      227,197
+    "
+    fill="#FFE866"
+    opacity="0.35"
+  />
+</svg>

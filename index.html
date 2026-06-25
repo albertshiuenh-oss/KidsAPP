@@ -18,6 +18,7 @@
   --teal:#0e5570;--teal-dim:#0a3f54;--teal-light:#e4f2f8;
   --orange:#c94010;--orange-lt:#fde8e2;
   --green:#1a7a40;--green-lt:#e8f8ef;
+  --amber:#a07010;--amber-lt:#fef3d8;
   --bg:#f2f2f7;--card:#fff;--text:#1c1c1e;--sub:#8e8e93;--border:#e5e5ea;
   --sys-green:#34c759;--red:#ff3b30;--shadow:0 1px 3px rgba(0,0,0,.08);
 }
@@ -65,20 +66,33 @@ body{font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;b
 .tile-emoji{font-size:24px;margin-bottom:5px;}
 .tile-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;}
 .tile-ntd,.tile-mins{font-size:11px;font-weight:600;}
-/* Add button */
-.add-rec-btn{width:100%;padding:13px;background:var(--teal);color:#fff;border:none;border-radius:13px;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:12px;}
-.add-rec-btn:active{background:var(--teal-dim);}
-.add-rec-btn.locked{background:var(--sub);cursor:default;}
-/* Transactions summary bar */
-.tx-summary{display:flex;gap:6px;margin-bottom:12px;}
-.tx-sum-card{flex:1;background:var(--card);border-radius:11px;padding:9px 11px;border:1px solid var(--border);box-shadow:var(--shadow);}
-.tx-sum-label{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;}
-.tx-sum-ntd,.tx-sum-mins{font-size:12px;font-weight:700;}
-/* Filter tabs for transactions */
-.filter-row{display:flex;gap:6px;margin-bottom:12px;}
-.filter-btn{flex:1;padding:7px;border-radius:10px;border:1.5px solid var(--border);background:var(--card);font-size:12px;font-weight:600;color:var(--sub);cursor:pointer;}
-.filter-btn.active{border-color:var(--teal);background:var(--teal-light);color:var(--teal);}
-/* Record cards */
+
+/* ── Goal Cards ── */
+.goal-section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.add-goal-btn{font-size:12px;font-weight:600;color:var(--teal);background:var(--teal-light);border:none;border-radius:8px;padding:4px 10px;cursor:pointer;}
+.goal-card{background:var(--card);border-radius:14px;padding:13px;margin-bottom:8px;border:1px solid var(--border);box-shadow:var(--shadow);}
+.goal-card.completed{background:#fafafa;opacity:.75;border-style:dashed;}
+.goal-freq-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.goal-freq-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:7px;background:var(--teal-light);color:var(--teal);}
+.goal-freq-badge.recurring{background:var(--amber-lt);color:var(--amber);}
+.goal-due{font-size:10px;color:var(--sub);margin-left:auto;}
+.goal-desc{font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;line-height:1.4;}
+.goal-rewards{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
+.goal-reward-pill{font-size:11px;font-weight:600;padding:3px 9px;border-radius:8px;}
+.reward-pass{background:var(--green-lt);color:var(--green);}
+.reward-fail{background:var(--orange-lt);color:var(--orange);}
+.goal-verify-row{display:flex;gap:6px;}
+.btn-pass{flex:1;padding:9px;background:var(--green-lt);color:var(--green);border:1.5px solid var(--green);border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;}
+.btn-fail{flex:1;padding:9px;background:var(--orange-lt);color:var(--orange);border:1.5px solid var(--orange);border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;}
+.btn-pass:active{background:#c8f0d8;}
+.btn-fail:active{background:#fdd0c0;}
+.goal-completed-badge{font-size:11px;padding:3px 9px;border-radius:8px;background:#f0f0f0;color:var(--sub);font-weight:500;margin-left:auto;}
+.no-goals{text-align:center;padding:18px;color:var(--sub);font-size:12px;background:var(--card);border-radius:12px;border:1px dashed var(--border);}
+
+/* ── Records ── */
+.add-rec-btn{width:100%;padding:12px;background:var(--card);color:var(--teal);border:1.5px solid var(--teal);border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:12px;}
+.add-rec-btn:active{background:var(--teal-light);}
+.add-rec-btn.locked{color:var(--sub);border-color:var(--border);cursor:default;}
 .rec-card{background:var(--card);border-radius:12px;padding:11px 13px;margin-bottom:7px;border:1px solid var(--border);box-shadow:var(--shadow);}
 .rec-card.deleted-card{background:#fafafa;opacity:.75;border-style:dashed;}
 .rec-top{display:flex;align-items:center;gap:5px;margin-bottom:4px;flex-wrap:wrap;}
@@ -101,6 +115,16 @@ body{font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;b
 .restore-btn{font-size:11px;padding:4px 10px;background:var(--teal-light);color:var(--teal);border:none;border-radius:8px;cursor:pointer;font-weight:600;white-space:nowrap;}
 .days-left{font-size:10px;color:var(--red);margin-left:auto;}
 .empty-state{text-align:center;padding:32px 20px;color:var(--sub);font-size:13px;line-height:1.8;}
+
+/* Transactions */
+.tx-summary{display:flex;gap:6px;margin-bottom:10px;}
+.tx-sum-card{flex:1;background:var(--card);border-radius:11px;padding:9px 11px;border:1px solid var(--border);box-shadow:var(--shadow);}
+.tx-sum-label{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;}
+.tx-sum-val{font-size:12px;font-weight:700;}
+.filter-row{display:flex;gap:6px;margin-bottom:10px;}
+.filter-btn{flex:1;padding:7px;border-radius:10px;border:1.5px solid var(--border);background:var(--card);font-size:11px;font-weight:600;color:var(--sub);cursor:pointer;}
+.filter-btn.active{border-color:var(--teal);background:var(--teal-light);color:var(--teal);}
+
 /* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
 .modal-overlay.show{opacity:1;pointer-events:all;}
@@ -108,7 +132,7 @@ body{font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;b
 .modal-overlay.show .modal-sheet{transform:translateY(0);}
 .modal-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px;}
 .modal-title{font-size:17px;font-weight:700;text-align:center;margin-bottom:14px;}
-/* Auditor list */
+/* Auditor */
 .aud-list{display:flex;flex-direction:column;gap:8px;}
 .aud-item{display:flex;align-items:center;gap:11px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:13px;cursor:pointer;}
 .aud-item:active{background:var(--bg);}
@@ -126,37 +150,44 @@ body{font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;b
 .pin-err{font-size:12px;color:var(--red);text-align:center;min-height:18px;margin:6px 0;}
 .pin-ok{width:100%;padding:14px;background:var(--teal);color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:600;cursor:pointer;margin-top:6px;}
 .pin-back{width:100%;padding:10px;background:transparent;color:var(--sub);border:none;font-size:13px;cursor:pointer;margin-top:4px;}
-/* Entry form */
+/* Forms */
 .form-grp{margin-bottom:12px;}
 .form-lbl{font-size:12px;font-weight:600;color:var(--sub);margin-bottom:5px;display:block;}
-.form-inp{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:11px;font-size:14px;background:var(--bg);color:var(--text);outline:none;}
+.form-inp{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:11px;font-size:14px;background:var(--bg);color:var(--text);outline:none;font-family:inherit;}
 .form-inp:focus{border-color:var(--teal);}
+textarea.form-inp{resize:none;line-height:1.5;}
 .form-hint{font-size:10px;color:var(--sub);margin-top:4px;padding-left:2px;}
-.tog-row{display:flex;gap:6px;}
-.tog-btn{flex:1;padding:9px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);color:var(--sub);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;}
+.tog-row{display:flex;gap:5px;}
+.tog-btn{flex:1;padding:9px 6px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);color:var(--sub);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;}
 .tog-btn.active.t-pass{background:var(--green-lt);border-color:var(--green);color:var(--green);}
 .tog-btn.active.t-fail{background:var(--orange-lt);border-color:var(--orange);color:var(--orange);}
 .tog-btn.active.t-teal{background:var(--teal-light);border-color:var(--teal);color:var(--teal);}
 .tog-btn.active.t-org{background:var(--orange-lt);border-color:var(--orange);color:var(--orange);}
 .tog-btn.active.t-green{background:var(--green-lt);border-color:var(--green);color:var(--green);}
-/* Transaction hint box */
-.tx-hint-box{background:var(--bg);border-radius:10px;padding:10px 13px;margin-top:8px;font-size:12px;color:var(--sub);border-left:3px solid var(--border);}
-.tx-hint-box.withdraw{border-left-color:var(--orange);color:var(--orange);}
-.tx-hint-box.deposit{border-left-color:var(--green);color:var(--green);}
-/* Amount */
-.amt-grp-full{width:100%;}
+/* Day picker */
+.day-grid{display:flex;gap:5px;margin-top:6px;}
+.day-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);background:var(--bg);font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--sub);}
+.day-btn.active{background:var(--teal);border-color:var(--teal);color:#fff;}
+/* Amounts */
+.amt-row{display:flex;gap:8px;}
+.amt-grp{flex:1;}
 .amt-lbl{font-size:10px;font-weight:600;color:var(--sub);margin-bottom:4px;display:block;}
-.amt-inp{width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:20px;font-weight:700;text-align:center;background:var(--bg);color:var(--text);outline:none;}
+.amt-inp{width:100%;padding:10px;border:1.5px solid var(--border);border-radius:10px;font-size:16px;font-weight:600;text-align:center;background:var(--bg);color:var(--text);outline:none;}
 .amt-inp:focus{border-color:var(--teal);}
 .form-aud-row{display:flex;align-items:center;gap:6px;padding:10px 13px;background:var(--bg);border-radius:10px;margin-bottom:12px;font-size:12px;color:var(--sub);}
 .save-btn{width:100%;padding:14px;background:var(--teal);color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:600;cursor:pointer;}
 .save-btn:active{background:var(--teal-dim);}
+.tx-hint-box{background:var(--bg);border-radius:10px;padding:10px 13px;margin-top:8px;font-size:12px;color:var(--sub);border-left:3px solid var(--border);}
+.tx-hint-box.withdraw{border-left-color:var(--orange);color:var(--orange);}
+.tx-hint-box.deposit{border-left-color:var(--green);color:var(--green);}
 /* Confirm */
 .confirm-box{background:var(--card);border-radius:16px;padding:18px;margin-bottom:12px;border:1px solid var(--border);}
-.confirm-msg{font-size:14px;color:var(--text);margin-bottom:14px;line-height:1.5;text-align:center;}
+.confirm-msg{font-size:14px;color:var(--text);margin-bottom:14px;line-height:1.6;text-align:center;}
 .confirm-row{display:flex;gap:8px;}
-.confirm-cancel{flex:1;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text);}
+.confirm-cancel{flex:1;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;}
 .confirm-del{flex:1;padding:12px;background:var(--red);border:none;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;color:#fff;}
+.confirm-pass{flex:1;padding:12px;background:var(--green);border:none;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;color:#fff;}
+.confirm-fail{flex:1;padding:12px;background:var(--orange);border:none;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;color:#fff;}
 /* Toast */
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(28,28,28,.92);color:#fff;padding:10px 20px;border-radius:22px;font-size:13px;font-weight:500;opacity:0;transition:all .22s;pointer-events:none;z-index:999;white-space:nowrap;max-width:calc(100vw - 40px);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -200,9 +231,7 @@ body{font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;b
     <div class="nav-center" id="detailTitle"></div>
     <div class="nav-badges" id="detailBadges"></div>
   </div>
-  <div class="content" id="detailContent">
-    <!-- Populated dynamically -->
-  </div>
+  <div class="content" id="detailContent"></div>
 </div>
 
 <!-- ══ MODAL: AUDITOR ══ -->
@@ -228,7 +257,16 @@ body{font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;b
   </div>
 </div>
 
-<!-- ══ MODAL: ENTRY ══ -->
+<!-- ══ MODAL: GOAL FORM ══ -->
+<div class="modal-overlay" id="modalGoal" onclick="handleOverlay(event,'modalGoal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="goalModalTitle">新增目標</div>
+    <div id="goalForm"></div>
+  </div>
+</div>
+
+<!-- ══ MODAL: ENTRY FORM ══ -->
 <div class="modal-overlay" id="modalEntry" onclick="handleOverlay(event,'modalEntry')">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -237,7 +275,7 @@ body{font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;b
   </div>
 </div>
 
-<!-- ══ MODAL: CONFIRM DELETE ══ -->
+<!-- ══ MODAL: CONFIRM ══ -->
 <div class="modal-overlay" id="modalConfirm" onclick="handleOverlay(event,'modalConfirm')">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -255,22 +293,24 @@ const db=firebase.database();
 
 /* ══ Categories ══ */
 const CATS=[
-  {id:'vocab',       name:'Vocabulary',   emoji:'📚',type:'goal',        group:'top'},
-  {id:'school',      name:'School Exam',  emoji:'📝',type:'goal',        group:'top'},
-  {id:'housework',   name:'Housework',    emoji:'🏠',type:'goal',        group:'top'},
-  {id:'sport',       name:'Sport',        emoji:'⚽',type:'goal',        group:'top'},
-  {id:'transactions',name:'Transactions', emoji:'💳',type:'transactions',group:'bot'},
-  {id:'behavior',    name:'Behavior',     emoji:'⭐',type:'mixed',       group:'bot'},
+  {id:'vocab',       name:'Vocabulary',  emoji:'📚',type:'goal',        group:'top'},
+  {id:'school',      name:'School Exam', emoji:'📝',type:'goal',        group:'top'},
+  {id:'housework',   name:'Housework',   emoji:'🏠',type:'goal',        group:'top'},
+  {id:'sport',       name:'Sport',       emoji:'⚽',type:'goal',        group:'top'},
+  {id:'transactions',name:'Transactions',emoji:'💳',type:'transactions',group:'bot'},
+  {id:'behavior',    name:'Behavior',    emoji:'⭐',type:'mixed',       group:'bot'},
 ];
+const GOAL_CATS=['vocab','school','housework','sport'];
 
 /* ══ State ══ */
 const S={
-  children:{},auditors:{},entries:{},
+  children:{},auditors:{},entries:{},goals:{},
   currentChildId:null,currentCat:null,
   currentAuditor:null,pendingAuditor:null,
-  editingEntryId:null,
-  txFilter:'all',   // 'all' | 'withdraw' | 'deposit'
-  rtMain:null
+  editingEntryId:null,editingGoalId:null,
+  txFilter:'all',
+  pendingVerify:null,  // { catId, goalId, result } — queued when auditor not logged in
+  rtMain:null,rtGoal:null
 };
 
 /* ══ Seed ══ */
@@ -283,19 +323,27 @@ const SEED={
 const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const MON_MAP={Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
 function fmtDate(iso){const[y,m,d]=iso.split('-');return `${y}${MON[+m-1]}${d.padStart(2,'0')}`;}
-function parseDate(d){const m=d?.match(/^(\d{4})([A-Za-z]+)(\d{2})$/);return m?`${m[1]}-${MON_MAP[m[2]]}-${m[3]}`:todayISO();}
 function todayISO(){return new Date().toISOString().split('T')[0];}
 function amtStr(v,u){return v===0?'':`${v>0?'+':''}${v.toLocaleString()} ${u}`;}
 function amtCls(v){return v>0?'pos':v<0?'neg':'';}
+function txDirection(e){const n=Number(e.ntd||0),m=Number(e.mins||0);if(n<0||m<0)return 'withdraw';if(n>0||m>0)return 'deposit';return 'unknown';}
 
-/* ══ Determine if a transaction entry is withdraw or deposit ══ */
-function txDirection(e){
-  // If any value is negative → withdraw; if all non-zero are positive → deposit
-  const ntd=Number(e.ntd||0),mins=Number(e.mins||0);
-  if(ntd<0||mins<0) return 'withdraw';
-  if(ntd>0||mins>0) return 'deposit';
-  return 'unknown';
+/* ══ Frequency helpers ══ */
+const DAY_NAMES=['一','二','三','四','五','六','日'];
+const WEEK_NUMS=['第一','第二','第三','第四','最後'];
+function fmtFreq(goal){
+  if(goal.freq==='once')  return `📅 ${goal.dueDate||''}`;
+  if(goal.freq==='daily') return '🔄 每天';
+  if(goal.freq==='weekly'){
+    const ds=(goal.freqDays||[]).map(d=>DAY_NAMES[d]).join('、');
+    return `🔄 每週${ds||'—'}`;
+  }
+  if(goal.freq==='monthly'){
+    return `🔄 每月${WEEK_NUMS[(goal.freqWeekNum||1)-1]}週${DAY_NAMES[goal.freqWeekDay||0]}`;
+  }
+  return '';
 }
+function isRecurring(goal){return goal.freq!=='once';}
 
 /* ══ Init ══ */
 async function init(){
@@ -308,24 +356,26 @@ async function init(){
     S.children=cs.val()||{};
     S.currentChildId=Object.keys(S.children)[0]||null;
     if(S.currentChildId){
-      const es=await db.ref(`/entries/${S.currentChildId}`).once('value');
+      const[es,gs]=await Promise.all([
+        db.ref(`/entries/${S.currentChildId}`).once('value'),
+        db.ref(`/goals/${S.currentChildId}`).once('value')
+      ]);
       S.entries[S.currentChildId]=es.val()||{};
-      await migrateWithdraw(S.currentChildId); // migrate old 'withdraw' → 'transactions'
+      S.goals[S.currentChildId]=gs.val()||{};
+      await migrateWithdraw(S.currentChildId);
       attachMainListener(S.currentChildId);
+      attachGoalListener(S.currentChildId);
       cleanupOldDeleted();
     }
     renderAll();
   }catch(e){console.error(e);showToast('⚠️ 連線失敗，請重新整理',4000);document.getElementById('childName').textContent='連線失敗';}
 }
 
-/* ══ Migrate old 'withdraw' entries to 'transactions' ══ */
 async function migrateWithdraw(cid){
-  const oldSnap=await db.ref(`/entries/${cid}/withdraw`).once('value');
-  if(!oldSnap.exists())return;
-  const oldData=oldSnap.val();
-  await db.ref(`/entries/${cid}/transactions`).update(oldData);
+  const s=await db.ref(`/entries/${cid}/withdraw`).once('value');
+  if(!s.exists())return;
+  await db.ref(`/entries/${cid}/transactions`).update(s.val());
   await db.ref(`/entries/${cid}/withdraw`).remove();
-  console.log('Migrated withdraw → transactions');
 }
 
 function attachMainListener(cid){
@@ -338,22 +388,28 @@ function attachMainListener(cid){
   });
 }
 
-/* ══ Cleanup ══ */
+function attachGoalListener(cid){
+  if(S.rtGoal)db.ref(`/goals/${S.rtGoal}`).off();
+  S.rtGoal=cid;
+  db.ref(`/goals/${cid}`).on('value',snap=>{
+    S.goals[cid]=snap.val()||{};
+    if(S.currentCat&&GOAL_CATS.includes(S.currentCat))renderDetailContent(S.currentCat);
+  });
+}
+
 async function cleanupOldDeleted(){
   const cid=S.currentChildId;if(!cid)return;
   const weekAgo=Date.now()-7*24*60*60*1000;
-  const all=S.entries[cid]||{};
   const tasks=[];
   CATS.forEach(cat=>{
-    Object.entries(all[cat.id]||{}).forEach(([id,e])=>{
-      if(e.deletedAt&&e.deletedAt<weekAgo)
-        tasks.push(db.ref(`/entries/${cid}/${cat.id}/${id}`).remove());
+    Object.entries((S.entries[cid]||{})[cat.id]||{}).forEach(([id,e])=>{
+      if(e.deletedAt&&e.deletedAt<weekAgo)tasks.push(db.ref(`/entries/${cid}/${cat.id}/${id}`).remove());
     });
   });
   if(tasks.length)await Promise.all(tasks);
 }
 
-/* ══ Render home ══ */
+/* ══ Render Home ══ */
 function renderAll(){renderTabs();renderAudBar();renderDashboard();}
 
 function renderTabs(){
@@ -399,10 +455,9 @@ function renderGrid(gid,grp,entries){
   }).join('');
 }
 
-/* ══ Detail screen ══ */
+/* ══ Detail Screen ══ */
 function openCat(catId){
-  S.currentCat=catId;
-  S.txFilter='all';
+  S.currentCat=catId;S.txFilter='all';
   const cat=CATS.find(c=>c.id===catId);
   const entries=S.entries[S.currentChildId]||{};
   let ntd=0,mins=0;
@@ -418,98 +473,465 @@ function openCat(catId){
 
 function renderDetailContent(catId){
   const cat=CATS.find(c=>c.id===catId);
-  const isLocked=!S.currentAuditor;
   let html='';
 
-  /* Add record button */
-  html+=`<button class="add-rec-btn ${isLocked?'locked':''}" onclick="openAddEntry(null)">
-    ${isLocked?'🔐 請先登入審核人':'＋ 新增記錄'}</button>`;
+  /* ── Goal-type categories ── */
+  if(cat.type==='goal'){
+    const goals=S.goals[S.currentChildId]?.[catId]||{};
+    const active=Object.entries(goals).filter(([,g])=>g.active!==false).sort((a,b)=>a[1].createdAt-b[1].createdAt);
+    const completed=Object.entries(goals).filter(([,g])=>g.active===false).sort((a,b)=>(b[1].completedAt||0)-(a[1].completedAt||0));
 
-  /* Transactions-specific: summary + filter */
-  if(cat.type==='transactions'){
+    /* Active Goals section */
+    html+=`<div class="goal-section-hdr">
+      <div class="sec-lbl" style="margin-bottom:0;">🎯 Active Goals</div>
+      <button class="add-goal-btn" onclick="openAddGoal(null,'${catId}')">＋ 新增目標</button>
+    </div>`;
+
+    if(!active.length){
+      html+=`<div class="no-goals">目前沒有進行中的目標<br><span style="font-size:11px;color:var(--sub);">點上方「＋ 新增目標」開始設定</span></div>`;
+    } else {
+      html+=active.map(([gid,g])=>buildGoalCard(gid,g,catId,false)).join('');
+    }
+
+    /* Completed Goals */
+    if(completed.length){
+      html+=`<div class="sec-lbl" style="margin-top:16px;color:var(--sub);">✅ 已完成目標</div>`;
+      html+=completed.slice(0,5).map(([gid,g])=>buildGoalCard(gid,g,catId,true)).join('');
+    }
+
+    /* Manual entry + records */
+    html+=`<div style="margin-top:16px;">`;
+    html+=`<div class="sec-lbl">📋 紀錄歷史</div>`;
+    html+=`<button class="add-rec-btn ${S.currentAuditor?'':'locked'}" onclick="openAddEntry(null)">
+      ${S.currentAuditor?'＋ 手動新增記錄':'🔐 請先登入審核人'}
+    </button>`;
+    html+=buildRecordsList(catId);
+    html+=`</div>`;
+  }
+  /* ── Transactions ── */
+  else if(cat.type==='transactions'){
+    html+=`<button class="add-rec-btn ${S.currentAuditor?'':'locked'}" onclick="openAddEntry(null)">
+      ${S.currentAuditor?'＋ 新增記錄':'🔐 請先登入審核人'}</button>`;
     const entries=Object.values((S.entries[S.currentChildId]||{})[catId]||{}).filter(e=>!e.deletedAt);
     let wNTD=0,wMins=0,dNTD=0,dMins=0;
-    entries.forEach(e=>{
-      const n=Number(e.ntd||0),m=Number(e.mins||0);
-      if(n<0)wNTD+=n; else if(n>0)dNTD+=n;
-      if(m<0)wMins+=m; else if(m>0)dMins+=m;
-    });
+    entries.forEach(e=>{const n=Number(e.ntd||0),m=Number(e.mins||0);if(n<0)wNTD+=n;else if(n>0)dNTD+=n;if(m<0)wMins+=m;else if(m>0)dMins+=m;});
     html+=`<div class="tx-summary">
       <div class="tx-sum-card">
         <div class="tx-sum-label" style="color:var(--orange);">💸 Withdraw</div>
-        ${wNTD!==0?`<div class="tx-sum-ntd neg">${wNTD.toLocaleString()} NTD</div>`:''}
-        ${wMins!==0?`<div class="tx-sum-mins neg">${wMins.toLocaleString()} mins</div>`:''}
-        ${wNTD===0&&wMins===0?`<div class="tx-sum-ntd" style="color:var(--sub);">—</div>`:''}
+        ${wNTD!==0?`<div class="tx-sum-val neg">${wNTD.toLocaleString()} NTD</div>`:''}
+        ${wMins!==0?`<div class="tx-sum-val neg">${wMins.toLocaleString()} mins</div>`:''}
+        ${wNTD===0&&wMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}
       </div>
       <div class="tx-sum-card">
         <div class="tx-sum-label" style="color:var(--green);">💰 Deposit</div>
-        ${dNTD!==0?`<div class="tx-sum-ntd pos">+${dNTD.toLocaleString()} NTD</div>`:''}
-        ${dMins!==0?`<div class="tx-sum-mins pos">+${dMins.toLocaleString()} mins</div>`:''}
-        ${dNTD===0&&dMins===0?`<div class="tx-sum-ntd" style="color:var(--sub);">—</div>`:''}
+        ${dNTD!==0?`<div class="tx-sum-val pos">+${dNTD.toLocaleString()} NTD</div>`:''}
+        ${dMins!==0?`<div class="tx-sum-val pos">+${dMins.toLocaleString()} mins</div>`:''}
+        ${dNTD===0&&dMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}
       </div>
     </div>`;
-    /* Filter tabs */
     html+=`<div class="filter-row">
       <button class="filter-btn ${S.txFilter==='all'?'active':''}" onclick="setTxFilter('all')">全部</button>
       <button class="filter-btn ${S.txFilter==='withdraw'?'active':''}" onclick="setTxFilter('withdraw')">💸 Withdraw</button>
       <button class="filter-btn ${S.txFilter==='deposit'?'active':''}" onclick="setTxFilter('deposit')">💰 Deposit</button>
     </div>`;
+    html+=`<div class="sec-lbl">紀錄歷史</div>`;
+    html+=buildRecordsList(catId);
   }
-
-  /* Records */
-  html+=`<div class="sec-lbl">紀錄歷史</div>`;
-  html+=buildRecordsList(catId);
+  /* ── Behavior ── */
+  else {
+    html+=`<button class="add-rec-btn ${S.currentAuditor?'':'locked'}" onclick="openAddEntry(null)">
+      ${S.currentAuditor?'＋ 新增記錄':'🔐 請先登入審核人'}</button>`;
+    html+=`<div class="sec-lbl">紀錄歷史</div>`;
+    html+=buildRecordsList(catId);
+  }
 
   document.getElementById('detailContent').innerHTML=html;
 }
 
-function setTxFilter(v){
-  S.txFilter=v;
-  renderDetailContent(S.currentCat);
+function closeDetail(){S.currentCat=null;showScreen('screenHome');}
+
+/* ══ Goal Cards ══ */
+function buildGoalCard(gid,g,catId,isCompleted){
+  const freqBadge=`<span class="goal-freq-badge ${isRecurring(g)?'recurring':''}">${fmtFreq(g)}</span>`;
+  const rewardPills=[];
+  if(g.rewardNTD) rewardPills.push(`<span class="goal-reward-pill reward-pass">Pass +${g.rewardNTD} NTD</span>`);
+  if(g.rewardMins)rewardPills.push(`<span class="goal-reward-pill reward-pass">Pass +${g.rewardMins} mins</span>`);
+  if(g.penaltyNTD) rewardPills.push(`<span class="goal-reward-pill reward-fail">Fail -${g.penaltyNTD} NTD</span>`);
+  if(g.penaltyMins)rewardPills.push(`<span class="goal-reward-pill reward-fail">Fail -${g.penaltyMins} mins</span>`);
+
+  let bottom='';
+  if(isCompleted){
+    const res=g.completedResult==='pass'?'✅ Passed':'❌ Failed';
+    bottom=`<div style="display:flex;align-items:center;"><span class="goal-completed-badge">${res}</span></div>`;
+  } else {
+    const canVerify=!!S.currentAuditor;
+    bottom=`<div class="goal-verify-row">
+      <button class="btn-pass" onclick="verifyGoal('${catId}','${gid}','pass')" ${canVerify?'':'disabled style="opacity:.5;"'}>✅ Passed</button>
+      <button class="btn-fail" onclick="verifyGoal('${catId}','${gid}','fail')" ${canVerify?'':'disabled style="opacity:.5;"'}>❌ Failed</button>
+      <button style="width:32px;border:none;background:var(--bg);border-radius:8px;cursor:pointer;font-size:14px;" onclick="openAddGoal('${gid}','${catId}')" title="編輯">✏️</button>
+    </div>`;
+  }
+
+  return `<div class="goal-card ${isCompleted?'completed':''}">
+    <div class="goal-freq-row">${freqBadge}</div>
+    <div class="goal-desc">${g.desc||'—'}</div>
+    <div class="goal-rewards">${rewardPills.join('')||'<span style="font-size:11px;color:var(--sub);">（無獎懲設定）</span>'}</div>
+    ${bottom}
+  </div>`;
 }
 
+/* ══ Goal CRUD ══ */
+function openAddGoal(goalId,catId){
+  if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');openAuditorModal();return;}
+  S.editingGoalId=goalId||null;
+  const existing=goalId?(S.goals[S.currentChildId]?.[catId||S.currentCat]?.[goalId]):null;
+  document.getElementById('goalModalTitle').textContent=goalId?'編輯目標':'＋ 新增目標';
+  document.getElementById('goalForm').innerHTML=buildGoalForm(catId||S.currentCat,existing);
+  showModal('modalGoal');
+}
+
+function buildGoalForm(catId,ex){
+  ex=ex||{};
+  const freq=ex.freq||'once';
+  let h='';
+  /* Description */
+  h+=`<div class="form-grp"><label class="form-lbl">📋 目標描述</label>
+    <textarea class="form-inp" id="gDesc" rows="2" placeholder="${goalPlaceholder(catId)}">${ex.desc||''}</textarea></div>`;
+  /* Frequency */
+  const freqs=['once','daily','weekly','monthly'];
+  const freqLabels=['單次','每天','每週','每月'];
+  h+=`<div class="form-grp"><label class="form-lbl">🔄 頻率</label>
+    <div class="tog-row">
+      ${freqs.map((f,i)=>`<button class="tog-btn ${freq===f?'active t-teal':''}" id="gFreq_${f}" onclick="setGoalFreq('${f}')">${freqLabels[i]}</button>`).join('')}
+    </div></div>`;
+  /* Frequency details */
+  h+=`<div id="freqDetails">${buildFreqDetails(freq,ex)}</div>`;
+  /* Rewards */
+  h+=`<div class="form-grp"><label class="form-lbl">🎁 Pass 獎勵</label>
+    <div class="amt-row">
+      <div class="amt-grp"><span class="amt-lbl">+NTD</span><input type="number" class="amt-inp" id="gRNTD" placeholder="0" min="0" step="10" value="${ex.rewardNTD||''}"></div>
+      <div class="amt-grp"><span class="amt-lbl">+Mins</span><input type="number" class="amt-inp" id="gRMins" placeholder="0" min="0" step="10" value="${ex.rewardMins||''}"></div>
+    </div></div>`;
+  h+=`<div class="form-grp"><label class="form-lbl">⚠️ Fail 懲罰（選填）</label>
+    <div class="amt-row">
+      <div class="amt-grp"><span class="amt-lbl">-NTD</span><input type="number" class="amt-inp" id="gPNTD" placeholder="0" min="0" step="10" value="${ex.penaltyNTD||''}"></div>
+      <div class="amt-grp"><span class="amt-lbl">-Mins</span><input type="number" class="amt-inp" id="gPMins" placeholder="0" min="0" step="10" value="${ex.penaltyMins||''}"></div>
+    </div></div>`;
+  h+=`<div class="form-aud-row">建立者：${S.currentAuditor.emoji} ${S.currentAuditor.name}</div>`;
+  h+=`<button class="save-btn" onclick="saveGoal('${catId}')">💾 ${ex.desc?'更新目標':'儲存目標'}</button>`;
+  return h;
+}
+
+function buildFreqDetails(freq,ex){
+  ex=ex||{};
+  if(freq==='once'){
+    return `<div class="form-grp"><label class="form-lbl">📅 截止日期</label>
+      <input type="date" class="form-inp" id="gDueDate" value="${ex.dueDate||todayISO()}"></div>`;
+  }
+  if(freq==='daily'){
+    return `<div class="form-grp"><div style="padding:10px;background:var(--teal-light);border-radius:10px;font-size:12px;color:var(--teal);text-align:center;">📅 每天執行</div></div>`;
+  }
+  if(freq==='weekly'){
+    const sel=ex.freqDays||[];
+    return `<div class="form-grp"><label class="form-lbl">選擇星期（可複選）</label>
+      <div class="day-grid" id="dayGrid">
+        ${DAY_NAMES.map((d,i)=>`<button class="day-btn ${sel.includes(i)?'active':''}" data-day="${i}" onclick="toggleDay(this)">${d}</button>`).join('')}
+      </div></div>`;
+  }
+  if(freq==='monthly'){
+    const wn=ex.freqWeekNum||1,wd=ex.freqWeekDay||0;
+    return `<div class="form-grp"><label class="form-lbl">執行時間</label>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:13px;">每月</span>
+        <select class="form-inp" id="gWeekNum" style="width:auto;padding:8px 12px;">
+          ${WEEK_NUMS.map((w,i)=>`<option value="${i+1}" ${wn==i+1?'selected':''}>${w}</option>`).join('')}
+        </select>
+        <span style="font-size:13px;">週</span>
+        <select class="form-inp" id="gWeekDay" style="width:auto;padding:8px 12px;">
+          ${['週一','週二','週三','週四','週五','週六','週日'].map((d,i)=>`<option value="${i}" ${wd==i?'selected':''}>${d}</option>`).join('')}
+        </select>
+      </div></div>`;
+  }
+  return '';
+}
+
+function goalPlaceholder(catId){
+  const map={vocab:'例：背10個新單字（apple, banana…）',school:'例：數學考試 ≥ 90分',housework:'例：清洗碗盤',sport:'例：跑步 30 分鐘'};
+  return map[catId]||'請輸入目標描述';
+}
+
+function setGoalFreq(f){
+  document.querySelectorAll('[id^="gFreq_"]').forEach(b=>{
+    const bf=b.id.replace('gFreq_','');
+    b.className=`tog-btn ${bf===f?'active t-teal':''}`;
+  });
+  const ex={};// get current due date if any
+  const dd=document.getElementById('gDueDate');if(dd)ex.dueDate=dd.value;
+  const wd=document.getElementById('gWeekDay');if(wd)ex.freqWeekDay=parseInt(wd.value);
+  const wn=document.getElementById('gWeekNum');if(wn)ex.freqWeekNum=parseInt(wn.value);
+  document.getElementById('freqDetails').innerHTML=buildFreqDetails(f,ex);
+}
+
+function toggleDay(btn){
+  btn.classList.toggle('active');
+}
+
+async function saveGoal(catId){
+  if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}
+  const desc=(document.getElementById('gDesc')?.value||'').trim();
+  if(!desc){showToast('請輸入目標描述');return;}
+  /* Detect freq */
+  let freq='once';
+  const freqs=['once','daily','weekly','monthly'];
+  freqs.forEach(f=>{if(document.getElementById(`gFreq_${f}`)?.classList.contains('active'))freq=f;});
+  /* Build goal object */
+  const goal={
+    desc,freq,active:true,
+    rewardNTD:Math.abs(parseFloat(document.getElementById('gRNTD')?.value)||0),
+    rewardMins:Math.abs(parseFloat(document.getElementById('gRMins')?.value)||0),
+    penaltyNTD:Math.abs(parseFloat(document.getElementById('gPNTD')?.value)||0),
+    penaltyMins:Math.abs(parseFloat(document.getElementById('gPMins')?.value)||0),
+    createdBy:S.currentAuditor.name,
+  };
+  if(freq==='once')goal.dueDate=document.getElementById('gDueDate')?.value||todayISO();
+  if(freq==='weekly'){
+    goal.freqDays=[...document.querySelectorAll('.day-btn.active')].map(b=>parseInt(b.dataset.day));
+    if(!goal.freqDays.length){showToast('請選擇至少一天');return;}
+  }
+  if(freq==='monthly'){
+    goal.freqWeekNum=parseInt(document.getElementById('gWeekNum')?.value||1);
+    goal.freqWeekDay=parseInt(document.getElementById('gWeekDay')?.value||0);
+  }
+  try{
+    if(S.editingGoalId){
+      goal.updatedAt=Date.now();
+      await db.ref(`/goals/${S.currentChildId}/${catId}/${S.editingGoalId}`).update(goal);
+    } else {
+      goal.createdAt=Date.now();
+      await db.ref(`/goals/${S.currentChildId}/${catId}`).push(goal);
+    }
+    S.editingGoalId=null;
+    closeModal('modalGoal');
+    showToast('✅ 目標已儲存！');
+  }catch(e){console.error(e);showToast('❌ 儲存失敗');}
+}
+
+/* ══ Goal Verification ══ */
+function verifyGoal(catId,goalId,result){
+  if(!S.currentAuditor){
+    S.pendingVerify={catId,goalId,result};
+    showToast('⚠️ 請先登入審核人');
+    openAuditorModal();
+    return;
+  }
+  const goal=S.goals[S.currentChildId]?.[catId]?.[goalId];
+  if(!goal)return;
+  const ntd=result==='pass'?(goal.rewardNTD||0):-(goal.penaltyNTD||0);
+  const mins=result==='pass'?(goal.rewardMins||0):-(goal.penaltyMins||0);
+  const hasAmt=ntd!==0||mins!==0;
+  const emoji=result==='pass'?'✅':'❌';
+  const amtHtml=hasAmt?`
+    <div style="display:flex;gap:8px;justify-content:center;margin:8px 0;">
+      ${ntd!==0?`<span class="goal-reward-pill ${ntd>0?'reward-pass':'reward-fail'}">${ntd>0?'+':''}${ntd} NTD</span>`:''}
+      ${mins!==0?`<span class="goal-reward-pill ${mins>0?'reward-pass':'reward-fail'}">${mins>0?'+':''}${mins} mins</span>`:''}
+    </div>`:`<div style="color:var(--sub);font-size:12px;margin:8px 0;">（本次無獎懲記錄）</div>`;
+
+  document.getElementById('confirmBody').innerHTML=`
+    <div class="confirm-box">
+      <div style="font-size:28px;text-align:center;margin-bottom:8px;">${emoji}</div>
+      <div class="confirm-msg">
+        <strong>${result==='pass'?'Passed':'Failed'}</strong><br>
+        <span style="font-size:12px;color:var(--sub);">${goal.desc}</span>
+        ${amtHtml}
+        <span style="font-size:11px;color:var(--sub);">審核人：${S.currentAuditor.emoji} ${S.currentAuditor.name}</span>
+      </div>
+      <div class="confirm-row">
+        <button class="confirm-cancel" onclick="closeModal('modalConfirm')">取消</button>
+        <button class="${result==='pass'?'confirm-pass':'confirm-fail'}" onclick="confirmVerify('${catId}','${goalId}','${result}')">確認 ${result==='pass'?'Passed':'Failed'}</button>
+      </div>
+    </div>`;
+  showModal('modalConfirm');
+}
+
+async function confirmVerify(catId,goalId,result){
+  closeModal('modalConfirm');
+  const goal=S.goals[S.currentChildId]?.[catId]?.[goalId];
+  if(!goal||!S.currentAuditor)return;
+  const ntd=result==='pass'?(goal.rewardNTD||0):-(goal.penaltyNTD||0);
+  const mins=result==='pass'?(goal.rewardMins||0):-(goal.penaltyMins||0);
+  try{
+    /* Create entry */
+    if(ntd!==0||mins!==0){
+      await db.ref(`/entries/${S.currentChildId}/${catId}`).push({
+        date:fmtDate(todayISO()),ntd,mins,
+        auditor:S.currentAuditor.name,
+        note:`[目標] ${goal.desc}`,
+        passed:result==='pass',
+        goalId,createdAt:Date.now()
+      });
+    }
+    /* Archive one-time goals after verification */
+    if(!isRecurring(goal)){
+      await db.ref(`/goals/${S.currentChildId}/${catId}/${goalId}`).update({
+        active:false,completedAt:Date.now(),completedResult:result
+      });
+    }
+    showToast(`${result==='pass'?'✅ Passed':'❌ Failed'} 已記錄！`);
+  }catch(e){console.error(e);showToast('❌ 記錄失敗');}
+}
+
+/* ══ Entry CRUD (manual) ══ */
+function openAddEntry(entryId){
+  if(!S.currentAuditor){showToast('⚠️ 請先點「切換」選擇審核人');openAuditorModal();return;}
+  S.editingEntryId=entryId||null;
+  const cat=CATS.find(c=>c.id===S.currentCat);
+  const existing=entryId?(S.entries[S.currentChildId]?.[S.currentCat]?.[entryId]):null;
+  document.getElementById('entryTitle').textContent=entryId?`✏️ 編輯 ${cat.name}`:`${cat.emoji} 新增 ${cat.name}`;
+  document.getElementById('entryForm').innerHTML=buildEntryForm(cat,existing);
+  showModal('modalEntry');
+}
+
+function buildEntryForm(cat,existing){
+  const ex=existing||{};
+  let h='';
+  if(!existing){
+    h+=`<div class="form-grp"><label class="form-lbl">📅 日期</label>
+      <input type="date" class="form-inp" id="fDate" value="${todayISO()}" max="${todayISO()}"></div>`;
+  } else {
+    h+=`<div class="form-grp"><label class="form-lbl">📅 日期</label>
+      <div style="padding:11px 13px;background:var(--bg);border-radius:11px;font-size:14px;color:var(--sub);">${ex.date||'—'} <span style="font-size:10px;">（不可更改）</span></div></div>`;
+  }
+  if(cat.type==='transactions'){
+    const existDir=existing?txDirection(existing):'withdraw';
+    const existCurr=existing?(Number(ex.ntd||0)!==0?'money':'time'):'money';
+    const existAmt=existing?Math.abs(Number(ex.ntd||0)||Number(ex.mins||0)):0;
+    h+=`<div class="form-grp"><label class="form-lbl">操作類型</label>
+      <div class="tog-row">
+        <button class="tog-btn ${existDir==='withdraw'?'active ':''}t-org" id="togTxA" onclick="setTxTog('withdraw')">💸 Withdraw</button>
+        <button class="tog-btn ${existDir==='deposit'?'active ':''}t-green" id="togTxB" onclick="setTxTog('deposit')">💰 Deposit</button>
+      </div></div>`;
+    h+=`<div class="form-grp"><label class="form-lbl">貨幣類型</label>
+      <div class="tog-row">
+        <button class="tog-btn ${existCurr==='money'?'active ':''}t-teal" id="togCurA" onclick="setTxCurr('money')">💰 NTD</button>
+        <button class="tog-btn ${existCurr==='time'?'active ':''}t-teal" id="togCurB" onclick="setTxCurr('time')">⏱ Mins</button>
+      </div></div>`;
+    h+=`<div class="form-grp"><label class="form-lbl">金額（輸入正數）</label>
+      <input type="number" class="amt-inp" id="fAmount" placeholder="0" min="0" step="10" value="${existAmt||''}">
+      <div class="tx-hint-box ${existDir}" id="txHintBox">${existDir==='withdraw'?'💸 提領後從總額扣除':'💰 存入後累計至總額'}</div></div>`;
+  } else if(cat.type==='goal'){
+    const isPass=ex.passed!==false;
+    h+=`<div class="form-grp"><label class="form-lbl">結果</label>
+      <div class="tog-row">
+        <button class="tog-btn ${isPass?'active ':''}t-pass" id="togA" onclick="setTog('pass')">✅ Passed</button>
+        <button class="tog-btn ${!isPass?'active ':''}t-fail" id="togB" onclick="setTog('fail')">❌ Failed</button>
+      </div></div>`;
+    h+=`<div class="form-grp"><label class="form-lbl">金額（正數，自動依 Pass/Fail 決定正負）</label>
+      <div class="amt-row">
+        <div class="amt-grp"><span class="amt-lbl">NTD</span><input type="number" class="amt-inp" id="fNTD" placeholder="0" min="0" step="10" value="${existing?Math.abs(Number(ex.ntd||0)):''}"></div>
+        <div class="amt-grp"><span class="amt-lbl">Mins</span><input type="number" class="amt-inp" id="fMins" placeholder="0" min="0" step="10" value="${existing?Math.abs(Number(ex.mins||0)):''}"></div>
+      </div></div>`;
+  } else {
+    const isReward=!existing||(Number(ex.ntd||0)>=0&&Number(ex.mins||0)>=0);
+    h+=`<div class="form-grp"><label class="form-lbl">類型</label>
+      <div class="tog-row">
+        <button class="tog-btn ${isReward?'active ':''}t-green" id="togA" onclick="setBTog('reward')">👍 嘉獎</button>
+        <button class="tog-btn ${!isReward?'active ':''}t-org" id="togB" onclick="setBTog('punish')">👎 懲罰</button>
+      </div></div>`;
+    h+=`<div class="form-grp"><label class="form-lbl">金額（正數）</label>
+      <div class="amt-row">
+        <div class="amt-grp"><span class="amt-lbl">NTD</span><input type="number" class="amt-inp" id="fNTD" placeholder="0" min="0" step="10" value="${existing?Math.abs(Number(ex.ntd||0)):''}"></div>
+        <div class="amt-grp"><span class="amt-lbl">Mins</span><input type="number" class="amt-inp" id="fMins" placeholder="0" min="0" step="10" value="${existing?Math.abs(Number(ex.mins||0)):''}"></div>
+      </div></div>`;
+  }
+  h+=`<div class="form-grp"><label class="form-lbl">📝 備註（選填）</label>
+    <input type="text" class="form-inp" id="fNote" value="${ex.note||''}" placeholder="例：買樂高、主動完成…"></div>`;
+  h+=`<div class="form-aud-row">審核人：${S.currentAuditor.emoji} ${S.currentAuditor.name}</div>`;
+  h+=`<button class="save-btn" onclick="saveEntry('${cat.id}')">💾 ${existing?'更新記錄':'儲存記錄'}</button>`;
+  return h;
+}
+
+/* Toggle helpers */
+function setTog(v){document.getElementById('togA').className=`tog-btn ${v==='pass'?'active ':''}t-pass`;document.getElementById('togB').className=`tog-btn ${v==='fail'?'active ':''}t-fail`;}
+function setBTog(v){document.getElementById('togA').className=`tog-btn ${v==='reward'?'active ':''}t-green`;document.getElementById('togB').className=`tog-btn ${v==='punish'?'active ':''}t-org`;}
+function setTxTog(v){
+  document.getElementById('togTxA').className=`tog-btn ${v==='withdraw'?'active ':''}t-org`;
+  document.getElementById('togTxB').className=`tog-btn ${v==='deposit'?'active ':''}t-green`;
+  const b=document.getElementById('txHintBox');b.className=`tx-hint-box ${v}`;b.textContent=v==='withdraw'?'💸 提領後從總額扣除':'💰 存入後累計至總額';
+}
+function setTxCurr(v){
+  document.getElementById('togCurA').className=`tog-btn ${v==='money'?'active ':''}t-teal`;
+  document.getElementById('togCurB').className=`tog-btn ${v==='time'?'active ':''}t-teal`;
+}
+function setTxFilter(v){S.txFilter=v;renderDetailContent(S.currentCat);}
+
+async function saveEntry(catId){
+  if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}
+  const cat=CATS.find(c=>c.id===catId);
+  const isEdit=!!S.editingEntryId;
+  const dateVal=isEdit?null:document.getElementById('fDate')?.value;
+  if(!isEdit&&!dateVal){showToast('請選擇日期');return;}
+  let ntd=0,mins=0;
+  const note=(document.getElementById('fNote')?.value||'').trim();
+  if(cat.type==='transactions'){
+    const isW=document.getElementById('togTxA').classList.contains('active');
+    const isM=document.getElementById('togCurA').classList.contains('active');
+    const amt=Math.abs(parseFloat(document.getElementById('fAmount').value)||0);
+    if(!amt){showToast('請輸入金額');return;}
+    if(isM)ntd=(isW?-1:1)*amt; else mins=(isW?-1:1)*amt;
+  } else if(cat.type==='goal'){
+    const isFail=document.getElementById('togB').classList.contains('active');
+    const s=isFail?-1:1;
+    ntd=s*Math.abs(parseFloat(document.getElementById('fNTD').value)||0);
+    mins=s*Math.abs(parseFloat(document.getElementById('fMins').value)||0);
+    if(!ntd&&!mins){showToast('請至少輸入一個金額');return;}
+  } else {
+    const isP=document.getElementById('togB').classList.contains('active');
+    const s=isP?-1:1;
+    ntd=s*Math.abs(parseFloat(document.getElementById('fNTD').value)||0);
+    mins=s*Math.abs(parseFloat(document.getElementById('fMins').value)||0);
+    if(!ntd&&!mins){showToast('請至少輸入一個金額');return;}
+  }
+  try{
+    if(isEdit){
+      const upd={ntd,mins,auditor:S.currentAuditor.name,note,editedAt:Date.now()};
+      if(cat.type==='goal')upd.passed=document.getElementById('togA').classList.contains('active');
+      await db.ref(`/entries/${S.currentChildId}/${catId}/${S.editingEntryId}`).update(upd);
+      showToast('✅ 記錄已更新！');
+    } else {
+      const entry={date:fmtDate(dateVal),ntd,mins,auditor:S.currentAuditor.name,note,createdAt:Date.now()};
+      if(cat.type==='goal')entry.passed=document.getElementById('togA').classList.contains('active');
+      await db.ref(`/entries/${S.currentChildId}/${catId}`).push(entry);
+      showToast('✅ 記錄已儲存！');
+    }
+    S.editingEntryId=null;closeModal('modalEntry');
+  }catch(e){console.error(e);showToast('❌ 儲存失敗');}
+}
+
+/* ══ Records list ══ */
 function buildRecordsList(catId){
   const cat=CATS.find(c=>c.id===catId);
   const all=Object.entries((S.entries[S.currentChildId]||{})[catId]||{});
   let active=all.filter(([,e])=>!e.deletedAt).sort((a,b)=>(b[1].createdAt||0)-(a[1].createdAt||0));
   const deleted=all.filter(([,e])=>!!e.deletedAt).sort((a,b)=>(b[1].deletedAt||0)-(a[1].deletedAt||0));
   const canAct=!!S.currentAuditor;
-
-  /* Apply transactions filter */
-  if(cat.type==='transactions'&&S.txFilter!=='all'){
-    active=active.filter(([,e])=>txDirection(e)===S.txFilter);
-  }
+  if(cat.type==='transactions'&&S.txFilter!=='all')active=active.filter(([,e])=>txDirection(e)===S.txFilter);
 
   let html='';
   if(!active.length){
-    html+=`<div class="empty-state">📭 尚無記錄<br><span style="font-size:11px;">新增第一筆記錄開始追蹤</span></div>`;
+    html+=`<div class="empty-state">📭 尚無記錄</div>`;
   } else {
     html+=active.map(([id,e])=>{
-      const ns=amtStr(Number(e.ntd||0),'NTD');
-      const ms=amtStr(Number(e.mins||0),'mins');
-      const nc=amtCls(Number(e.ntd||0));
-      const mc=amtCls(Number(e.mins||0));
-      /* Badge */
+      const ns=amtStr(Number(e.ntd||0),'NTD'),ms=amtStr(Number(e.mins||0),'mins');
+      const nc=amtCls(Number(e.ntd||0)),mc=amtCls(Number(e.mins||0));
       let badge='';
-      if(cat.type==='transactions'){
-        const dir=txDirection(e);
-        badge=dir==='withdraw'
-          ?`<span class="tx-type-badge tx-withdraw">💸 Withdraw</span>`
-          :`<span class="tx-type-badge tx-deposit">💰 Deposit</span>`;
-      } else {
-        if(e.passed===true)  badge=`<span class="rec-badge pass">✅ Passed</span>`;
-        if(e.passed===false) badge=`<span class="rec-badge fail">❌ Failed</span>`;
-      }
+      if(cat.type==='transactions'){const dir=txDirection(e);badge=dir==='withdraw'?`<span class="tx-type-badge tx-withdraw">💸 Withdraw</span>`:`<span class="tx-type-badge tx-deposit">💰 Deposit</span>`;}
+      else{if(e.passed===true)badge=`<span class="rec-badge pass">✅ Passed</span>`;if(e.passed===false)badge=`<span class="rec-badge fail">❌ Failed</span>`;}
       const acts=canAct?`<div class="rec-actions">
-        <button class="rec-act" onclick="openAddEntry('${id}')" title="編輯">✏️</button>
-        <button class="rec-act del" onclick="confirmDelete('${catId}','${id}')" title="刪除">🗑️</button>
+        <button class="rec-act" onclick="openAddEntry('${id}')">✏️</button>
+        <button class="rec-act del" onclick="confirmDelete('${catId}','${id}')">🗑️</button>
       </div>`:'';
       return `<div class="rec-card">
-        <div class="rec-top">
-          <span class="rec-date">${e.date||'—'}</span>
-          <span class="rec-aud">· ${e.auditor||'—'}</span>
-          ${badge}${acts}
-        </div>
+        <div class="rec-top"><span class="rec-date">${e.date||'—'}</span><span class="rec-aud">· ${e.auditor||'—'}</span>${badge}${acts}</div>
         <div class="rec-amts">
           ${ns?`<span class="rec-amt ${nc}">${ns}</span>`:''}
           ${ms?`<span class="rec-amt ${mc}">${ms}</span>`:''}
@@ -520,25 +942,15 @@ function buildRecordsList(catId){
     }).join('');
   }
 
-  /* Deleted section */
   if(deleted.length){
-    html+=`<div class="sec-lbl" style="margin-top:18px;color:var(--red);">🗑️ 最近刪除（7天內可恢復）</div>`;
+    html+=`<div class="sec-lbl" style="margin-top:16px;color:var(--red);">🗑️ 最近刪除（7天內可恢復）</div>`;
     html+=deleted.map(([id,e])=>{
       const daysLeft=Math.max(1,Math.ceil((e.deletedAt+7*24*60*60*1000-Date.now())/(24*60*60*1000)));
-      const ns=amtStr(Number(e.ntd||0),'NTD');
-      const ms=amtStr(Number(e.mins||0),'mins');
+      const ns=amtStr(Number(e.ntd||0),'NTD'),ms=amtStr(Number(e.mins||0),'mins');
       return `<div class="rec-card deleted-card">
-        <div class="rec-top">
-          <span class="rec-date">${e.date||'—'}</span>
-          <span class="rec-aud">· ${e.auditor||'—'}</span>
-          <span class="days-left">${daysLeft}天後永久刪除</span>
-        </div>
+        <div class="rec-top"><span class="rec-date">${e.date||'—'}</span><span class="rec-aud">· ${e.auditor||'—'}</span><span class="days-left">${daysLeft}天後永久刪除</span></div>
         <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
-          <div style="flex:1;">
-            ${ns?`<span class="rec-amt" style="font-size:12px;color:var(--sub);">${ns}</span> `:''}
-            ${ms?`<span class="rec-amt" style="font-size:12px;color:var(--sub);">${ms}</span>`:''}
-            ${e.note?`<div class="rec-note">${e.note}</div>`:''}
-          </div>
+          <div style="flex:1;">${ns?`<span class="rec-amt" style="font-size:12px;color:var(--sub);">${ns}</span> `:''} ${ms?`<span class="rec-amt" style="font-size:12px;color:var(--sub);">${ms}</span>`:''} ${e.note?`<div class="rec-note">${e.note}</div>`:''}</div>
           ${canAct?`<button class="restore-btn" onclick="restoreEntry('${catId}','${id}')">恢復</button>`:''}
         </div>
       </div>`;
@@ -547,13 +959,11 @@ function buildRecordsList(catId){
   return html;
 }
 
-function closeDetail(){S.currentCat=null;showScreen('screenHome');}
-
-/* ══ Confirm / Delete / Restore ══ */
+/* ══ Delete / Restore ══ */
 function confirmDelete(catId,entryId){
   document.getElementById('confirmBody').innerHTML=`
     <div class="confirm-box">
-      <div class="confirm-msg">確定要刪除這筆記錄嗎？<br><span style="font-size:12px;color:var(--sub);">刪除後保留 7 天，可在「最近刪除」恢復</span></div>
+      <div class="confirm-msg">確定要刪除這筆記錄嗎？<br><span style="font-size:12px;color:var(--sub);">保留 7 天，可在「最近刪除」恢復</span></div>
       <div class="confirm-row">
         <button class="confirm-cancel" onclick="closeModal('modalConfirm')">取消</button>
         <button class="confirm-del" onclick="deleteEntry('${catId}','${entryId}')">刪除</button>
@@ -561,184 +971,20 @@ function confirmDelete(catId,entryId){
     </div>`;
   showModal('modalConfirm');
 }
-async function deleteEntry(catId,entryId){
-  closeModal('modalConfirm');
-  if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}
-  try{await db.ref(`/entries/${S.currentChildId}/${catId}/${entryId}/deletedAt`).set(Date.now());showToast('已移至刪除，7天內可恢復');}
-  catch(e){console.error(e);showToast('❌ 刪除失敗');}
-}
-async function restoreEntry(catId,entryId){
-  if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}
-  try{await db.ref(`/entries/${S.currentChildId}/${catId}/${entryId}/deletedAt`).remove();showToast('✅ 已恢復');}
-  catch(e){console.error(e);showToast('❌ 恢復失敗');}
-}
-
-/* ══ Add / Edit Entry ══ */
-function openAddEntry(entryId){
-  if(!S.currentAuditor){showToast('⚠️ 請先點「切換」選擇審核人');openAuditorModal();return;}
-  S.editingEntryId=entryId||null;
-  const cat=CATS.find(c=>c.id===S.currentCat);
-  const existing=entryId?(S.entries[S.currentChildId]?.[S.currentCat]?.[entryId]):null;
-  document.getElementById('entryTitle').textContent=entryId?`✏️ 編輯 ${cat.name}`:`${cat.emoji} 新增 ${cat.name}`;
-  document.getElementById('entryForm').innerHTML=buildForm(cat,existing);
-  showModal('modalEntry');
-}
-
-function buildForm(cat,existing){
-  const ex=existing||{};
-  let h='';
-
-  /* Date */
-  if(!existing){
-    h+=`<div class="form-grp"><label class="form-lbl">📅 日期</label>
-      <input type="date" class="form-inp" id="fDate" value="${todayISO()}" max="${todayISO()}"></div>`;
-  } else {
-    h+=`<div class="form-grp"><label class="form-lbl">📅 日期</label>
-      <div style="padding:11px 13px;background:var(--bg);border-radius:11px;font-size:14px;color:var(--sub);">${ex.date||'—'} <span style="font-size:10px;">（日期不可更改）</span></div></div>`;
-  }
-
-  /* ── TRANSACTIONS form ── */
-  if(cat.type==='transactions'){
-    const existDir=existing?txDirection(existing):'withdraw';
-    const existCurr=existing?(Number(ex.ntd||0)!==0?'money':'time'):'money';
-    const existAmt=existing?Math.abs(Number(ex.ntd||0)||Number(ex.mins||0)):0;
-    h+=`<div class="form-grp"><label class="form-lbl">操作類型</label>
-      <div class="tog-row">
-        <button class="tog-btn ${existDir==='withdraw'?'active ':''}t-org" id="togTxA" onclick="setTxTog('withdraw')">💸 Withdraw</button>
-        <button class="tog-btn ${existDir==='deposit' ?'active ':''}t-green" id="togTxB" onclick="setTxTog('deposit')">💰 Deposit</button>
-      </div></div>`;
-    h+=`<div class="form-grp"><label class="form-lbl">貨幣類型</label>
-      <div class="tog-row">
-        <button class="tog-btn ${existCurr==='money'?'active ':''}t-teal" id="togCurA" onclick="setTxCurr('money')">💰 NTD</button>
-        <button class="tog-btn ${existCurr==='time' ?'active ':''}t-teal" id="togCurB" onclick="setTxCurr('time')">⏱ Mins</button>
-      </div></div>`;
-    h+=`<div class="form-grp"><label class="form-lbl">金額（請輸入正數）</label>
-      <input type="number" class="amt-inp" id="fAmount" placeholder="0" min="0" step="10" value="${existAmt||''}">
-      <div class="tx-hint-box ${existDir}" id="txHintBox">${existDir==='withdraw'?'💸 提領後將從總額扣除':'💰 存入後將累計至總額'}</div>
-    </div>`;
-  }
-  /* ── GOAL form ── */
-  else if(cat.type==='goal'){
-    const isPass=ex.passed!==false;
-    const ntdV=existing?Math.abs(Number(ex.ntd||0)):'';
-    const minsV=existing?Math.abs(Number(ex.mins||0)):'';
-    h+=`<div class="form-grp"><label class="form-lbl">結果</label>
-      <div class="tog-row">
-        <button class="tog-btn ${isPass?'active ':''}t-pass" id="togA" onclick="setTog('pass')">✅ Passed</button>
-        <button class="tog-btn ${!isPass?'active ':''}t-fail" id="togB" onclick="setTog('fail')">❌ Failed</button>
-      </div></div>`;
-    h+=`<div class="form-grp"><label class="form-lbl">金額（輸入正數）</label>
-      <div style="display:flex;gap:8px;">
-        <div style="flex:1;"><span class="amt-lbl">NTD</span><input type="number" class="amt-inp" id="fNTD" placeholder="0" min="0" step="10" value="${ntdV}"></div>
-        <div style="flex:1;"><span class="amt-lbl">Mins</span><input type="number" class="amt-inp" id="fMins" placeholder="0" min="0" step="10" value="${minsV}"></div>
-      </div>
-      <div class="form-hint">Passed → 正向累計 · Failed → 負向扣除</div>
-    </div>`;
-  }
-  /* ── BEHAVIOR form ── */
-  else {
-    const isReward=!existing||(Number(ex.ntd||0)>=0&&Number(ex.mins||0)>=0);
-    const ntdV=existing?Math.abs(Number(ex.ntd||0)):'';
-    const minsV=existing?Math.abs(Number(ex.mins||0)):'';
-    h+=`<div class="form-grp"><label class="form-lbl">類型</label>
-      <div class="tog-row">
-        <button class="tog-btn ${isReward?'active ':''}t-green" id="togA" onclick="setBTog('reward')">👍 嘉獎</button>
-        <button class="tog-btn ${!isReward?'active ':''}t-org"  id="togB" onclick="setBTog('punish')">👎 懲罰</button>
-      </div></div>`;
-    h+=`<div class="form-grp"><label class="form-lbl">金額（輸入正數）</label>
-      <div style="display:flex;gap:8px;">
-        <div style="flex:1;"><span class="amt-lbl">NTD</span><input type="number" class="amt-inp" id="fNTD" placeholder="0" min="0" step="10" value="${ntdV}"></div>
-        <div style="flex:1;"><span class="amt-lbl">Mins</span><input type="number" class="amt-inp" id="fMins" placeholder="0" min="0" step="10" value="${minsV}"></div>
-      </div>
-      <div class="form-hint">系統依嘉獎/懲罰自動決定正負</div>
-    </div>`;
-  }
-
-  /* Note */
-  h+=`<div class="form-grp"><label class="form-lbl">📝 備註（選填）</label>
-    <input type="text" class="form-inp" id="fNote" placeholder="${cat.type==='transactions'?'例：買樂高、零用錢…':'例：主動完成、頂嘴…'}" value="${ex.note||''}"></div>`;
-  /* Auditor */
-  h+=`<div class="form-aud-row">審核人：${S.currentAuditor.emoji} ${S.currentAuditor.name}</div>`;
-  /* Save */
-  h+=`<button class="save-btn" onclick="saveEntry('${cat.id}')">💾 ${existing?'更新記錄':'儲存記錄'}</button>`;
-  return h;
-}
-
-/* Toggle helpers */
-function setTog(v){
-  document.getElementById('togA').className=`tog-btn ${v==='pass'?'active ':''}t-pass`;
-  document.getElementById('togB').className=`tog-btn ${v==='fail'?'active ':''}t-fail`;
-}
-function setBTog(v){
-  document.getElementById('togA').className=`tog-btn ${v==='reward'?'active ':''}t-green`;
-  document.getElementById('togB').className=`tog-btn ${v==='punish'?'active ':''}t-org`;
-}
-function setTxTog(v){
-  document.getElementById('togTxA').className=`tog-btn ${v==='withdraw'?'active ':''}t-org`;
-  document.getElementById('togTxB').className=`tog-btn ${v==='deposit' ?'active ':''}t-green`;
-  const box=document.getElementById('txHintBox');
-  box.className=`tx-hint-box ${v}`;
-  box.textContent=v==='withdraw'?'💸 提領後將從總額扣除':'💰 存入後將累計至總額';
-}
-function setTxCurr(v){
-  document.getElementById('togCurA').className=`tog-btn ${v==='money'?'active ':''}t-teal`;
-  document.getElementById('togCurB').className=`tog-btn ${v==='time' ?'active ':''}t-teal`;
-}
-
-/* ══ Save / Update ══ */
-async function saveEntry(catId){
-  if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}
-  const cat=CATS.find(c=>c.id===catId);
-  const isEdit=!!S.editingEntryId;
-  const dateVal=isEdit?null:document.getElementById('fDate')?.value;
-  if(!isEdit&&!dateVal){showToast('請選擇日期');return;}
-
-  let ntd=0,mins=0;
-  const note=(document.getElementById('fNote')?.value||'').trim();
-
-  if(cat.type==='transactions'){
-    const isWithdraw=document.getElementById('togTxA').classList.contains('active');
-    const isMoney=document.getElementById('togCurA').classList.contains('active');
-    const amount=Math.abs(parseFloat(document.getElementById('fAmount').value)||0);
-    if(amount===0){showToast('請輸入金額');return;}
-    const sign=isWithdraw?-1:1;
-    if(isMoney)ntd=sign*amount; else mins=sign*amount;
-  } else if(cat.type==='goal'){
-    const isFail=document.getElementById('togB').classList.contains('active');
-    const sign=isFail?-1:1;
-    ntd=sign*Math.abs(parseFloat(document.getElementById('fNTD').value)||0);
-    mins=sign*Math.abs(parseFloat(document.getElementById('fMins').value)||0);
-    if(ntd===0&&mins===0){showToast('請至少輸入一個金額');return;}
-  } else {
-    const isPunish=document.getElementById('togB').classList.contains('active');
-    const sign=isPunish?-1:1;
-    ntd=sign*Math.abs(parseFloat(document.getElementById('fNTD').value)||0);
-    mins=sign*Math.abs(parseFloat(document.getElementById('fMins').value)||0);
-    if(ntd===0&&mins===0){showToast('請至少輸入一個金額');return;}
-  }
-
-  try{
-    if(isEdit){
-      const update={ntd,mins,auditor:S.currentAuditor.name,note,editedAt:Date.now()};
-      if(cat.type==='goal')update.passed=document.getElementById('togA').classList.contains('active');
-      await db.ref(`/entries/${S.currentChildId}/${catId}/${S.editingEntryId}`).update(update);
-      showToast('✅ 記錄已更新！');
-    } else {
-      const entry={date:fmtDate(dateVal),ntd,mins,auditor:S.currentAuditor.name,note,createdAt:Date.now()};
-      if(cat.type==='goal')entry.passed=document.getElementById('togA').classList.contains('active');
-      await db.ref(`/entries/${S.currentChildId}/${catId}`).push(entry);
-      showToast('✅ 記錄已儲存！');
-    }
-    S.editingEntryId=null;
-    closeModal('modalEntry');
-  }catch(e){console.error(e);showToast('❌ 儲存失敗，請重試');}
-}
+async function deleteEntry(catId,entryId){closeModal('modalConfirm');if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}try{await db.ref(`/entries/${S.currentChildId}/${catId}/${entryId}/deletedAt`).set(Date.now());showToast('已移至刪除，7天內可恢復');}catch(e){showToast('❌ 刪除失敗');}}
+async function restoreEntry(catId,entryId){if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}try{await db.ref(`/entries/${S.currentChildId}/${catId}/${entryId}/deletedAt`).remove();showToast('✅ 已恢復');}catch(e){showToast('❌ 恢復失敗');}}
 
 /* ══ Child / Settings ══ */
 function selectChild(id){
   if(id===S.currentChildId)return;
   S.currentChildId=id;
-  db.ref(`/entries/${id}`).once('value').then(s=>{S.entries[id]=s.val()||{};attachMainListener(id);renderAll();});
+  Promise.all([
+    db.ref(`/entries/${id}`).once('value'),
+    db.ref(`/goals/${id}`).once('value')
+  ]).then(([es,gs])=>{
+    S.entries[id]=es.val()||{};S.goals[id]=gs.val()||{};
+    attachMainListener(id);attachGoalListener(id);renderAll();
+  });
 }
 function addChild(){showToast('➕ 新增孩子（Phase 4 實作）');}
 function openSettings(){showToast('⚙️ 設定頁面（Phase 4 實作）');}
@@ -775,6 +1021,11 @@ function confirmPin(){
   closeModal('modalAud');renderAudBar();
   showToast(`✅ 歡迎，${S.currentAuditor.name}！`);
   if(S.currentCat)renderDetailContent(S.currentCat);
+  /* Execute pending verify if any */
+  if(S.pendingVerify){
+    const pv=S.pendingVerify;S.pendingVerify=null;
+    setTimeout(()=>verifyGoal(pv.catId,pv.goalId,pv.result),400);
+  }
 }
 function backToStep1(){document.getElementById('step2').classList.remove('show');document.getElementById('step1').style.display='block';S.pendingAuditor=null;}
 function handleOverlay(e,id){if(e.target.classList.contains('modal-overlay'))closeModal(id);}

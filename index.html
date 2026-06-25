@@ -2,1129 +2,500 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>KidsAPP</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0e5570">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="KidsAPP">
-<link rel="apple-touch-icon" href="icon-180.png">
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KidsAPP · Style C 佈局優化</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-:root{
-  --teal:#0e5570;--teal-dim:#0a3f54;--teal-light:#e4f2f8;
-  --orange:#c94010;--orange-lt:#fde8e2;
-  --green:#1a7a40;--green-lt:#e8f8ef;
-  --amber:#a07010;--amber-lt:#fef3d8;
-  --bg:#f2f2f7;--card:#fff;--text:#1c1c1e;--sub:#8e8e93;--border:#e5e5ea;
-  --sys-green:#34c759;--red:#ff3b30;--shadow:0 1px 3px rgba(0,0,0,.08);
-}
-body{font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100vh;-webkit-font-smoothing:antialiased;}
-.screen{display:none;}.screen.active{display:block;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,'SF Pro Display',sans-serif;background:radial-gradient(ellipse at top,#0d2035 0%,#070d18 60%);min-height:100vh;padding:24px 10px 48px;color:#fff;}
 
-/* ── Navbar ── */
-.navbar{background:var(--teal);color:#fff;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.22);}
-.nav-title{font-size:17px;font-weight:700;}
-.nav-btn{width:32px;height:32px;border-radius:9px;border:none;background:rgba(255,255,255,.18);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.nav-back{background:none;border:none;color:#fff;font-size:15px;font-weight:500;cursor:pointer;padding:0;opacity:.9;}
-.nav-center{display:flex;align-items:center;gap:6px;font-size:15px;font-weight:600;}
-.nav-badges{display:flex;gap:4px;margin-left:auto;}
-.nav-badge{background:rgba(255,255,255,.2);color:#fff;font-size:9px;padding:2px 8px;border-radius:8px;white-space:nowrap;}
+h1{text-align:center;font-size:17px;font-weight:700;margin-bottom:3px;letter-spacing:-.3px;}
+.sub{text-align:center;font-size:11px;opacity:.4;margin-bottom:20px;}
 
-/* ── Tabs ── */
-.tabs-bar{background:var(--teal-dim);padding:8px 12px;}
-.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;}
-.tabs::-webkit-scrollbar{display:none;}
-.ctab{flex-shrink:0;padding:5px 13px;border-radius:14px;font-size:12px;font-weight:600;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px;}
-.ctab.active{background:#fff;color:var(--teal);border-color:#fff;}
-.ctab img{width:20px;height:20px;border-radius:50%;object-fit:cover;}
-.ctab-add{flex-shrink:0;padding:5px 10px;border-radius:14px;font-size:15px;border:1.5px dashed rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.5);cursor:pointer;margin-left:auto;}
-
-/* ── Content ── */
-.content{padding:12px 14px 50px;}
-
-/* ── Auditor bar ── */
-.aud-bar{background:var(--card);border-radius:11px;padding:8px 12px;display:flex;align-items:center;gap:6px;margin-bottom:10px;border:1px solid var(--border);box-shadow:var(--shadow);}
-.aud-dot{width:7px;height:7px;border-radius:50%;background:var(--sub);flex-shrink:0;}
-.aud-dot.on{background:var(--sys-green);}
-.aud-lbl,.aud-nm{font-size:12px;color:var(--sub);}
-.aud-nm{font-weight:600;color:var(--teal);}
-.aud-switch{margin-left:auto;font-size:11px;padding:3px 9px;background:var(--teal-light);color:var(--teal);border-radius:7px;border:none;cursor:pointer;font-weight:600;}
-
-/* ── Profile card ── */
-.profile-card{background:var(--card);border-radius:16px;padding:14px;display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid var(--border);position:relative;overflow:hidden;}
-.profile-card::before{content:'';position:absolute;left:0;top:0;width:4px;height:100%;background:var(--teal);}
-.avatar-box{width:64px;height:64px;border-radius:13px;background:var(--teal-light);border:2px solid var(--teal);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:30px;overflow:hidden;}
-.avatar-box img{width:100%;height:100%;object-fit:cover;display:block;}
-.p-right{flex:1;}
-.p-name{font-size:16px;font-weight:700;margin-bottom:6px;}
-.bal-ntd{font-size:30px;font-weight:800;color:var(--teal);line-height:1;letter-spacing:-.5px;display:flex;align-items:baseline;gap:4px;}
-.bal-mins{font-size:24px;font-weight:800;color:var(--orange);line-height:1.2;margin-top:3px;letter-spacing:-.3px;display:flex;align-items:baseline;gap:4px;}
-.b-unit{font-size:11px;font-weight:400;color:var(--sub);}
+/* ── improvement badges ── */
+.improvements{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:22px;}
+.imp{font-size:10px;padding:4px 12px;border-radius:20px;background:rgba(48,213,245,.1);border:1px solid rgba(48,213,245,.2);color:#30d5f5;}
 
 /* ── Section label ── */
-.sec-lbl{font-size:10px;font-weight:700;color:var(--sub);letter-spacing:.6px;text-transform:uppercase;padding:0 2px;margin-bottom:7px;}
+.section-lbl{text-align:center;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;opacity:.35;margin:16px 0 12px;}
 
-/* ── Category grid ── */
-.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
-.cat-tile{background:var(--card);border-radius:13px;padding:11px;cursor:pointer;border:1px solid var(--border);box-shadow:var(--shadow);transition:transform .1s;-webkit-user-select:none;user-select:none;}
-.cat-tile:active{transform:scale(.96);}
-.tile-emoji{font-size:24px;margin-bottom:5px;}
-.tile-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;}
-.tile-ntd,.tile-mins{font-size:11px;font-weight:600;}
+/* ── Phones row ── */
+.phones{display:flex;gap:14px;justify-content:center;overflow-x:auto;padding:4px 4px 16px;flex-wrap:nowrap;}
 
-/* ── Goal cards ── */
-.goal-section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
-.add-goal-btn{font-size:12px;font-weight:600;color:var(--teal);background:var(--teal-light);border:none;border-radius:8px;padding:4px 10px;cursor:pointer;}
-.goal-card{background:var(--card);border-radius:14px;padding:13px;margin-bottom:8px;border:1px solid var(--border);box-shadow:var(--shadow);}
-.goal-card.completed{background:#fafafa;opacity:.75;border-style:dashed;}
-.goal-freq-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
-.goal-freq-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:7px;background:var(--teal-light);color:var(--teal);}
-.goal-freq-badge.recurring{background:var(--amber-lt);color:var(--amber);}
-.goal-desc{font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;line-height:1.4;}
-.goal-rewards{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
-.goal-reward-pill{font-size:11px;font-weight:600;padding:3px 9px;border-radius:8px;}
-.reward-pass{background:var(--green-lt);color:var(--green);}
-.reward-fail{background:var(--orange-lt);color:var(--orange);}
-.goal-verify-row{display:flex;gap:6px;}
-.btn-pass{flex:1;padding:9px;background:var(--green-lt);color:var(--green);border:1.5px solid var(--green);border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;}
-.btn-fail{flex:1;padding:9px;background:var(--orange-lt);color:var(--orange);border:1.5px solid var(--orange);border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;}
-.goal-completed-badge{font-size:11px;padding:3px 9px;border-radius:8px;background:#f0f0f0;color:var(--sub);font-weight:500;margin-left:auto;}
-.no-goals{text-align:center;padding:18px;color:var(--sub);font-size:12px;background:var(--card);border-radius:12px;border:1px dashed var(--border);}
+/* ── iPhone 15 Pro ── */
+.phone-col{display:flex;flex-direction:column;align-items:center;gap:10px;flex-shrink:0;}
+.iphone{
+  width:192px;
+  background:linear-gradient(145deg,#2e2e2e 0%,#1a1a1a 50%,#242424 100%);
+  border-radius:46px;padding:9px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 30px 90px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.08);
+  position:relative;
+}
+.iphone::before{content:'';position:absolute;left:-3px;top:88px;width:3px;height:26px;background:#3a3a3a;border-radius:2px 0 0 2px;}
+.iphone::after{content:'';position:absolute;right:-3px;top:108px;width:3px;height:48px;background:#3a3a3a;border-radius:0 2px 2px 0;}
+.screen{width:174px;height:378px;border-radius:38px;overflow:hidden;background:#080e1a;position:relative;}
+.island{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:70px;height:19px;background:#000;border-radius:13px;z-index:30;}
 
-/* ── Records ── */
-.add-rec-btn{width:100%;padding:12px;background:var(--card);color:var(--teal);border:1.5px solid var(--teal);border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:12px;}
-.add-rec-btn:active{background:var(--teal-light);}
-.add-rec-btn.locked{color:var(--sub);border-color:var(--border);cursor:default;}
-.rec-card{background:var(--card);border-radius:12px;padding:11px 13px;margin-bottom:7px;border:1px solid var(--border);box-shadow:var(--shadow);}
-.rec-card.deleted-card{background:#fafafa;opacity:.75;border-style:dashed;}
-.rec-top{display:flex;align-items:center;gap:5px;margin-bottom:4px;flex-wrap:wrap;}
-.rec-date{font-size:11px;color:var(--sub);font-weight:500;}
-.rec-aud{font-size:11px;color:var(--sub);}
-.tx-type-badge{font-size:10px;padding:2px 8px;border-radius:6px;font-weight:700;}
-.tx-withdraw{background:var(--orange-lt);color:var(--orange);}
-.tx-deposit{background:var(--green-lt);color:var(--green);}
-.rec-badge{font-size:10px;padding:1px 8px;border-radius:6px;font-weight:600;}
-.rec-badge.pass{background:var(--green-lt);color:var(--green);}
-.rec-badge.fail{background:var(--orange-lt);color:var(--orange);}
-.rec-actions{display:flex;gap:4px;margin-left:auto;}
-.rec-act{width:28px;height:28px;border:none;border-radius:8px;background:var(--bg);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
-.rec-act.del{background:#fff0f0;}
-.rec-amts{display:flex;gap:8px;margin-bottom:3px;}
-.rec-amt{font-size:13px;font-weight:700;}
-.pos{color:var(--teal);}.neg{color:var(--orange);}
-.rec-note,.rec-edited{font-size:11px;color:var(--sub);}
-.rec-edited{font-style:italic;}
-.restore-btn{font-size:11px;padding:4px 10px;background:var(--teal-light);color:var(--teal);border:none;border-radius:8px;cursor:pointer;font-weight:600;white-space:nowrap;}
-.days-left{font-size:10px;color:var(--red);margin-left:auto;}
-.empty-state{text-align:center;padding:32px 20px;color:var(--sub);font-size:13px;line-height:1.8;}
+/* ── Labels ── */
+.ver-name{font-size:13px;font-weight:700;color:#e8f4f8;}
+.ver-tag{font-size:10px;opacity:.45;text-align:center;max-width:180px;line-height:1.4;}
 
-/* ── Transactions ── */
-.tx-summary{display:flex;gap:6px;margin-bottom:10px;}
-.tx-sum-card{flex:1;background:var(--card);border-radius:11px;padding:9px 11px;border:1px solid var(--border);box-shadow:var(--shadow);}
-.tx-sum-label{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;}
-.tx-sum-val{font-size:12px;font-weight:700;}
-.filter-row{display:flex;gap:6px;margin-bottom:10px;}
-.filter-btn{flex:1;padding:7px;border-radius:10px;border:1.5px solid var(--border);background:var(--card);font-size:11px;font-weight:600;color:var(--sub);cursor:pointer;}
-.filter-btn.active{border-color:var(--teal);background:var(--teal-light);color:var(--teal);}
+/* ══════════════════════════════
+   SHARED DARK STYLE C elements
+══════════════════════════════ */
+.bg{background:#080e1a;}
+.nav-bar{height:54px;display:flex;align-items:flex-end;padding:0 11px 9px;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.05);}
+.app-name{font-size:13px;font-weight:700;color:#d4e8f0;flex:1;}
+.aud-chip{display:flex;align-items:center;gap:4px;background:rgba(48,213,245,.12);border:1px solid rgba(48,213,245,.25);border-radius:16px;padding:3px 8px 3px 5px;margin-right:6px;cursor:pointer;}
+.aud-av-tiny{width:18px;height:18px;border-radius:50%;background:rgba(48,213,245,.2);display:flex;align-items:center;justify-content:center;font-size:10px;overflow:hidden;}
+.aud-av-tiny img{width:100%;height:100%;object-fit:cover;display:block;}
+.aud-chip-name{font-size:9px;font-weight:600;color:#30d5f5;}
+.gear-btn{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:13px;}
 
-/* ── Settings page ── */
-.settings-section{background:var(--card);border-radius:14px;overflow:hidden;margin-bottom:14px;border:1px solid var(--border);box-shadow:var(--shadow);}
-.settings-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--border);}
-.settings-section-title{font-size:13px;font-weight:700;color:var(--text);}
-.settings-add-btn{font-size:12px;font-weight:600;color:var(--teal);background:var(--teal-light);border:none;border-radius:8px;padding:4px 10px;cursor:pointer;}
-.person-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border);}
-.person-row:last-child{border-bottom:none;}
-.person-av{width:48px;height:48px;border-radius:11px;background:var(--teal-light);border:1.5px solid var(--teal);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;overflow:hidden;}
-.person-av img{width:100%;height:100%;object-fit:cover;display:block;}
-.person-info{flex:1;min-width:0;}
-.person-name{font-size:14px;font-weight:600;color:var(--text);}
-.person-sub{font-size:11px;color:var(--sub);margin-top:1px;}
-.person-acts{display:flex;gap:6px;}
-.person-act{width:30px;height:30px;border:none;border-radius:8px;background:var(--bg);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
-.person-act.del{background:#fff0f0;}
-.settings-info{background:var(--card);border-radius:14px;padding:14px;border:1px solid var(--border);box-shadow:var(--shadow);text-align:center;}
-.settings-info-title{font-size:14px;font-weight:700;margin-bottom:4px;}
-.settings-info-sub{font-size:12px;color:var(--sub);}
+/* Scroll content */
+.scr{overflow-y:auto;height:calc(100% - 54px);scrollbar-width:none;}
+.scr::-webkit-scrollbar{display:none;}
+.pad{padding:7px 8px;}
 
-/* ── Photo picker in form ── */
-.photo-picker-area{text-align:center;margin-bottom:16px;}
-.photo-preview-box{width:90px;height:90px;border-radius:18px;background:var(--teal-light);border:2px solid var(--teal);margin:0 auto 8px;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:40px;}
-.photo-preview-box img{width:100%;height:100%;object-fit:cover;display:block;}
-.photo-pick-btn{font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;font-weight:500;}
+/* Category grid */
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:5px;}
+.ctile{background:#0e1829;border-radius:12px;padding:7px;border:1px solid rgba(48,213,245,.18);position:relative;}
+.ctile.ob{border-color:rgba(255,112,67,.2);}
+.ctile.am{border-color:rgba(255,213,79,.15);}
+.te{font-size:15px;margin-bottom:2px;}
+.tn{font-size:8px;font-weight:700;color:#b8d4e0;margin-bottom:1px;}
+.tv{font-size:8px;font-weight:600;color:#30d5f5;}
+.tv.o{color:#ff7043;}
+.tv.g{color:#66bb6a;}
+.sec{font-size:7px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:rgba(180,210,225,.35);margin:4px 0 4px 2px;}
 
-/* ── PIN change section ── */
-.pin-toggle-btn{width:100%;padding:10px 13px;background:var(--bg);border:1px solid var(--border);border-radius:10px;text-align:left;font-size:13px;color:var(--teal);cursor:pointer;font-weight:500;margin-bottom:4px;}
-.pin-change-section{background:var(--bg);border-radius:10px;padding:12px;border:1px solid var(--border);margin-bottom:12px;}
-.pin-change-input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:18px;text-align:center;letter-spacing:6px;background:#fff;color:var(--text);outline:none;margin-bottom:8px;font-family:inherit;}
-.pin-change-input:focus{border-color:var(--teal);}
+/* ══ GOAL DETAIL shared ══ */
+.goal-card-d{background:#0e1829;border-radius:11px;padding:8px;margin-bottom:4px;border:1px solid rgba(48,213,245,.15);}
+.gf-badge{font-size:8px;font-weight:700;background:rgba(48,213,245,.15);color:#30d5f5;border-radius:5px;padding:2px 7px;display:inline-block;margin-bottom:4px;}
+.gf-desc{font-size:9px;color:#c5dce8;margin-bottom:5px;line-height:1.4;}
+.gpills{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:5px;}
+.gp{font-size:8px;font-weight:600;padding:2px 6px;border-radius:5px;}
+.gpp{background:rgba(26,122,64,.4);color:#66bb6a;}
+.gpf{background:rgba(201,64,16,.3);color:#ff7043;}
+.gbtns{display:flex;gap:3px;}
+.gbp{flex:1;padding:5px;border-radius:7px;background:rgba(26,122,64,.25);border:1px solid rgba(102,187,106,.4);color:#66bb6a;font-size:8px;font-weight:700;text-align:center;}
+.gbf{flex:1;padding:5px;border-radius:7px;background:rgba(201,64,16,.2);border:1px solid rgba(255,112,67,.35);color:#ff7043;font-size:8px;font-weight:700;text-align:center;}
 
-/* ── Modal ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
-.modal-overlay.show{opacity:1;pointer-events:all;}
-.modal-sheet{background:var(--card);border-radius:22px 22px 0 0;width:100%;max-width:430px;padding:16px 18px 44px;transform:translateY(100%);transition:transform .28s cubic-bezier(.34,1.2,.64,1);max-height:90vh;overflow-y:auto;}
-.modal-overlay.show .modal-sheet{transform:translateY(0);}
-.modal-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px;}
-.modal-title{font-size:17px;font-weight:700;text-align:center;margin-bottom:14px;}
+/* ══════ VERSION 1: 星環中心 ══════ */
+/* Swipe dots */
+.swipe-dots{display:flex;align-items:center;justify-content:center;gap:5px;padding:5px 0;}
+.sdot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);}
+.sdot.on{width:18px;border-radius:3px;background:#30d5f5;}
+/* Profile V1: centered large avatar */
+.prof1{display:flex;flex-direction:column;align-items:center;padding:8px 8px 6px;gap:4px;}
+.av1{width:72px;height:72px;border-radius:50%;border:2px solid rgba(48,213,245,.5);overflow:hidden;box-shadow:0 0 24px rgba(48,213,245,.2);}
+.av1 img{width:100%;height:100%;object-fit:cover;display:block;}
+.name1{font-size:13px;font-weight:700;color:#e8f4f8;}
+/* Stats V1: two rows, same format, aligned */
+.stats1{width:100%;background:#0e1829;border-radius:11px;border:1px solid rgba(255,255,255,.06);overflow:hidden;margin-top:2px;}
+.stat1-row{display:flex;align-items:center;padding:7px 12px;gap:8px;}
+.stat1-row+.stat1-row{border-top:1px solid rgba(255,255,255,.05);}
+.stat1-icon{font-size:13px;width:20px;text-align:center;}
+.stat1-val{font-size:20px;font-weight:800;letter-spacing:-.5px;flex:1;}
+.stat1-val.t{color:#30d5f5;}
+.stat1-val.o{color:#ff7043;}
+.stat1-unit{font-size:9px;color:rgba(180,210,225,.4);font-weight:500;}
 
-/* ── Auditor list ── */
-.aud-list{display:flex;flex-direction:column;gap:8px;}
-.aud-item{display:flex;align-items:center;gap:11px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:13px;cursor:pointer;}
-.aud-item:active{background:var(--bg);}
-.aud-av{width:40px;height:40px;border-radius:11px;background:var(--teal-light);display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;flex-shrink:0;}
-.aud-av img{width:100%;height:100%;object-fit:cover;display:block;}
-.aud-item-name{font-size:14px;font-weight:600;}
-.aud-item-role{font-size:11px;color:var(--sub);}
-.aud-arrow{margin-left:auto;color:var(--border);font-size:18px;}
+/* ══════ VERSION 2: 分割頁首 ══════ */
+/* Profile V2: avatar left+name, stats right as two equal chips */
+.prof2{background:#0e1829;border-radius:14px;padding:10px;margin:6px 0;border:1px solid rgba(255,255,255,.06);}
+.prof2-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.av2-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.av2{width:52px;height:52px;border-radius:50%;border:2px solid rgba(48,213,245,.45);overflow:hidden;}
+.av2 img{width:100%;height:100%;object-fit:cover;display:block;}
+.name2{font-size:12px;font-weight:700;color:#e8f4f8;}
+.stats2{display:flex;gap:5px;}
+.stat2-chip{flex:1;background:#111d30;border-radius:9px;padding:7px 8px;border:1px solid rgba(255,255,255,.05);}
+.stat2-label{font-size:7px;color:rgba(180,210,225,.4);margin-bottom:2px;}
+.stat2-val{font-size:17px;font-weight:800;letter-spacing:-.3px;}
+.stat2-val.t{color:#30d5f5;}
+.stat2-val.o{color:#ff7043;}
+.stat2-unit{font-size:8px;color:rgba(180,210,225,.4);margin-top:1px;}
+/* Swipe V2: child name + arrows */
+.swipe2{display:flex;align-items:center;justify-content:space-between;padding:5px 10px 2px;}
+.sarrow{font-size:12px;color:rgba(48,213,245,.5);padding:2px 6px;}
+.sname2{font-size:11px;font-weight:600;color:#e8f4f8;}
+.sdots2{display:flex;gap:4px;justify-content:center;padding:3px 0;}
+.sd2{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.15);}
+.sd2.on{width:14px;border-radius:2px;background:#30d5f5;}
 
-/* ── PIN modal ── */
-.pin-section{display:none;}.pin-section.show{display:block;}
-.pin-dots{display:flex;gap:10px;justify-content:center;margin-bottom:14px;}
-.pin-dot-el{width:44px;height:44px;border-radius:11px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--sub);transition:all .1s;}
-.pin-dot-el.filled{background:var(--teal-light);border-color:var(--teal);color:var(--teal);}
-.pin-input{width:100%;padding:13px;border:1.5px solid var(--border);border-radius:13px;font-size:24px;text-align:center;letter-spacing:8px;background:var(--bg);color:var(--text);outline:none;}
-.pin-input:focus{border-color:var(--teal);}
-.pin-err{font-size:12px;color:var(--red);text-align:center;min-height:18px;margin:6px 0;}
-.pin-ok{width:100%;padding:14px;background:var(--teal);color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:600;cursor:pointer;margin-top:6px;}
-.pin-back{width:100%;padding:10px;background:transparent;color:var(--sub);border:none;font-size:13px;cursor:pointer;margin-top:4px;}
-
-/* ── Forms ── */
-.form-grp{margin-bottom:12px;}
-.form-lbl{font-size:12px;font-weight:600;color:var(--sub);margin-bottom:5px;display:block;}
-.form-inp{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:11px;font-size:14px;background:var(--bg);color:var(--text);outline:none;font-family:inherit;}
-.form-inp:focus{border-color:var(--teal);}
-textarea.form-inp{resize:none;line-height:1.5;}
-.form-hint{font-size:10px;color:var(--sub);margin-top:4px;padding-left:2px;}
-.tog-row{display:flex;gap:5px;}
-.tog-btn{flex:1;padding:9px 6px;border:1.5px solid var(--border);border-radius:10px;background:var(--bg);color:var(--sub);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;}
-.tog-btn.active.t-pass{background:var(--green-lt);border-color:var(--green);color:var(--green);}
-.tog-btn.active.t-fail{background:var(--orange-lt);border-color:var(--orange);color:var(--orange);}
-.tog-btn.active.t-teal{background:var(--teal-light);border-color:var(--teal);color:var(--teal);}
-.tog-btn.active.t-org{background:var(--orange-lt);border-color:var(--orange);color:var(--orange);}
-.tog-btn.active.t-green{background:var(--green-lt);border-color:var(--green);color:var(--green);}
-.day-grid{display:flex;gap:5px;margin-top:6px;}
-.day-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);background:var(--bg);font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--sub);}
-.day-btn.active{background:var(--teal);border-color:var(--teal);color:#fff;}
-.amt-row{display:flex;gap:8px;}
-.amt-grp{flex:1;}
-.amt-lbl{font-size:10px;font-weight:600;color:var(--sub);margin-bottom:4px;display:block;}
-.amt-inp{width:100%;padding:10px;border:1.5px solid var(--border);border-radius:10px;font-size:16px;font-weight:600;text-align:center;background:var(--bg);color:var(--text);outline:none;}
-.amt-inp:focus{border-color:var(--teal);}
-.form-aud-row{display:flex;align-items:center;gap:6px;padding:10px 13px;background:var(--bg);border-radius:10px;margin-bottom:12px;font-size:12px;color:var(--sub);}
-.save-btn{width:100%;padding:14px;background:var(--teal);color:#fff;border:none;border-radius:13px;font-size:15px;font-weight:600;cursor:pointer;}
-.save-btn:active{background:var(--teal-dim);}
-.tx-hint-box{background:var(--bg);border-radius:10px;padding:10px 13px;margin-top:8px;font-size:12px;color:var(--sub);border-left:3px solid var(--border);}
-.tx-hint-box.withdraw{border-left-color:var(--orange);color:var(--orange);}
-.tx-hint-box.deposit{border-left-color:var(--green);color:var(--green);}
-
-/* ── Confirm ── */
-.confirm-box{background:var(--card);border-radius:16px;padding:18px;margin-bottom:12px;border:1px solid var(--border);}
-.confirm-msg{font-size:14px;color:var(--text);margin-bottom:14px;line-height:1.6;text-align:center;}
-.confirm-row{display:flex;gap:8px;}
-.confirm-cancel{flex:1;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;}
-.confirm-del{flex:1;padding:12px;background:var(--red);border:none;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;color:#fff;}
-.confirm-pass{flex:1;padding:12px;background:var(--green);border:none;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;color:#fff;}
-.confirm-fail{flex:1;padding:12px;background:var(--orange);border:none;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;color:#fff;}
-
-/* ── Toast ── */
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(28,28,28,.92);color:#fff;padding:10px 20px;border-radius:22px;font-size:13px;font-weight:500;opacity:0;transition:all .22s;pointer-events:none;z-index:999;white-space:nowrap;max-width:calc(100vw - 40px);}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* ══════ VERSION 3: 懸浮卡片 ══════ */
+/* Profile V3: glassmorphism card, avatar top-center, name, stats */
+.prof3{margin:6px;border-radius:18px;padding:12px 10px;background:rgba(14,24,46,.8);backdrop-filter:blur(12px);border:1px solid rgba(48,213,245,.12);box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05);}
+.prof3-av-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;margin-bottom:9px;}
+.av3{width:64px;height:64px;border-radius:50%;overflow:hidden;border:2.5px solid rgba(48,213,245,.6);box-shadow:0 0 0 4px rgba(48,213,245,.08),0 0 20px rgba(48,213,245,.2);}
+.av3 img{width:100%;height:100%;object-fit:cover;display:block;}
+.name3{font-size:13px;font-weight:700;color:#e8f4f8;letter-spacing:-.2px;}
+/* Stats V3: two rows full width, same style */
+.stats3{border-top:1px solid rgba(255,255,255,.06);padding-top:8px;}
+.stat3-row{display:flex;align-items:baseline;padding:3px 4px;gap:0;}
+.stat3-row+.stat3-row{margin-top:2px;}
+.stat3-ico{font-size:11px;width:18px;}
+.stat3-num{font-size:21px;font-weight:800;letter-spacing:-.4px;flex:1;}
+.stat3-num.t{color:#30d5f5;}
+.stat3-num.o{color:#ff7043;}
+.stat3-unit{font-size:9px;color:rgba(180,210,225,.35);align-self:flex-end;padding-bottom:2px;}
+/* Swipe V3: child carousel strip */
+.swipe3{display:flex;align-items:center;gap:6px;padding:5px 8px 4px;overflow:hidden;}
+.schildpill{display:flex;align-items:center;gap:4px;padding:4px 9px;border-radius:12px;background:rgba(48,213,245,.15);border:1px solid rgba(48,213,245,.3);}
+.schildpill.off{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08);}
+.spfoto{width:18px;height:18px;border-radius:50%;overflow:hidden;background:rgba(48,213,245,.2);}
+.spfoto img{width:100%;height:100%;object-fit:cover;display:block;}
+.spname{font-size:9px;font-weight:600;color:#30d5f5;}
+.spname.off{color:rgba(255,255,255,.4);}
+.swipe-hint{font-size:8px;color:rgba(255,255,255,.2);margin-left:auto;}
 </style>
 </head>
 <body>
 
-<!-- Hidden photo input -->
-<input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoSelected(event)">
+<h1>KidsAPP · Style C 佈局優化</h1>
+<div class="sub">深色主題 · 四項改進套用</div>
 
-<!-- ══ SCREEN: HOME ══ -->
-<div id="screenHome" class="screen active">
-  <div class="navbar">
-    <div class="nav-title">🏅 KidsAPP</div>
-    <button class="nav-btn" onclick="openSettings()">⚙️</button>
-  </div>
-  <div class="tabs-bar"><div class="tabs" id="childTabs"></div></div>
-  <div class="content">
-    <div class="aud-bar">
-      <div class="aud-dot" id="audDot"></div>
-      <span class="aud-lbl">審核人：</span>
-      <span class="aud-nm" id="audName">未登入</span>
-      <button class="aud-switch" onclick="openAuditorModal()">切換 ›</button>
-    </div>
-    <div class="profile-card">
-      <div class="avatar-box" id="childAvatar"></div>
-      <div class="p-right">
-        <div class="p-name" id="childName">連線中…</div>
-        <div class="bal-ntd"  id="balNTD"><span>—</span><span class="b-unit">NTD</span></div>
-        <div class="bal-mins" id="balMins"><span>—</span><span class="b-unit">mins</span></div>
-      </div>
-    </div>
-    <div class="sec-lbl">🎯 Learning &amp; Tasks</div>
-    <div class="cat-grid" id="gridTop"></div>
-    <div class="sec-lbl">💳 Money &amp; Behavior</div>
-    <div class="cat-grid" id="gridBot"></div>
-  </div>
+<div class="improvements">
+  <span class="imp">① 目標單頁不捲動</span>
+  <span class="imp">② 審核人移至導覽列</span>
+  <span class="imp">③ 左右滑換帳號</span>
+  <span class="imp">④ 頭像+名字+統計重整</span>
 </div>
 
-<!-- ══ SCREEN: DETAIL ══ -->
-<div id="screenDetail" class="screen">
-  <div class="navbar">
-    <button class="nav-back" onclick="closeDetail()">‹ 返回</button>
-    <div class="nav-center" id="detailTitle"></div>
-    <div class="nav-badges" id="detailBadges"></div>
-  </div>
-  <div class="content" id="detailContent"></div>
-</div>
+<div class="section-lbl">── 首頁佈局版本選擇 ──</div>
 
-<!-- ══ SCREEN: SETTINGS ══ -->
-<div id="screenSettings" class="screen">
-  <div class="navbar">
-    <button class="nav-back" onclick="closeSettings()">‹ 返回</button>
-    <div class="nav-title">⚙️ 設定</div>
-  </div>
-  <div class="content" id="settingsContent"></div>
-</div>
+<div class="phones">
 
-<!-- ══ MODAL: AUDITOR LOGIN ══ -->
-<div class="modal-overlay" id="modalAud" onclick="handleOverlay(event,'modalAud')">
-  <div class="modal-sheet" onclick="event.stopPropagation()">
-    <div class="modal-handle"></div>
-    <div id="step1">
-      <div class="modal-title">選擇審核人</div>
-      <div class="aud-list" id="audList"></div>
-    </div>
-    <div class="pin-section" id="step2">
-      <div class="modal-title" id="pinTitle">輸入 PIN</div>
-      <div class="pin-dots" id="pinDots">
-        <div class="pin-dot-el">•</div><div class="pin-dot-el">•</div>
-        <div class="pin-dot-el">•</div><div class="pin-dot-el">•</div>
-      </div>
-      <input type="password" inputmode="numeric" maxlength="4" class="pin-input"
-             id="pinInput" placeholder="••••" oninput="handlePinInput()">
-      <div class="pin-err" id="pinErr"></div>
-      <button class="pin-ok" onclick="confirmPin()">確認登入</button>
-      <button class="pin-back" onclick="backToStep1()">← 返回</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ MODAL: PERSON (add/edit child or auditor) ══ -->
-<div class="modal-overlay" id="modalPerson" onclick="handleOverlay(event,'modalPerson')">
-  <div class="modal-sheet" onclick="event.stopPropagation()">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="personTitle">新增孩子</div>
-    <div id="personForm"></div>
-  </div>
-</div>
-
-<!-- ══ MODAL: GOAL FORM ══ -->
-<div class="modal-overlay" id="modalGoal" onclick="handleOverlay(event,'modalGoal')">
-  <div class="modal-sheet" onclick="event.stopPropagation()">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="goalModalTitle">新增目標</div>
-    <div id="goalForm"></div>
-  </div>
-</div>
-
-<!-- ══ MODAL: ENTRY FORM ══ -->
-<div class="modal-overlay" id="modalEntry" onclick="handleOverlay(event,'modalEntry')">
-  <div class="modal-sheet" onclick="event.stopPropagation()">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="entryTitle">新增記錄</div>
-    <div id="entryForm"></div>
-  </div>
-</div>
-
-<!-- ══ MODAL: CONFIRM ══ -->
-<div class="modal-overlay" id="modalConfirm" onclick="handleOverlay(event,'modalConfirm')">
-  <div class="modal-sheet" onclick="event.stopPropagation()">
-    <div class="modal-handle"></div>
-    <div id="confirmBody"></div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-/* ══ Firebase ══ */
-const FB={apiKey:"AIzaSyBCuSVVPZGb76D4OKkIklOck50Mm-wbdsA",authDomain:"kidsapp-e9a8d.firebaseapp.com",databaseURL:"https://kidsapp-e9a8d-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"kidsapp-e9a8d",storageBucket:"kidsapp-e9a8d.firebasestorage.app",messagingSenderId:"240270025549",appId:"1:240270025549:web:98777be0532c7cc97ecd04"};
-firebase.initializeApp(FB);
-const db=firebase.database();
-
-/* ══ Categories ══ */
-const CATS=[
-  {id:'vocab',       name:'Vocabulary',  emoji:'📚',type:'goal',        group:'top'},
-  {id:'school',      name:'School Exam', emoji:'📝',type:'goal',        group:'top'},
-  {id:'housework',   name:'Housework',   emoji:'🏠',type:'goal',        group:'top'},
-  {id:'sport',       name:'Sport',       emoji:'⚽',type:'goal',        group:'top'},
-  {id:'transactions',name:'Transactions',emoji:'💳',type:'transactions',group:'bot'},
-  {id:'behavior',    name:'Behavior',    emoji:'⭐',type:'mixed',       group:'bot'},
-];
-const GOAL_CATS=['vocab','school','housework','sport'];
-
-/* ══ State ══ */
-const S={
-  children:{},auditors:{},entries:{},goals:{},
-  currentChildId:null,currentCat:null,
-  currentAuditor:null,pendingAuditor:null,
-  editingEntryId:null,editingGoalId:null,
-  editingPersonType:null,editingPersonId:null,
-  pendingPhoto:null,        // compressed base64 from photo picker
-  pendingVerify:null,
-  txFilter:'all',
-  rtMain:null,rtGoal:null
-};
-
-/* ══ Date helpers ══ */
-const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const MON_MAP={Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
-function fmtDate(iso){const[y,m,d]=iso.split('-');return `${y}${MON[+m-1]}${d.padStart(2,'0')}`;}
-function todayISO(){return new Date().toISOString().split('T')[0];}
-function amtStr(v,u){return v===0?'':`${v>0?'+':''}${v.toLocaleString()} ${u}`;}
-function amtCls(v){return v>0?'pos':v<0?'neg':'';}
-function txDirection(e){const n=Number(e.ntd||0),m=Number(e.mins||0);if(n<0||m<0)return 'withdraw';if(n>0||m>0)return 'deposit';return 'unknown';}
-
-/* ══ Frequency helpers ══ */
-const DAY_NAMES=['一','二','三','四','五','六','日'];
-const WEEK_NUMS=['第一','第二','第三','第四','最後'];
-function fmtFreq(g){
-  if(g.freq==='once')  return `📅 ${g.dueDate||''}`;
-  if(g.freq==='daily') return '🔄 每天';
-  if(g.freq==='weekly'){const ds=(g.freqDays||[]).map(d=>DAY_NAMES[d]).join('、');return `🔄 每週${ds||'—'}`;}
-  if(g.freq==='monthly')return `🔄 每月${WEEK_NUMS[(g.freqWeekNum||1)-1]}週${DAY_NAMES[g.freqWeekDay||0]}`;
-  return '';
-}
-function isRecurring(g){return g.freq!=='once';}
-
-/* ══ Avatar helper ══ */
-function avatarInner(item,size=56){
-  if(item?.photoB64){
-    return `<img src="${item.photoB64}" style="width:${size}px;height:${size}px;object-fit:cover;display:block;" loading="lazy">`;
-  }
-  return `<span style="font-size:${Math.round(size*.5)}px;">${item?.emoji||'👤'}</span>`;
-}
-
-/* ══ Photo compression ══ */
-async function compressImage(file){
-  return new Promise(resolve=>{
-    const canvas=document.createElement('canvas');
-    const ctx=canvas.getContext('2d');
-    const img=new Image();
-    const url=URL.createObjectURL(file);
-    img.onload=()=>{
-      const min=Math.min(img.width,img.height);
-      const sx=(img.width-min)/2,sy=(img.height-min)/2;
-      canvas.width=canvas.height=200;
-      ctx.drawImage(img,sx,sy,min,min,0,0,200,200);
-      URL.revokeObjectURL(url);
-      resolve(canvas.toDataURL('image/jpeg',.72));
-    };
-    img.onerror=()=>{URL.revokeObjectURL(url);resolve(null);};
-    img.src=url;
-  });
-}
-
-async function handlePhotoSelected(e){
-  const file=e.target.files[0];if(!file)return;
-  showToast('壓縮照片中…',1500);
-  const b64=await compressImage(file);
-  S.pendingPhoto=b64;
-  const box=document.getElementById('photoPreviewBox');
-  if(box){box.innerHTML=b64?`<img src="${b64}" style="width:100%;height:100%;object-fit:cover;display:block;">`:`<span style="font-size:36px;">⚠️</span>`;}
-  e.target.value='';
-}
-
-function pickPhoto(){document.getElementById('photoInput').click();}
-
-/* ══ Init ══ */
-async function init(){
-  try{
-    const[as,cs]=await Promise.all([db.ref('/auditors').once('value'),db.ref('/children').once('value')]);
-    S.auditors=as.val()||{};
-    S.children=cs.val()||{};
-    S.currentChildId=Object.keys(S.children)[0]||null;
-    if(S.currentChildId){
-      const[es,gs]=await Promise.all([db.ref(`/entries/${S.currentChildId}`).once('value'),db.ref(`/goals/${S.currentChildId}`).once('value')]);
-      S.entries[S.currentChildId]=es.val()||{};
-      S.goals[S.currentChildId]=gs.val()||{};
-      await migrateWithdraw(S.currentChildId);
-      attachMainListener(S.currentChildId);
-      attachGoalListener(S.currentChildId);
-      cleanupOldDeleted();
-    }
-    renderAll();
-  }catch(err){console.error(err);showToast('⚠️ 連線失敗，請重新整理',4000);document.getElementById('childName').textContent='連線失敗';}
-}
-
-async function migrateWithdraw(cid){
-  const s=await db.ref(`/entries/${cid}/withdraw`).once('value');
-  if(!s.exists())return;
-  await db.ref(`/entries/${cid}/transactions`).update(s.val());
-  await db.ref(`/entries/${cid}/withdraw`).remove();
-}
-
-function attachMainListener(cid){
-  if(S.rtMain)db.ref(`/entries/${S.rtMain}`).off();
-  S.rtMain=cid;
-  db.ref(`/entries/${cid}`).on('value',snap=>{S.entries[cid]=snap.val()||{};renderDashboard();if(S.currentCat)renderDetailContent(S.currentCat);});
-}
-function attachGoalListener(cid){
-  if(S.rtGoal)db.ref(`/goals/${S.rtGoal}`).off();
-  S.rtGoal=cid;
-  db.ref(`/goals/${cid}`).on('value',snap=>{S.goals[cid]=snap.val()||{};if(S.currentCat&&GOAL_CATS.includes(S.currentCat))renderDetailContent(S.currentCat);});
-}
-async function cleanupOldDeleted(){
-  const cid=S.currentChildId;if(!cid)return;
-  const weekAgo=Date.now()-7*24*60*60*1000;
-  const tasks=[];
-  CATS.forEach(cat=>{Object.entries((S.entries[cid]||{})[cat.id]||{}).forEach(([id,e])=>{if(e.deletedAt&&e.deletedAt<weekAgo)tasks.push(db.ref(`/entries/${cid}/${cat.id}/${id}`).remove());});});
-  if(tasks.length)await Promise.all(tasks);
-}
-
-/* ══ Render Home ══ */
-function renderAll(){renderTabs();renderAudBar();renderDashboard();}
-
-function renderTabs(){
-  document.getElementById('childTabs').innerHTML=
-    Object.entries(S.children).map(([id,c])=>{
-      const av=c.photoB64?`<img src="${c.photoB64}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;">`:`<span>${c.emoji||'👤'}</span>`;
-      return `<button class="ctab ${id===S.currentChildId?'active':''}" onclick="selectChild('${id}')">${av} ${c.name}</button>`;
-    }).join('')+`<button class="ctab-add" onclick="goToAddChild()">＋</button>`;
-}
-
-function renderAudBar(){
-  const dot=document.getElementById('audDot'),nm=document.getElementById('audName');
-  if(S.currentAuditor){dot.classList.add('on');const a=S.currentAuditor;nm.textContent=`${a.name}`;}
-  else{dot.classList.remove('on');nm.textContent='未登入';}
-}
-
-function renderDashboard(){
-  const child=S.children[S.currentChildId];if(!child)return;
-  const av=document.getElementById('childAvatar');
-  av.innerHTML=child.photoB64?`<img src="${child.photoB64}" style="width:100%;height:100%;object-fit:cover;display:block;">`:`<span style="font-size:30px;">${child.emoji||'👤'}</span>`;
-  document.getElementById('childName').textContent=child.name;
-  const entries=S.entries[S.currentChildId]||{};
-  let ntd=0,mins=0;
-  CATS.forEach(cat=>Object.values(entries[cat.id]||{}).filter(e=>!e.deletedAt).forEach(e=>{ntd+=Number(e.ntd||0);mins+=Number(e.mins||0);}));
-  document.getElementById('balNTD').innerHTML=`<span>${ntd.toLocaleString()}</span><span class="b-unit">NTD</span>`;
-  document.getElementById('balMins').innerHTML=`<span>${mins.toLocaleString()}</span><span class="b-unit">mins</span>`;
-  renderGrid('gridTop','top',entries);
-  renderGrid('gridBot','bot',entries);
-}
-
-function renderGrid(gid,grp,entries){
-  document.getElementById(gid).innerHTML=CATS.filter(c=>c.group===grp).map(cat=>{
-    let ntd=0,mins=0;
-    Object.values(entries[cat.id]||{}).filter(e=>!e.deletedAt).forEach(e=>{ntd+=Number(e.ntd||0);mins+=Number(e.mins||0);});
-    const nc=ntd<0?'#c94010':ntd>0?'#0e5570':'#8e8e93';
-    const mc=mins<0?'#c94010':mins>0?'#0e5570':'#8e8e93';
-    return `<div class="cat-tile" onclick="openCat('${cat.id}')">
-      <div class="tile-emoji">${cat.emoji}</div>
-      <div class="tile-name">${cat.name}</div>
-      <div class="tile-ntd" style="color:${nc};">${ntd===0?'— NTD':`${ntd>0?'+':''}${ntd.toLocaleString()} NTD`}</div>
-      <div class="tile-mins" style="color:${mc};">${mins===0?'— mins':`${mins>0?'+':''}${mins.toLocaleString()} mins`}</div>
-    </div>`;
-  }).join('');
-}
-
-/* ══ Settings Page ══ */
-function openSettings(){
-  if(!S.currentAuditor){showToast('⚠️ 請先登入審核人才能進入設定');openAuditorModal();return;}
-  renderSettings();
-  showScreen('screenSettings');
-}
-function closeSettings(){showScreen('screenHome');}
-
-function renderSettings(){
-  const ch=S.children,au=S.auditors;
-  let html='';
-
-  /* Children */
-  html+=`<div class="settings-section">
-    <div class="settings-section-hdr">
-      <span class="settings-section-title">👧 孩子管理</span>
-      <button class="settings-add-btn" onclick="openPersonModal('child',null)">＋ 新增</button>
-    </div>`;
-  Object.entries(ch).forEach(([id,c])=>{
-    html+=`<div class="person-row">
-      <div class="person-av">${c.photoB64?`<img src="${c.photoB64}">`:(c.emoji||'👤')}</div>
-      <div class="person-info"><div class="person-name">${c.name}</div></div>
-      <div class="person-acts">
-        <button class="person-act" onclick="openPersonModal('child','${id}')">✏️</button>
-        <button class="person-act del" onclick="confirmDeletePerson('child','${id}','${c.name}')">🗑️</button>
-      </div>
-    </div>`;
-  });
-  html+=`</div>`;
-
-  /* Auditors */
-  html+=`<div class="settings-section">
-    <div class="settings-section-hdr">
-      <span class="settings-section-title">👤 審核人管理</span>
-      <button class="settings-add-btn" onclick="openPersonModal('auditor',null)">＋ 新增</button>
-    </div>`;
-  Object.entries(au).forEach(([id,a])=>{
-    html+=`<div class="person-row">
-      <div class="person-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div>
-      <div class="person-info">
-        <div class="person-name">${a.name}</div>
-        <div class="person-sub">${a.role||''}</div>
-      </div>
-      <div class="person-acts">
-        <button class="person-act" onclick="openPersonModal('auditor','${id}')">✏️</button>
-        <button class="person-act del" onclick="confirmDeletePerson('auditor','${id}','${a.name}')">🗑️</button>
-      </div>
-    </div>`;
-  });
-  html+=`</div>`;
-
-  /* App info */
-  html+=`<div class="settings-info">
-    <div class="settings-info-title">🏅 KidsAPP</div>
-    <div class="settings-info-sub">Phase 4 · Firebase Realtime DB</div>
-  </div>`;
-
-  document.getElementById('settingsContent').innerHTML=html;
-}
-
-/* ══ Person Modal (child / auditor) ══ */
-function openPersonModal(type,id){
-  S.editingPersonType=type;
-  S.editingPersonId=id;
-  S.pendingPhoto=null;
-  const isNew=!id;
-  const existing=id?(type==='child'?S.children[id]:S.auditors[id]):null;
-  document.getElementById('personTitle').textContent=isNew?(type==='child'?'➕ 新增孩子':'➕ 新增審核人'):(type==='child'?'✏️ 編輯孩子':'✏️ 編輯審核人');
-  document.getElementById('personForm').innerHTML=buildPersonForm(type,existing);
-  showModal('modalPerson');
-}
-
-function goToAddChild(){
-  if(!S.currentAuditor){openAuditorModal();return;}
-  openPersonModal('child',null);
-}
-
-function buildPersonForm(type,ex){
-  ex=ex||{};
-  let h='';
-
-  /* Photo picker */
-  const initImg=ex.photoB64?`<img src="${ex.photoB64}" style="width:100%;height:100%;object-fit:cover;display:block;">`:`<span style="font-size:36px;">${ex.emoji||(type==='child'?'👧':'👤')}</span>`;
-  h+=`<div class="photo-picker-area">
-    <div class="photo-preview-box" id="photoPreviewBox" onclick="pickPhoto()">${initImg}</div>
-    <button class="photo-pick-btn" onclick="pickPhoto()">📷 點擊更換照片</button>
-  </div>`;
-
-  /* Name */
-  h+=`<div class="form-grp"><label class="form-lbl">姓名</label>
-    <input type="text" class="form-inp" id="pName" value="${ex.name||''}" placeholder="${type==='child'?'例：小明':'例：Hang'}"></div>`;
-
-  if(type==='child'){
-    /* Emoji fallback */
-    h+=`<div class="form-grp"><label class="form-lbl">Emoji（無照片時顯示）</label>
-      <input type="text" class="form-inp" id="pEmoji" value="${ex.emoji||''}" placeholder="👦" style="font-size:22px;text-align:center;"></div>`;
-  } else {
-    /* Auditor fields */
-    h+=`<div class="form-grp"><label class="form-lbl">Emoji（無照片時顯示）</label>
-      <input type="text" class="form-inp" id="pEmoji" value="${ex.emoji||''}" placeholder="👩" style="font-size:22px;text-align:center;"></div>`;
-    h+=`<div class="form-grp"><label class="form-lbl">職稱</label>
-      <input type="text" class="form-inp" id="pRole" value="${ex.role||''}" placeholder="例：家長"></div>`;
-
-    if(!S.editingPersonId){
-      /* New auditor: set initial PIN */
-      h+=`<div class="form-grp"><label class="form-lbl">🔑 設定 PIN（4碼數字）</label>
-        <input type="password" inputmode="numeric" maxlength="4" class="pin-change-input" id="pNewPin" placeholder="••••">
-        <input type="password" inputmode="numeric" maxlength="4" class="pin-change-input" id="pNewPin2" placeholder="確認 PIN">
-      </div>`;
-    } else {
-      /* Edit auditor: optional PIN change */
-      h+=`<div class="form-grp">
-        <button class="pin-toggle-btn" onclick="togglePinSection()">🔑 修改 PIN ›</button>
-        <div id="pinChangeSection" style="display:none;" class="pin-change-section">
-          <div class="form-lbl" style="margin-bottom:6px;">輸入舊 PIN 驗證</div>
-          <input type="password" inputmode="numeric" maxlength="4" class="pin-change-input" id="pOldPin" placeholder="舊 PIN ••••">
-          <div class="form-lbl" style="margin-bottom:6px;">新 PIN</div>
-          <input type="password" inputmode="numeric" maxlength="4" class="pin-change-input" id="pNewPin" placeholder="新 PIN ••••">
-          <input type="password" inputmode="numeric" maxlength="4" class="pin-change-input" id="pNewPin2" placeholder="確認新 PIN ••••">
+  <!-- ══ V1: 星環中心 ══ -->
+  <div class="phone-col">
+    <div class="iphone">
+      <div class="screen bg">
+        <div class="island"></div>
+        <!-- Nav with auditor -->
+        <div class="nav-bar">
+          <span class="app-name">🏅 KidsAPP</span>
+          <div class="aud-chip">
+            <div class="aud-av-tiny"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' fill='%23081428'/%3E%3Ccircle cx='10' cy='7' r='4' fill='%2330d5f5'/%3E%3Cellipse cx='10' cy='17' rx='7' ry='5' fill='%2330d5f5'/%3E%3C/svg%3E"></div>
+            <span class="aud-chip-name">Hang</span>
+          </div>
+          <div class="gear-btn">⚙️</div>
         </div>
-      </div>`;
-    }
-  }
-
-  h+=`<button class="save-btn" onclick="savePerson()">💾 儲存</button>`;
-  return h;
-}
-
-function togglePinSection(){
-  const s=document.getElementById('pinChangeSection');
-  s.style.display=s.style.display==='none'?'block':'none';
-}
-
-async function savePerson(){
-  const type=S.editingPersonType,id=S.editingPersonId;
-  const name=(document.getElementById('pName')?.value||'').trim();
-  if(!name){showToast('請輸入姓名');return;}
-  const emoji=(document.getElementById('pEmoji')?.value||'').trim();
-
-  const data={name,emoji:emoji||(type==='child'?'👧':'👤')};
-  if(S.pendingPhoto)data.photoB64=S.pendingPhoto;
-  else if(id){
-    /* Keep existing photo if no new one selected */
-    const existing=type==='child'?S.children[id]:S.auditors[id];
-    if(existing?.photoB64)data.photoB64=existing.photoB64;
-  }
-
-  if(type==='auditor'){
-    const role=(document.getElementById('pRole')?.value||'').trim();
-    data.role=role||'家長';
-
-    const newPinEl=document.getElementById('pNewPin');
-    const newPin2El=document.getElementById('pNewPin2');
-    const oldPinEl=document.getElementById('pOldPin');
-    const newPin=newPinEl?.value||'';
-    const newPin2=newPin2El?.value||'';
-
-    if(!id){
-      /* New auditor must set PIN */
-      if(newPin.length!==4){showToast('請設定 4 碼 PIN');return;}
-      if(newPin!==newPin2){showToast('兩次 PIN 不一致');return;}
-      data.pin=newPin;
-    } else {
-      /* Edit: keep existing PIN unless changing */
-      const existing=S.auditors[id];
-      data.pin=existing?.pin||'0000';
-      if(newPin){
-        /* Changing PIN: verify old PIN */
-        const oldPin=oldPinEl?.value||'';
-        if(oldPin!==existing?.pin){showToast('❌ 舊 PIN 錯誤');return;}
-        if(newPin.length!==4){showToast('新 PIN 必須為 4 碼');return;}
-        if(newPin!==newPin2){showToast('兩次新 PIN 不一致');return;}
-        data.pin=newPin;
-      }
-    }
-  }
-
-  try{
-    const path=type==='child'?'/children':'/auditors';
-    if(id){
-      await db.ref(`${path}/${id}`).update(data);
-    } else {
-      const newRef=db.ref(path).push();
-      await newRef.set(data);
-    }
-    /* Reload local data */
-    const snap=await db.ref(path).once('value');
-    if(type==='child'){S.children=snap.val()||{};}
-    else{S.auditors=snap.val()||{};}
-    S.pendingPhoto=null;
-    closeModal('modalPerson');
-    renderSettings();
-    renderAll();
-    showToast('✅ 儲存成功！');
-  }catch(e){console.error(e);showToast('❌ 儲存失敗');}
-}
-
-function confirmDeletePerson(type,id,name){
-  const typeLabel=type==='child'?'孩子':'審核人';
-  const warn=type==='child'?'<br><span style="font-size:12px;color:var(--red);">⚠️ 同時刪除該孩子所有記錄與目標</span>':'';
-  document.getElementById('confirmBody').innerHTML=`
-    <div class="confirm-box">
-      <div class="confirm-msg">確定刪除${typeLabel}「${name}」？${warn}</div>
-      <div class="confirm-row">
-        <button class="confirm-cancel" onclick="closeModal('modalConfirm')">取消</button>
-        <button class="confirm-del" onclick="deletePerson('${type}','${id}')">刪除</button>
+        <div class="scr">
+          <!-- Swipe dots indicator -->
+          <div class="swipe-dots">
+            <div class="sdot"></div>
+            <div class="sdot on"></div>
+            <div class="sdot"></div>
+            <div style="font-size:7px;color:rgba(255,255,255,.2);margin-left:4px;">滑動切換</div>
+          </div>
+          <!-- Profile: centered avatar + name + stats -->
+          <div class="prof1">
+            <div class="av1">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23081428'/%3E%3Ccircle cx='40' cy='28' r='18' fill='%2330d5f5'/%3E%3Cellipse cx='40' cy='68' rx='28' ry='20' fill='%2330d5f5'/%3E%3C/svg%3E">
+            </div>
+            <div class="name1">小明</div>
+            <div class="stats1">
+              <div class="stat1-row">
+                <div class="stat1-icon">💰</div>
+                <div class="stat1-val t">1,800</div>
+                <div class="stat1-unit">NTD</div>
+              </div>
+              <div class="stat1-row">
+                <div class="stat1-icon">⏱</div>
+                <div class="stat1-val o">1,120</div>
+                <div class="stat1-unit">mins</div>
+              </div>
+            </div>
+          </div>
+          <div class="pad">
+            <div class="sec">🎯 Learning & Tasks</div>
+            <div class="cgrid">
+              <div class="ctile"><div class="te">📚</div><div class="tn">Vocabulary</div><div class="tv">+500 NTD</div><div class="tv">+200 mins</div></div>
+              <div class="ctile"><div class="te">📝</div><div class="tn">School Exam</div><div class="tv">+800 NTD</div></div>
+              <div class="ctile"><div class="te">🏠</div><div class="tn">Housework</div><div class="tv">+300 NTD</div><div class="tv">+150 mins</div></div>
+              <div class="ctile"><div class="te">⚽</div><div class="tn">Sport</div><div class="tv">+200 NTD</div><div class="tv">+100 mins</div></div>
+            </div>
+            <div class="sec">💳 Money & Behavior</div>
+            <div class="cgrid">
+              <div class="ctile ob"><div class="te">💳</div><div class="tn">Transactions</div><div class="tv o">-200 NTD</div></div>
+              <div class="ctile am"><div class="te">⭐</div><div class="tn">Behavior</div><div class="tv g">+100 NTD</div></div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>`;
-  showModal('modalConfirm');
-}
+    </div>
+    <div class="ver-name">V1 · 星環中心</div>
+    <div class="ver-tag">大頭像居中 · 數字等行</div>
+  </div>
 
-async function deletePerson(type,id){
-  closeModal('modalConfirm');
-  try{
-    if(type==='child'){
-      await Promise.all([
-        db.ref(`/children/${id}`).remove(),
-        db.ref(`/entries/${id}`).remove(),
-        db.ref(`/goals/${id}`).remove(),
-      ]);
-      const snap=await db.ref('/children').once('value');
-      S.children=snap.val()||{};
-      S.entries[id]={};S.goals[id]={};
-      S.currentChildId=Object.keys(S.children)[0]||null;
-      if(S.currentChildId){
-        const[es,gs]=await Promise.all([db.ref(`/entries/${S.currentChildId}`).once('value'),db.ref(`/goals/${S.currentChildId}`).once('value')]);
-        S.entries[S.currentChildId]=es.val()||{};S.goals[S.currentChildId]=gs.val()||{};
-        attachMainListener(S.currentChildId);attachGoalListener(S.currentChildId);
-      }
-    } else {
-      await db.ref(`/auditors/${id}`).remove();
-      const snap=await db.ref('/auditors').once('value');
-      S.auditors=snap.val()||{};
-      if(S.currentAuditor?.id===id)S.currentAuditor=null;
-    }
-    renderSettings();renderAll();
-    showToast('✅ 已刪除');
-  }catch(e){console.error(e);showToast('❌ 刪除失敗');}
-}
-
-/* ══ Detail Screen ══ */
-function openCat(catId){
-  S.currentCat=catId;S.txFilter='all';
-  const cat=CATS.find(c=>c.id===catId);
-  const entries=S.entries[S.currentChildId]||{};
-  let ntd=0,mins=0;
-  Object.values(entries[catId]||{}).filter(e=>!e.deletedAt).forEach(e=>{ntd+=Number(e.ntd||0);mins+=Number(e.mins||0);});
-  document.getElementById('detailTitle').innerHTML=`<span>${cat.emoji}</span><span>${cat.name}</span>`;
-  const b=[];
-  if(ntd!==0)b.push(`<span class="nav-badge">${ntd>0?'+':''}${ntd.toLocaleString()} NTD</span>`);
-  if(mins!==0)b.push(`<span class="nav-badge">${mins>0?'+':''}${mins.toLocaleString()} mins</span>`);
-  document.getElementById('detailBadges').innerHTML=b.join('');
-  renderDetailContent(catId);
-  showScreen('screenDetail');
-}
-
-function closeDetail(){S.currentCat=null;showScreen('screenHome');}
-
-function renderDetailContent(catId){
-  const cat=CATS.find(c=>c.id===catId);
-  let html='';
-  if(cat.type==='goal'){
-    const goals=S.goals[S.currentChildId]?.[catId]||{};
-    const active=Object.entries(goals).filter(([,g])=>g.active!==false).sort((a,b)=>a[1].createdAt-b[1].createdAt);
-    const completed=Object.entries(goals).filter(([,g])=>g.active===false).sort((a,b)=>(b[1].completedAt||0)-(a[1].completedAt||0));
-    html+=`<div class="goal-section-hdr">
-      <div class="sec-lbl" style="margin-bottom:0;">🎯 Active Goals</div>
-      <button class="add-goal-btn" onclick="openAddGoal(null,'${catId}')">＋ 新增目標</button>
-    </div>`;
-    html+=active.length?active.map(([gid,g])=>buildGoalCard(gid,g,catId,false)).join(''):`<div class="no-goals">目前沒有進行中的目標</div>`;
-    if(completed.length){html+=`<div class="sec-lbl" style="margin-top:16px;color:var(--sub);">✅ 已完成目標</div>`;html+=completed.slice(0,5).map(([gid,g])=>buildGoalCard(gid,g,catId,true)).join('');}
-    html+=`<div style="margin-top:16px;"><div class="sec-lbl">📋 紀錄歷史</div><button class="add-rec-btn ${S.currentAuditor?'':'locked'}" onclick="openAddEntry(null)">${S.currentAuditor?'＋ 手動新增記錄':'🔐 請先登入審核人'}</button>${buildRecordsList(catId)}</div>`;
-  } else if(cat.type==='transactions'){
-    html+=`<button class="add-rec-btn ${S.currentAuditor?'':'locked'}" onclick="openAddEntry(null)">${S.currentAuditor?'＋ 新增記錄':'🔐 請先登入審核人'}</button>`;
-    const entries=Object.values((S.entries[S.currentChildId]||{})[catId]||{}).filter(e=>!e.deletedAt);
-    let wNTD=0,wMins=0,dNTD=0,dMins=0;
-    entries.forEach(e=>{const n=Number(e.ntd||0),m=Number(e.mins||0);if(n<0)wNTD+=n;else if(n>0)dNTD+=n;if(m<0)wMins+=m;else if(m>0)dMins+=m;});
-    html+=`<div class="tx-summary">
-      <div class="tx-sum-card"><div class="tx-sum-label" style="color:var(--orange);">💸 Withdraw</div>${wNTD!==0?`<div class="tx-sum-val neg">${wNTD.toLocaleString()} NTD</div>`:''}${wMins!==0?`<div class="tx-sum-val neg">${wMins.toLocaleString()} mins</div>`:''} ${wNTD===0&&wMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}</div>
-      <div class="tx-sum-card"><div class="tx-sum-label" style="color:var(--green);">💰 Deposit</div>${dNTD!==0?`<div class="tx-sum-val pos">+${dNTD.toLocaleString()} NTD</div>`:''}${dMins!==0?`<div class="tx-sum-val pos">+${dMins.toLocaleString()} mins</div>`:''} ${dNTD===0&&dMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}</div>
-    </div>`;
-    html+=`<div class="filter-row">
-      <button class="filter-btn ${S.txFilter==='all'?'active':''}" onclick="setTxFilter('all')">全部</button>
-      <button class="filter-btn ${S.txFilter==='withdraw'?'active':''}" onclick="setTxFilter('withdraw')">💸 Withdraw</button>
-      <button class="filter-btn ${S.txFilter==='deposit'?'active':''}" onclick="setTxFilter('deposit')">💰 Deposit</button>
-    </div>`;
-    html+=`<div class="sec-lbl">紀錄歷史</div>${buildRecordsList(catId)}`;
-  } else {
-    html+=`<button class="add-rec-btn ${S.currentAuditor?'':'locked'}" onclick="openAddEntry(null)">${S.currentAuditor?'＋ 新增記錄':'🔐 請先登入審核人'}</button><div class="sec-lbl">紀錄歷史</div>${buildRecordsList(catId)}`;
-  }
-  document.getElementById('detailContent').innerHTML=html;
-}
-
-/* ══ Goal Cards & CRUD ══ */
-function buildGoalCard(gid,g,catId,isCompleted){
-  const freqBadge=`<span class="goal-freq-badge ${isRecurring(g)?'recurring':''}">${fmtFreq(g)}</span>`;
-  const pills=[];
-  if(g.rewardNTD) pills.push(`<span class="goal-reward-pill reward-pass">Pass +${g.rewardNTD} NTD</span>`);
-  if(g.rewardMins)pills.push(`<span class="goal-reward-pill reward-pass">Pass +${g.rewardMins} mins</span>`);
-  if(g.penaltyNTD) pills.push(`<span class="goal-reward-pill reward-fail">Fail -${g.penaltyNTD} NTD</span>`);
-  if(g.penaltyMins)pills.push(`<span class="goal-reward-pill reward-fail">Fail -${g.penaltyMins} mins</span>`);
-  let bottom=isCompleted?`<div style="display:flex;"><span class="goal-completed-badge">${g.completedResult==='pass'?'✅ Passed':'❌ Failed'}</span></div>`:
-    `<div class="goal-verify-row">
-      <button class="btn-pass" onclick="verifyGoal('${catId}','${gid}','pass')" ${S.currentAuditor?'':'disabled style="opacity:.5;"'}>✅ Passed</button>
-      <button class="btn-fail" onclick="verifyGoal('${catId}','${gid}','fail')" ${S.currentAuditor?'':'disabled style="opacity:.5;"'}>❌ Failed</button>
-      <button style="width:32px;border:none;background:var(--bg);border-radius:8px;cursor:pointer;font-size:14px;" onclick="openAddGoal('${gid}','${catId}')">✏️</button>
-    </div>`;
-  return `<div class="goal-card ${isCompleted?'completed':''}">
-    <div class="goal-freq-row">${freqBadge}</div>
-    <div class="goal-desc">${g.desc||'—'}</div>
-    <div class="goal-rewards">${pills.join('')||'<span style="font-size:11px;color:var(--sub);">（無獎懲設定）</span>'}</div>
-    ${bottom}
-  </div>`;
-}
-
-function openAddGoal(goalId,catId){
-  if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');openAuditorModal();return;}
-  S.editingGoalId=goalId||null;
-  const existing=goalId?(S.goals[S.currentChildId]?.[catId||S.currentCat]?.[goalId]):null;
-  document.getElementById('goalModalTitle').textContent=goalId?'編輯目標':'＋ 新增目標';
-  document.getElementById('goalForm').innerHTML=buildGoalForm(catId||S.currentCat,existing);
-  showModal('modalGoal');
-}
-
-function buildGoalForm(catId,ex){
-  ex=ex||{};const freq=ex.freq||'once';
-  const freqs=['once','daily','weekly','monthly'],freqLabels=['單次','每天','每週','每月'];
-  let h=`<div class="form-grp"><label class="form-lbl">📋 目標描述</label>
-    <textarea class="form-inp" id="gDesc" rows="2" placeholder="${goalPlaceholder(catId)}">${ex.desc||''}</textarea></div>`;
-  h+=`<div class="form-grp"><label class="form-lbl">🔄 頻率</label><div class="tog-row">
-    ${freqs.map((f,i)=>`<button class="tog-btn ${freq===f?'active t-teal':''}" id="gFreq_${f}" onclick="setGoalFreq('${f}')">${freqLabels[i]}</button>`).join('')}
-  </div></div>`;
-  h+=`<div id="freqDetails">${buildFreqDetails(freq,ex)}</div>`;
-  h+=`<div class="form-grp"><label class="form-lbl">🎁 Pass 獎勵</label><div class="amt-row">
-    <div class="amt-grp"><span class="amt-lbl">+NTD</span><input type="number" class="amt-inp" id="gRNTD" placeholder="0" min="0" step="10" value="${ex.rewardNTD||''}"></div>
-    <div class="amt-grp"><span class="amt-lbl">+Mins</span><input type="number" class="amt-inp" id="gRMins" placeholder="0" min="0" step="10" value="${ex.rewardMins||''}"></div>
-  </div></div>`;
-  h+=`<div class="form-grp"><label class="form-lbl">⚠️ Fail 懲罰（選填）</label><div class="amt-row">
-    <div class="amt-grp"><span class="amt-lbl">-NTD</span><input type="number" class="amt-inp" id="gPNTD" placeholder="0" min="0" step="10" value="${ex.penaltyNTD||''}"></div>
-    <div class="amt-grp"><span class="amt-lbl">-Mins</span><input type="number" class="amt-inp" id="gPMins" placeholder="0" min="0" step="10" value="${ex.penaltyMins||''}"></div>
-  </div></div>`;
-  h+=`<div class="form-aud-row">建立者：${S.currentAuditor.name}</div>`;
-  h+=`<button class="save-btn" onclick="saveGoal('${catId}')">💾 ${ex.desc?'更新目標':'儲存目標'}</button>`;
-  return h;
-}
-
-function buildFreqDetails(freq,ex){
-  ex=ex||{};
-  if(freq==='once')return `<div class="form-grp"><label class="form-lbl">📅 截止日期</label><input type="date" class="form-inp" id="gDueDate" value="${ex.dueDate||todayISO()}"></div>`;
-  if(freq==='daily')return `<div class="form-grp"><div style="padding:10px;background:var(--teal-light);border-radius:10px;font-size:12px;color:var(--teal);text-align:center;">📅 每天執行</div></div>`;
-  if(freq==='weekly'){const sel=ex.freqDays||[];return `<div class="form-grp"><label class="form-lbl">選擇星期（可複選）</label><div class="day-grid" id="dayGrid">${DAY_NAMES.map((d,i)=>`<button class="day-btn ${sel.includes(i)?'active':''}" data-day="${i}" onclick="toggleDay(this)">${d}</button>`).join('')}</div></div>`;}
-  if(freq==='monthly'){const wn=ex.freqWeekNum||1,wd=ex.freqWeekDay||0;return `<div class="form-grp"><label class="form-lbl">執行時間</label><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:13px;">每月</span><select class="form-inp" id="gWeekNum" style="width:auto;padding:8px 12px;">${WEEK_NUMS.map((w,i)=>`<option value="${i+1}" ${wn==i+1?'selected':''}>${w}</option>`).join('')}</select><span style="font-size:13px;">週</span><select class="form-inp" id="gWeekDay" style="width:auto;padding:8px 12px;">${['週一','週二','週三','週四','週五','週六','週日'].map((d,i)=>`<option value="${i}" ${wd==i?'selected':''}>${d}</option>`).join('')}</select></div></div>`;}
-  return '';
-}
-
-function goalPlaceholder(catId){return {vocab:'例：背10個新單字',school:'例：數學考試 ≥ 90分',housework:'例：清洗碗盤',sport:'例：跑步 30 分鐘'}[catId]||'請輸入目標描述';}
-function setGoalFreq(f){document.querySelectorAll('[id^="gFreq_"]').forEach(b=>{const bf=b.id.replace('gFreq_','');b.className=`tog-btn ${bf===f?'active t-teal':''}`;});const ex={};const dd=document.getElementById('gDueDate');if(dd)ex.dueDate=dd.value;const wd=document.getElementById('gWeekDay');if(wd)ex.freqWeekDay=parseInt(wd.value);const wn=document.getElementById('gWeekNum');if(wn)ex.freqWeekNum=parseInt(wn.value);document.getElementById('freqDetails').innerHTML=buildFreqDetails(f,ex);}
-function toggleDay(btn){btn.classList.toggle('active');}
-
-async function saveGoal(catId){
-  if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}
-  const desc=(document.getElementById('gDesc')?.value||'').trim();
-  if(!desc){showToast('請輸入目標描述');return;}
-  let freq='once';['once','daily','weekly','monthly'].forEach(f=>{if(document.getElementById(`gFreq_${f}`)?.classList.contains('active'))freq=f;});
-  const goal={desc,freq,active:true,rewardNTD:Math.abs(parseFloat(document.getElementById('gRNTD')?.value)||0),rewardMins:Math.abs(parseFloat(document.getElementById('gRMins')?.value)||0),penaltyNTD:Math.abs(parseFloat(document.getElementById('gPNTD')?.value)||0),penaltyMins:Math.abs(parseFloat(document.getElementById('gPMins')?.value)||0),createdBy:S.currentAuditor.name};
-  if(freq==='once')goal.dueDate=document.getElementById('gDueDate')?.value||todayISO();
-  if(freq==='weekly'){goal.freqDays=[...document.querySelectorAll('.day-btn.active')].map(b=>parseInt(b.dataset.day));if(!goal.freqDays.length){showToast('請選擇至少一天');return;}}
-  if(freq==='monthly'){goal.freqWeekNum=parseInt(document.getElementById('gWeekNum')?.value||1);goal.freqWeekDay=parseInt(document.getElementById('gWeekDay')?.value||0);}
-  try{
-    if(S.editingGoalId){goal.updatedAt=Date.now();await db.ref(`/goals/${S.currentChildId}/${catId}/${S.editingGoalId}`).update(goal);}
-    else{goal.createdAt=Date.now();await db.ref(`/goals/${S.currentChildId}/${catId}`).push(goal);}
-    S.editingGoalId=null;closeModal('modalGoal');showToast('✅ 目標已儲存！');
-  }catch(e){console.error(e);showToast('❌ 儲存失敗');}
-}
-
-/* ══ Goal Verification ══ */
-function verifyGoal(catId,goalId,result){
-  if(!S.currentAuditor){S.pendingVerify={catId,goalId,result};showToast('⚠️ 請先登入審核人');openAuditorModal();return;}
-  const goal=S.goals[S.currentChildId]?.[catId]?.[goalId];if(!goal)return;
-  const ntd=result==='pass'?(goal.rewardNTD||0):-(goal.penaltyNTD||0);
-  const mins=result==='pass'?(goal.rewardMins||0):-(goal.penaltyMins||0);
-  const hasAmt=ntd!==0||mins!==0;
-  document.getElementById('confirmBody').innerHTML=`
-    <div class="confirm-box">
-      <div style="font-size:28px;text-align:center;margin-bottom:8px;">${result==='pass'?'✅':'❌'}</div>
-      <div class="confirm-msg">
-        <strong>${result==='pass'?'Passed':'Failed'}</strong><br>
-        <span style="font-size:12px;color:var(--sub);">${goal.desc}</span>
-        ${hasAmt?`<div style="display:flex;gap:8px;justify-content:center;margin:8px 0;">
-          ${ntd!==0?`<span class="goal-reward-pill ${ntd>0?'reward-pass':'reward-fail'}">${ntd>0?'+':''}${ntd} NTD</span>`:''}
-          ${mins!==0?`<span class="goal-reward-pill ${mins>0?'reward-pass':'reward-fail'}">${mins>0?'+':''}${mins} mins</span>`:''}
-        </div>`:`<div style="color:var(--sub);font-size:12px;margin:8px 0;">（本次無獎懲記錄）</div>`}
-        <span style="font-size:11px;color:var(--sub);">審核人：${S.currentAuditor.name}</span>
+  <!-- ══ V2: 分割頁首 ══ -->
+  <div class="phone-col">
+    <div class="iphone">
+      <div class="screen bg">
+        <div class="island"></div>
+        <div class="nav-bar">
+          <span class="app-name">🏅 KidsAPP</span>
+          <div class="aud-chip">
+            <div class="aud-av-tiny"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' fill='%23081428'/%3E%3Ccircle cx='10' cy='7' r='4' fill='%2330d5f5'/%3E%3Cellipse cx='10' cy='17' rx='7' ry='5' fill='%2330d5f5'/%3E%3C/svg%3E"></div>
+            <span class="aud-chip-name">Hang ▾</span>
+          </div>
+          <div class="gear-btn">⚙️</div>
+        </div>
+        <div class="scr">
+          <!-- Swipe: arrows + dots -->
+          <div class="swipe2">
+            <span class="sarrow">‹</span>
+            <div>
+              <div class="sname2">小明</div>
+            </div>
+            <span class="sarrow">›</span>
+          </div>
+          <div class="sdots2" style="display:flex;gap:4px;justify-content:center;padding:2px 0 4px;">
+            <div class="sd2"></div><div class="sd2 on"></div><div class="sd2"></div>
+          </div>
+          <!-- Profile: avatar+name left, stats right -->
+          <div style="padding:0 7px;">
+            <div class="prof2">
+              <div class="prof2-top">
+                <div class="av2-wrap">
+                  <div class="av2">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23081428'/%3E%3Ccircle cx='30' cy='21' r='14' fill='%2330d5f5'/%3E%3Cellipse cx='30' cy='51' rx='21' ry='15' fill='%2330d5f5'/%3E%3C/svg%3E">
+                  </div>
+                  <div class="name2">小明</div>
+                </div>
+                <div class="stats2" style="flex:1;flex-direction:column;gap:4px;">
+                  <div class="stat2-chip">
+                    <div class="stat2-label">💰 存款</div>
+                    <div class="stat2-val t">1,800</div>
+                    <div class="stat2-unit">NTD</div>
+                  </div>
+                  <div class="stat2-chip">
+                    <div class="stat2-label">⏱ 時間</div>
+                    <div class="stat2-val o">1,120</div>
+                    <div class="stat2-unit">mins</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pad" style="padding-top:3px;">
+            <div class="sec">🎯 Learning & Tasks</div>
+            <div class="cgrid">
+              <div class="ctile"><div class="te">📚</div><div class="tn">Vocabulary</div><div class="tv">+500 NTD</div><div class="tv">+200 mins</div></div>
+              <div class="ctile"><div class="te">📝</div><div class="tn">School Exam</div><div class="tv">+800 NTD</div></div>
+              <div class="ctile"><div class="te">🏠</div><div class="tn">Housework</div><div class="tv">+300 NTD</div></div>
+              <div class="ctile"><div class="te">⚽</div><div class="tn">Sport</div><div class="tv">+200 NTD</div></div>
+            </div>
+            <div class="sec">💳 Money & Behavior</div>
+            <div class="cgrid">
+              <div class="ctile ob"><div class="te">💳</div><div class="tn">Transactions</div><div class="tv o">-200 NTD</div></div>
+              <div class="ctile am"><div class="te">⭐</div><div class="tn">Behavior</div><div class="tv g">+100 NTD</div></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="confirm-row">
-        <button class="confirm-cancel" onclick="closeModal('modalConfirm')">取消</button>
-        <button class="${result==='pass'?'confirm-pass':'confirm-fail'}" onclick="confirmVerify('${catId}','${goalId}','${result}')">確認 ${result==='pass'?'Passed':'Failed'}</button>
+    </div>
+    <div class="ver-name">V2 · 分割頁首</div>
+    <div class="ver-tag">頭像+名字左，統計右 · 左右箭頭</div>
+  </div>
+
+  <!-- ══ V3: 懸浮卡片 ══ -->
+  <div class="phone-col">
+    <div class="iphone">
+      <div class="screen bg">
+        <div class="island"></div>
+        <div class="nav-bar">
+          <span class="app-name">🏅 KidsAPP</span>
+          <div class="aud-chip">
+            <div class="aud-av-tiny"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' fill='%23081428'/%3E%3Ccircle cx='10' cy='7' r='4' fill='%2330d5f5'/%3E%3Cellipse cx='10' cy='17' rx='7' ry='5' fill='%2330d5f5'/%3E%3C/svg%3E"></div>
+            <span class="aud-chip-name">Hang</span>
+          </div>
+          <div class="gear-btn">⚙️</div>
+        </div>
+        <div class="scr">
+          <!-- Swipe: child pills carousel -->
+          <div class="swipe3">
+            <div class="schildpill off">
+              <div class="spfoto"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' fill='%23111'/%3E%3Ccircle cx='10' cy='7' r='4' fill='%23aaa'/%3E%3Cellipse cx='10' cy='17' rx='7' ry='5' fill='%23aaa'/%3E%3C/svg%3E"></div>
+              <span class="spname off">小花</span>
+            </div>
+            <div class="schildpill">
+              <div class="spfoto"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' fill='%23081428'/%3E%3Ccircle cx='10' cy='7' r='4' fill='%2330d5f5'/%3E%3Cellipse cx='10' cy='17' rx='7' ry='5' fill='%2330d5f5'/%3E%3C/svg%3E"></div>
+              <span class="spname">小明</span>
+            </div>
+            <span class="swipe-hint">← 滑動 →</span>
+          </div>
+          <!-- Profile: glassmorphism floating card -->
+          <div class="prof3">
+            <div class="prof3-av-wrap">
+              <div class="av3">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 70'%3E%3Crect width='70' height='70' fill='%230a1422'/%3E%3Ccircle cx='35' cy='24' r='16' fill='%2330d5f5'/%3E%3Cellipse cx='35' cy='60' rx='24' ry='18' fill='%2330d5f5'/%3E%3C/svg%3E">
+              </div>
+              <div class="name3">小明</div>
+            </div>
+            <div class="stats3">
+              <div class="stat3-row">
+                <div class="stat3-ico">💰</div>
+                <div class="stat3-num t">1,800</div>
+                <div class="stat3-unit">NTD</div>
+              </div>
+              <div class="stat3-row">
+                <div class="stat3-ico">⏱</div>
+                <div class="stat3-num o">1,120</div>
+                <div class="stat3-unit">mins</div>
+              </div>
+            </div>
+          </div>
+          <div class="pad" style="padding-top:2px;">
+            <div class="sec">🎯 Learning & Tasks</div>
+            <div class="cgrid">
+              <div class="ctile"><div class="te">📚</div><div class="tn">Vocabulary</div><div class="tv">+500 NTD</div><div class="tv">+200 mins</div></div>
+              <div class="ctile"><div class="te">📝</div><div class="tn">School Exam</div><div class="tv">+800 NTD</div></div>
+              <div class="ctile"><div class="te">🏠</div><div class="tn">Housework</div><div class="tv">+300 NTD</div></div>
+              <div class="ctile"><div class="te">⚽</div><div class="tn">Sport</div><div class="tv">+200 NTD</div></div>
+            </div>
+            <div class="sec">💳 Money & Behavior</div>
+            <div class="cgrid">
+              <div class="ctile ob"><div class="te">💳</div><div class="tn">Transactions</div><div class="tv o">-200 NTD</div></div>
+              <div class="ctile am"><div class="te">⭐</div><div class="tn">Behavior</div><div class="tv g">+100 NTD</div></div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>`;
-  showModal('modalConfirm');
-}
+    </div>
+    <div class="ver-name">V3 · 懸浮卡片</div>
+    <div class="ver-tag">玻璃質感卡 · 子女切換帶照片</div>
+  </div>
 
-async function confirmVerify(catId,goalId,result){
-  closeModal('modalConfirm');
-  const goal=S.goals[S.currentChildId]?.[catId]?.[goalId];if(!goal||!S.currentAuditor)return;
-  const ntd=result==='pass'?(goal.rewardNTD||0):-(goal.penaltyNTD||0);
-  const mins=result==='pass'?(goal.rewardMins||0):-(goal.penaltyMins||0);
-  try{
-    if(ntd!==0||mins!==0){await db.ref(`/entries/${S.currentChildId}/${catId}`).push({date:fmtDate(todayISO()),ntd,mins,auditor:S.currentAuditor.name,note:`[目標] ${goal.desc}`,passed:result==='pass',goalId,createdAt:Date.now()});}
-    if(!isRecurring(goal)){await db.ref(`/goals/${S.currentChildId}/${catId}/${goalId}`).update({active:false,completedAt:Date.now(),completedResult:result});}
-    showToast(`${result==='pass'?'✅ Passed':'❌ Failed'} 已記錄！`);
-  }catch(e){console.error(e);showToast('❌ 記錄失敗');}
-}
+</div><!-- /phones row 1 -->
 
-/* ══ Entry CRUD ══ */
-function openAddEntry(entryId){
-  if(!S.currentAuditor){showToast('⚠️ 請先點「切換」選擇審核人');openAuditorModal();return;}
-  S.editingEntryId=entryId||null;
-  const cat=CATS.find(c=>c.id===S.currentCat);
-  const existing=entryId?(S.entries[S.currentChildId]?.[S.currentCat]?.[entryId]):null;
-  document.getElementById('entryTitle').textContent=entryId?`✏️ 編輯 ${cat.name}`:`${cat.emoji} 新增 ${cat.name}`;
-  document.getElementById('entryForm').innerHTML=buildEntryForm(cat,existing);
-  showModal('modalEntry');
-}
+<!-- ── Row 2: Goal detail page ── -->
+<div class="section-lbl">── 目標頁（單頁不捲動）對比 ──</div>
 
-function buildEntryForm(cat,existing){
-  const ex=existing||{};let h='';
-  if(!existing)h+=`<div class="form-grp"><label class="form-lbl">📅 日期</label><input type="date" class="form-inp" id="fDate" value="${todayISO()}" max="${todayISO()}"></div>`;
-  else h+=`<div class="form-grp"><label class="form-lbl">📅 日期</label><div style="padding:11px 13px;background:var(--bg);border-radius:11px;font-size:14px;color:var(--sub);">${ex.date||'—'} <span style="font-size:10px;">（不可更改）</span></div></div>`;
-  if(cat.type==='transactions'){
-    const existDir=existing?txDirection(existing):'withdraw';
-    const existCurr=existing?(Number(ex.ntd||0)!==0?'money':'time'):'money';
-    const existAmt=existing?Math.abs(Number(ex.ntd||0)||Number(ex.mins||0)):0;
-    h+=`<div class="form-grp"><label class="form-lbl">操作類型</label><div class="tog-row">
-      <button class="tog-btn ${existDir==='withdraw'?'active ':''}t-org" id="togTxA" onclick="setTxTog('withdraw')">💸 Withdraw</button>
-      <button class="tog-btn ${existDir==='deposit'?'active ':''}t-green" id="togTxB" onclick="setTxTog('deposit')">💰 Deposit</button>
-    </div></div>`;
-    h+=`<div class="form-grp"><label class="form-lbl">貨幣類型</label><div class="tog-row">
-      <button class="tog-btn ${existCurr==='money'?'active ':''}t-teal" id="togCurA" onclick="setTxCurr('money')">💰 NTD</button>
-      <button class="tog-btn ${existCurr==='time'?'active ':''}t-teal" id="togCurB" onclick="setTxCurr('time')">⏱ Mins</button>
-    </div></div>`;
-    h+=`<div class="form-grp"><label class="form-lbl">金額（輸入正數）</label><input type="number" class="amt-inp" id="fAmount" placeholder="0" min="0" step="10" value="${existAmt||''}"><div class="tx-hint-box ${existDir}" id="txHintBox">${existDir==='withdraw'?'💸 提領後從總額扣除':'💰 存入後累計至總額'}</div></div>`;
-  } else if(cat.type==='goal'){
-    const isPass=ex.passed!==false;
-    h+=`<div class="form-grp"><label class="form-lbl">結果</label><div class="tog-row">
-      <button class="tog-btn ${isPass?'active ':''}t-pass" id="togA" onclick="setTog('pass')">✅ Passed</button>
-      <button class="tog-btn ${!isPass?'active ':''}t-fail" id="togB" onclick="setTog('fail')">❌ Failed</button>
-    </div></div>`;
-    h+=`<div class="form-grp"><label class="form-lbl">金額（正數）</label><div class="amt-row">
-      <div class="amt-grp"><span class="amt-lbl">NTD</span><input type="number" class="amt-inp" id="fNTD" placeholder="0" min="0" step="10" value="${existing?Math.abs(Number(ex.ntd||0)):''}"></div>
-      <div class="amt-grp"><span class="amt-lbl">Mins</span><input type="number" class="amt-inp" id="fMins" placeholder="0" min="0" step="10" value="${existing?Math.abs(Number(ex.mins||0)):''}"></div>
-    </div></div>`;
-  } else {
-    const isReward=!existing||(Number(ex.ntd||0)>=0&&Number(ex.mins||0)>=0);
-    h+=`<div class="form-grp"><label class="form-lbl">類型</label><div class="tog-row">
-      <button class="tog-btn ${isReward?'active ':''}t-green" id="togA" onclick="setBTog('reward')">👍 嘉獎</button>
-      <button class="tog-btn ${!isReward?'active ':''}t-org" id="togB" onclick="setBTog('punish')">👎 懲罰</button>
-    </div></div>`;
-    h+=`<div class="form-grp"><label class="form-lbl">金額（正數）</label><div class="amt-row">
-      <div class="amt-grp"><span class="amt-lbl">NTD</span><input type="number" class="amt-inp" id="fNTD" placeholder="0" min="0" step="10" value="${existing?Math.abs(Number(ex.ntd||0)):''}"></div>
-      <div class="amt-grp"><span class="amt-lbl">Mins</span><input type="number" class="amt-inp" id="fMins" placeholder="0" min="0" step="10" value="${existing?Math.abs(Number(ex.mins||0)):''}"></div>
-    </div></div>`;
-  }
-  h+=`<div class="form-grp"><label class="form-lbl">📝 備註（選填）</label><input type="text" class="form-inp" id="fNote" value="${ex.note||''}" placeholder="例：買樂高、主動完成…"></div>`;
-  h+=`<div class="form-aud-row">審核人：${S.currentAuditor.name}</div>`;
-  h+=`<button class="save-btn" onclick="saveEntry('${cat.id}')">💾 ${existing?'更新記錄':'儲存記錄'}</button>`;
-  return h;
-}
+<div class="phones">
 
-function setTog(v){document.getElementById('togA').className=`tog-btn ${v==='pass'?'active ':''}t-pass`;document.getElementById('togB').className=`tog-btn ${v==='fail'?'active ':''}t-fail`;}
-function setBTog(v){document.getElementById('togA').className=`tog-btn ${v==='reward'?'active ':''}t-green`;document.getElementById('togB').className=`tog-btn ${v==='punish'?'active ':''}t-org`;}
-function setTxTog(v){document.getElementById('togTxA').className=`tog-btn ${v==='withdraw'?'active ':''}t-org`;document.getElementById('togTxB').className=`tog-btn ${v==='deposit'?'active ':''}t-green`;const b=document.getElementById('txHintBox');b.className=`tx-hint-box ${v}`;b.textContent=v==='withdraw'?'💸 提領後從總額扣除':'💰 存入後累計至總額';}
-function setTxCurr(v){document.getElementById('togCurA').className=`tog-btn ${v==='money'?'active ':''}t-teal`;document.getElementById('togCurB').className=`tog-btn ${v==='time'?'active ':''}t-teal`;}
-function setTxFilter(v){S.txFilter=v;renderDetailContent(S.currentCat);}
+  <!-- Goal page V1 style: compact list -->
+  <div class="phone-col">
+    <div class="iphone">
+      <div class="screen bg">
+        <div class="island"></div>
+        <!-- Detail nav -->
+        <div class="nav-bar" style="background:rgba(255,255,255,.03);">
+          <span style="font-size:10px;color:rgba(48,213,245,.7);margin-right:6px;">‹ 返回</span>
+          <span style="font-size:13px;font-weight:700;color:#d4e8f0;flex:1;">📚 Vocabulary</span>
+          <span style="font-size:8px;background:rgba(48,213,245,.15);color:#30d5f5;padding:2px 7px;border-radius:7px;">+500 NTD</span>
+        </div>
+        <div class="scr pad">
+          <!-- Goals section header -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+            <div class="sec" style="margin:0;">🎯 Active Goals</div>
+            <span style="font-size:8px;background:rgba(48,213,245,.15);color:#30d5f5;padding:2px 7px;border-radius:6px;">＋ 新增</span>
+          </div>
+          <!-- Goal 1 compact -->
+          <div class="goal-card-d">
+            <div class="gf-badge">🔄 每週一、三</div>
+            <div class="gf-desc">背10個新單字</div>
+            <div class="gpills"><span class="gp gpp">✅ +50 NTD</span><span class="gp gpp">+30 mins</span><span class="gp gpf">❌ -10 mins</span></div>
+            <div class="gbtns"><div class="gbp">✅ Passed</div><div class="gbf">❌ Failed</div></div>
+          </div>
+          <!-- Goal 2 compact -->
+          <div class="goal-card-d">
+            <div class="gf-badge">📅 2026 Jul 01 · 單次</div>
+            <div class="gf-desc">背15個進階單字，apple banana…</div>
+            <div class="gpills"><span class="gp gpp">✅ +80 NTD</span><span class="gp gpf">❌ -20 NTD</span></div>
+            <div class="gbtns"><div class="gbp">✅ Passed</div><div class="gbf">❌ Failed</div></div>
+          </div>
+          <!-- Goal 3 compact -->
+          <div class="goal-card-d" style="opacity:.5;border-style:dashed;">
+            <div class="gf-badge" style="background:rgba(255,255,255,.06);color:rgba(180,210,225,.4);">✅ 已完成 · 2026 Jun 22</div>
+            <div class="gf-desc" style="color:rgba(180,210,225,.4);">背10個動物單字</div>
+            <div style="font-size:8px;color:rgba(102,187,106,.6);">Passed → +50 NTD</div>
+          </div>
+          <!-- Manual entry -->
+          <div style="text-align:center;margin-top:6px;">
+            <span style="font-size:9px;color:rgba(48,213,245,.4);border:1px solid rgba(48,213,245,.15);padding:4px 14px;border-radius:8px;">＋ 手動新增記錄</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ver-name">目標頁 · 緊湊列表</div>
+    <div class="ver-tag">2-3個目標同時可見<br>不需上下捲動</div>
+  </div>
 
-async function saveEntry(catId){
-  if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}
-  const cat=CATS.find(c=>c.id===catId);const isEdit=!!S.editingEntryId;
-  const dateVal=isEdit?null:document.getElementById('fDate')?.value;
-  if(!isEdit&&!dateVal){showToast('請選擇日期');return;}
-  let ntd=0,mins=0;const note=(document.getElementById('fNote')?.value||'').trim();
-  if(cat.type==='transactions'){
-    const isW=document.getElementById('togTxA').classList.contains('active');const isM=document.getElementById('togCurA').classList.contains('active');
-    const amt=Math.abs(parseFloat(document.getElementById('fAmount').value)||0);if(!amt){showToast('請輸入金額');return;}
-    if(isM)ntd=(isW?-1:1)*amt; else mins=(isW?-1:1)*amt;
-  } else if(cat.type==='goal'){
-    const isFail=document.getElementById('togB').classList.contains('active');const s=isFail?-1:1;
-    ntd=s*Math.abs(parseFloat(document.getElementById('fNTD').value)||0);mins=s*Math.abs(parseFloat(document.getElementById('fMins').value)||0);if(!ntd&&!mins){showToast('請至少輸入一個金額');return;}
-  } else {
-    const isP=document.getElementById('togB').classList.contains('active');const s=isP?-1:1;
-    ntd=s*Math.abs(parseFloat(document.getElementById('fNTD').value)||0);mins=s*Math.abs(parseFloat(document.getElementById('fMins').value)||0);if(!ntd&&!mins){showToast('請至少輸入一個金額');return;}
-  }
-  try{
-    if(isEdit){const upd={ntd,mins,auditor:S.currentAuditor.name,note,editedAt:Date.now()};if(cat.type==='goal')upd.passed=document.getElementById('togA').classList.contains('active');await db.ref(`/entries/${S.currentChildId}/${catId}/${S.editingEntryId}`).update(upd);showToast('✅ 記錄已更新！');}
-    else{const entry={date:fmtDate(dateVal),ntd,mins,auditor:S.currentAuditor.name,note,createdAt:Date.now()};if(cat.type==='goal')entry.passed=document.getElementById('togA').classList.contains('active');await db.ref(`/entries/${S.currentChildId}/${catId}`).push(entry);showToast('✅ 記錄已儲存！');}
-    S.editingEntryId=null;closeModal('modalEntry');
-  }catch(e){console.error(e);showToast('❌ 儲存失敗');}
-}
+  <!-- Goal page V2 style: card with header stats -->
+  <div class="phone-col">
+    <div class="iphone">
+      <div class="screen bg">
+        <div class="island"></div>
+        <div class="nav-bar" style="background:rgba(255,255,255,.03);">
+          <span style="font-size:10px;color:rgba(48,213,245,.7);margin-right:6px;">‹</span>
+          <span style="font-size:13px;font-weight:700;color:#d4e8f0;flex:1;">📚 Vocabulary</span>
+          <div class="aud-chip" style="margin-right:0;">
+            <span class="aud-chip-name" style="font-size:8px;">Hang</span>
+          </div>
+        </div>
+        <div class="scr pad">
+          <!-- Stats strip -->
+          <div style="display:flex;gap:4px;margin-bottom:7px;">
+            <div style="flex:1;background:#0e1829;border-radius:9px;padding:6px 8px;border:1px solid rgba(48,213,245,.15);text-align:center;">
+              <div style="font-size:7px;color:rgba(180,210,225,.4);margin-bottom:2px;">累計</div>
+              <div style="font-size:16px;font-weight:800;color:#30d5f5;">+500</div>
+              <div style="font-size:8px;color:rgba(180,210,225,.35);">NTD</div>
+            </div>
+            <div style="flex:1;background:#0e1829;border-radius:9px;padding:6px 8px;border:1px solid rgba(255,112,67,.15);text-align:center;">
+              <div style="font-size:7px;color:rgba(180,210,225,.4);margin-bottom:2px;">累計</div>
+              <div style="font-size:16px;font-weight:800;color:#ff7043;">+200</div>
+              <div style="font-size:8px;color:rgba(180,210,225,.35);">mins</div>
+            </div>
+            <div style="width:50px;background:#0e1829;border-radius:9px;padding:6px 5px;border:1px solid rgba(255,255,255,.05);text-align:center;display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:18px;">+</span>
+            </div>
+          </div>
+          <!-- Goals -->
+          <div class="sec" style="margin-bottom:4px;">Active Goals</div>
+          <div class="goal-card-d" style="border-color:rgba(48,213,245,.25);">
+            <div style="display:flex;align-items:flex-start;gap:6px;">
+              <div style="flex:1;">
+                <div class="gf-badge">🔄 每週一、三</div>
+                <div class="gf-desc">背10個新單字</div>
+              </div>
+              <div style="text-align:right;flex-shrink:0;">
+                <div style="font-size:8px;color:#66bb6a;font-weight:600;">✅ +50 NTD</div>
+                <div style="font-size:8px;color:#66bb6a;">+30 mins</div>
+                <div style="font-size:8px;color:#ff7043;">❌ -10m</div>
+              </div>
+            </div>
+            <div class="gbtns" style="margin-top:5px;"><div class="gbp">✅ Passed</div><div class="gbf">❌ Failed</div></div>
+          </div>
+          <div class="goal-card-d">
+            <div style="display:flex;align-items:flex-start;gap:6px;">
+              <div style="flex:1;">
+                <div class="gf-badge">📅 Jul 01</div>
+                <div class="gf-desc">背15個進階單字</div>
+              </div>
+              <div style="text-align:right;flex-shrink:0;">
+                <div style="font-size:8px;color:#66bb6a;font-weight:600;">✅ +80 NTD</div>
+                <div style="font-size:8px;color:#ff7043;">❌ -20</div>
+              </div>
+            </div>
+            <div class="gbtns" style="margin-top:5px;"><div class="gbp">✅ Passed</div><div class="gbf">❌ Failed</div></div>
+          </div>
+          <div class="goal-card-d" style="opacity:.45;border-style:dashed;">
+            <div class="gf-badge" style="background:rgba(255,255,255,.05);color:rgba(180,210,225,.35);">✅ 已完成</div>
+            <div class="gf-desc" style="color:rgba(180,210,225,.35);">背10個動物單字 · Jun 22</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ver-name">目標頁 · 統計在上</div>
+    <div class="ver-tag">頁頂顯示累積統計<br>目標卡片資訊並排</div>
+  </div>
 
-/* ══ Records list ══ */
-function buildRecordsList(catId){
-  const cat=CATS.find(c=>c.id===catId);
-  const all=Object.entries((S.entries[S.currentChildId]||{})[catId]||{});
-  let active=all.filter(([,e])=>!e.deletedAt).sort((a,b)=>(b[1].createdAt||0)-(a[1].createdAt||0));
-  const deleted=all.filter(([,e])=>!!e.deletedAt).sort((a,b)=>(b[1].deletedAt||0)-(a[1].deletedAt||0));
-  const canAct=!!S.currentAuditor;
-  if(cat.type==='transactions'&&S.txFilter!=='all')active=active.filter(([,e])=>txDirection(e)===S.txFilter);
-  let html='';
-  if(!active.length)html+=`<div class="empty-state">📭 尚無記錄</div>`;
-  else html+=active.map(([id,e])=>{
-    const ns=amtStr(Number(e.ntd||0),'NTD'),ms=amtStr(Number(e.mins||0),'mins');
-    const nc=amtCls(Number(e.ntd||0)),mc=amtCls(Number(e.mins||0));
-    let badge='';
-    if(cat.type==='transactions'){const dir=txDirection(e);badge=dir==='withdraw'?`<span class="tx-type-badge tx-withdraw">💸 Withdraw</span>`:`<span class="tx-type-badge tx-deposit">💰 Deposit</span>`;}
-    else{if(e.passed===true)badge=`<span class="rec-badge pass">✅ Passed</span>`;if(e.passed===false)badge=`<span class="rec-badge fail">❌ Failed</span>`;}
-    const acts=canAct?`<div class="rec-actions"><button class="rec-act" onclick="openAddEntry('${id}')">✏️</button><button class="rec-act del" onclick="confirmDelete('${catId}','${id}')">🗑️</button></div>`:'';
-    return `<div class="rec-card">
-      <div class="rec-top"><span class="rec-date">${e.date||'—'}</span><span class="rec-aud">· ${e.auditor||'—'}</span>${badge}${acts}</div>
-      <div class="rec-amts">${ns?`<span class="rec-amt ${nc}">${ns}</span>`:''}${ms?`<span class="rec-amt ${mc}">${ms}</span>`:''}</div>
-      ${e.note?`<div class="rec-note">${e.note}</div>`:''}${e.editedAt?`<div class="rec-edited">已編輯</div>`:''}
-    </div>`;
-  }).join('');
-  if(deleted.length){
-    html+=`<div class="sec-lbl" style="margin-top:16px;color:var(--red);">🗑️ 最近刪除（7天內可恢復）</div>`;
-    html+=deleted.map(([id,e])=>{
-      const daysLeft=Math.max(1,Math.ceil((e.deletedAt+7*24*60*60*1000-Date.now())/(24*60*60*1000)));
-      const ns=amtStr(Number(e.ntd||0),'NTD'),ms=amtStr(Number(e.mins||0),'mins');
-      return `<div class="rec-card deleted-card">
-        <div class="rec-top"><span class="rec-date">${e.date||'—'}</span><span class="rec-aud">· ${e.auditor||'—'}</span><span class="days-left">${daysLeft}天後永久刪除</span></div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;"><div style="flex:1;">${ns?`<span class="rec-amt" style="font-size:12px;color:var(--sub);">${ns}</span> `:''} ${ms?`<span class="rec-amt" style="font-size:12px;color:var(--sub);">${ms}</span>`:''} ${e.note?`<div class="rec-note">${e.note}</div>`:''}</div>${canAct?`<button class="restore-btn" onclick="restoreEntry('${catId}','${id}')">恢復</button>`:''}</div>
-      </div>`;
-    }).join('');
-  }
-  return html;
-}
+</div>
 
-function confirmDelete(catId,entryId){
-  document.getElementById('confirmBody').innerHTML=`<div class="confirm-box"><div class="confirm-msg">確定要刪除這筆記錄嗎？<br><span style="font-size:12px;color:var(--sub);">保留 7 天，可在「最近刪除」恢復</span></div><div class="confirm-row"><button class="confirm-cancel" onclick="closeModal('modalConfirm')">取消</button><button class="confirm-del" onclick="deleteEntry('${catId}','${entryId}')">刪除</button></div></div>`;
-  showModal('modalConfirm');
-}
-async function deleteEntry(catId,entryId){closeModal('modalConfirm');if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}try{await db.ref(`/entries/${S.currentChildId}/${catId}/${entryId}/deletedAt`).set(Date.now());showToast('已移至刪除，7天內可恢復');}catch(e){showToast('❌ 刪除失敗');}}
-async function restoreEntry(catId,entryId){if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}try{await db.ref(`/entries/${S.currentChildId}/${catId}/${entryId}/deletedAt`).remove();showToast('✅ 已恢復');}catch(e){showToast('❌ 恢復失敗');}}
+<div style="text-align:center;margin-top:16px;font-size:11px;opacity:.35;line-height:1.8;">
+  選定版本組合後告訴我（例：首頁V3 + 目標頁右）<br>我直接套用至正式 index.html
+</div>
 
-/* ══ Child switching ══ */
-function selectChild(id){
-  if(id===S.currentChildId)return;
-  S.currentChildId=id;
-  Promise.all([db.ref(`/entries/${id}`).once('value'),db.ref(`/goals/${id}`).once('value')]).then(([es,gs])=>{
-    S.entries[id]=es.val()||{};S.goals[id]=gs.val()||{};attachMainListener(id);attachGoalListener(id);renderAll();
-  });
-}
-
-/* ══ Auditor modal ══ */
-function openAuditorModal(){
-  document.getElementById('audList').innerHTML=Object.entries(S.auditors).map(([id,a])=>`
-    <div class="aud-item" onclick="selectAuditor('${id}')">
-      <div class="aud-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div>
-      <div><div class="aud-item-name">${a.name}</div><div class="aud-item-role">${a.role||''}</div></div>
-      <div class="aud-arrow">›</div>
-    </div>`).join('');
-  document.getElementById('step1').style.display='block';document.getElementById('step2').classList.remove('show');
-  showModal('modalAud');
-}
-function selectAuditor(id){
-  const a=S.auditors[id];S.pendingAuditor={id,...a};
-  document.getElementById('pinTitle').textContent=`${a.name}`;
-  document.getElementById('pinInput').value='';document.getElementById('pinErr').textContent='';updateDots(0);
-  document.getElementById('step1').style.display='none';document.getElementById('step2').classList.add('show');
-  setTimeout(()=>document.getElementById('pinInput').focus(),120);
-}
-function handlePinInput(){const v=document.getElementById('pinInput').value;document.getElementById('pinErr').textContent='';updateDots(v.length);if(v.length===4)setTimeout(confirmPin,160);}
-function updateDots(n){document.querySelectorAll('#pinDots .pin-dot-el').forEach((d,i)=>{d.textContent=i<n?'●':'•';d.classList.toggle('filled',i<n);});}
-function confirmPin(){
-  const pin=document.getElementById('pinInput').value;
-  if(pin!==S.pendingAuditor.pin){document.getElementById('pinErr').textContent='❌ PIN 錯誤，請再試一次';document.getElementById('pinInput').value='';updateDots(0);return;}
-  S.currentAuditor={...S.pendingAuditor};S.pendingAuditor=null;
-  closeModal('modalAud');renderAudBar();showToast(`✅ 歡迎，${S.currentAuditor.name}！`);
-  if(S.currentCat)renderDetailContent(S.currentCat);
-  if(S.pendingVerify){const pv=S.pendingVerify;S.pendingVerify=null;setTimeout(()=>verifyGoal(pv.catId,pv.goalId,pv.result),400);}
-}
-function backToStep1(){document.getElementById('step2').classList.remove('show');document.getElementById('step1').style.display='block';S.pendingAuditor=null;}
-function handleOverlay(e,id){if(e.target.classList.contains('modal-overlay'))closeModal(id);}
-
-/* ══ Screen/Modal ══ */
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
-function showModal(id){const el=document.getElementById(id);el.style.display='flex';requestAnimationFrame(()=>el.classList.add('show'));}
-function closeModal(id){const el=document.getElementById(id);el.classList.remove('show');setTimeout(()=>{el.style.display='none';},300);}
-
-/* ══ Toast ══ */
-let _tt;
-function showToast(msg,ms=2600){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),ms);}
-
-/* ══ SW ══ */
-if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>console.log('KidsAPP SW:',r.scope)).catch(e=>console.error(e));});}
-
-init();
-</script>
 </body>
 </html>

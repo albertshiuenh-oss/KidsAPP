@@ -872,7 +872,12 @@ function renderSettings(){
   html+=`<div class="settings-section"><div class="settings-section-hdr"><span class="settings-section-title">👤 審核人管理</span><button class="settings-add-btn" onclick="openPersonModal('auditor',null)">＋ 新增</button></div>`;
   Object.entries(au).forEach(([id,a])=>{html+=`<div class="person-row"><div class="person-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div><div class="person-info"><div class="person-name">${a.name}</div><div class="person-sub">${a.role||''}</div></div><div class="person-acts"><button class="person-act" onclick="openPersonModal('auditor','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('auditor','${id}','${a.name}')">🗑️</button></div></div>`;});
   html+=`</div>`;
-  html+=`<div class="settings-info"><div class="settings-info-title">🏅 KidsAPP</div><div class="settings-info-sub">Style C · Firebase Realtime DB</div></div>`;
+  html+=`<div class="settings-info">
+    <div class="settings-info-title">🏅 KidsAPP</div>
+    <div class="settings-info-sub" style="margin-bottom:12px;">Style C · Firebase Realtime DB</div>
+    <button onclick="clearCache()" style="width:100%;padding:11px;background:rgba(255,82,82,.1);color:#ff5252;border:1px solid rgba(255,82,82,.22);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;">🔄 清除快取並重新載入</button>
+    <div style="font-size:10px;color:var(--sub);margin-top:6px;">App 顯示舊版畫面時請點此強制更新</div>
+  </div>`;
   document.getElementById('settingsContent').innerHTML=html;
 }
 function openPersonModal(type,id){S.editingPersonType=type;S.editingPersonId=id;S.pendingPhoto=null;const existing=id?(type==='child'?S.children[id]:S.auditors[id]):null;document.getElementById('personTitle').textContent=id?(type==='child'?'✏️ 編輯孩子':'✏️ 編輯審核人'):(type==='child'?'➕ 新增孩子':'➕ 新增審核人');document.getElementById('personForm').innerHTML=buildPersonForm(type,existing);showModal('modalPerson');}
@@ -970,6 +975,21 @@ function showToast(msg,ms=2600){const t=document.getElementById('toast');t.textC
 
 /* ══ Service Worker ══ */
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>console.log('KidsAPP SW:',r.scope)).catch(e=>console.error(e));});}
+
+async function clearCache(){
+  try{
+    if('serviceWorker' in navigator){
+      const regs=await navigator.serviceWorker.getRegistrations();
+      for(const r of regs)await r.unregister();
+    }
+    if('caches' in window){
+      const keys=await caches.keys();
+      await Promise.all(keys.map(k=>caches.delete(k)));
+    }
+    showToast('✅ 快取已清除，重新載入中…',1500);
+    setTimeout(()=>location.reload(true),1600);
+  }catch(e){showToast('❌ 清除失敗');}
+}
 
 init();
 </script>

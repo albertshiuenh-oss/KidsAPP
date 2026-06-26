@@ -3,168 +3,156 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>KidsAPP · 視覺對齊修復版</title>
+<title>KidsAPP · 視覺對齊功能修復版</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:radial-gradient(circle at top,#111a2e,#050a14);min-height:100vh;padding:30px 16px 50px;color:#fff;-webkit-font-smoothing:antialiased;}
-h1{text-align:center;font-size:18px;font-weight:700;margin-bottom:4px;color: #f1f5f9;letter-spacing: 0.5px;}
-.sub{text-align:center;font-size:12px;opacity:.6;margin-bottom:28px;color: #94a3b8;}
+h1{text-align:center;font-size:17px;font-weight:700;margin-bottom:3px;}
+.sub{text-align:center;font-size:11px;opacity:.35;margin-bottom:24px;}
 .phones{display:flex;gap:32px;justify-content:center;align-items:flex-start;flex-wrap:wrap;}
 
-/* iPhone 15 Pro 精緻外框 */
-.iphone{width:232px;background:linear-gradient(145deg,#2e3138,#16171a);border-radius:52px;padding:10px;box-shadow:0 0 0 1px rgba(255,255,255,.12),0 20px 50px rgba(0,0,0,.6),inset 0 1px 1px rgba(255,255,255,.2);position:relative;}
-.iphone::before{content:'';position:absolute;left:-3px;top:96px;width:3px;height:30px;background:#3a3d45;border-radius:2px 0 0 2px;box-shadow:0 40px 0 #3a3d45;}
-.iphone::after{content:'';position:absolute;right:-3px;top:122px;width:3px;height:58px;background:#3a3d45;border-radius:0 2px 2px 0;}
+/* iPhone 15 Pro frame */
+.iphone{width:232px;background:linear-gradient(145deg,#2f2f2f,#1a1a1a);border-radius:52px;padding:10px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 36px 100px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.09);position:relative;}
+.iphone::before{content:'';position:absolute;left:-3px;top:96px;width:3px;height:30px;background:#3c3c3c;border-radius:2px 0 0 2px;box-shadow:0 40px 0 #3c3c3c;}
+.iphone::after{content:'';position:absolute;right:-3px;top:122px;width:3px;height:58px;background:#3c3c3c;border-radius:0 2px 2px 0;}
+.screen{width:212px;height:460px;border-radius:44px;overflow:hidden;position:relative;background:#060b16;}
+.island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:86px;height:25px;background:#000;border-radius:16px;z-index:30;}
 
-/* 關鍵修正：確保 Screen 本身限制住內容，不讓裡面放大的 Canvas 亂跑 */
-.screen{width:212px;height:460px;border-radius:44px;overflow:hidden;position:relative;background:#060b16;box-shadow: inset 0 0 20px rgba(0,0,0,0.8); z-index: 1;}
-.island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:86px;height:25px;background:#000;border-radius:16px;z-index:30; pointer-events: none;}
+/* 關鍵修正：不再使用 app-real 放大再縮小，直接用 1:1 適應 screen 的彈性佈局 */
+.app-container{width:100%;height:100%;display:flex;flex-direction:column;background:#060b16;}
 
-/* App 畫布縮放修正 (加上正確的定位避免點擊錯位) */
-.app-real{
-  width:393px;
-  height:852px;
-  transform:scale(0.5394); /* 212 / 393 */
-  transform-origin: 0 0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background:#060b16;
-  display:flex;
-  flex-direction:column;
-}
-
-/* NAVBAR */
-.r-nav{height:64px;display:flex;align-items:flex-end;padding:0 18px 12px;background:rgba(6,11,22,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.05);flex-shrink:0;}
-.r-nav-title{font-size:18px;font-weight:800;color:#fff;flex:1;display:flex;align-items:center;gap:4px;}
-.r-aud-chip{display:flex;align-items:center;gap:6px;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.25);border-radius:20px;padding:4px 12px 4px 5px;margin-right:8px;cursor: pointer;}
-.r-aud-av{width:22px;height:22px;border-radius:50%;overflow:hidden;flex-shrink:0;background:#1e293b;border:1px solid rgba(56,189,248,0.3);}
+/* NAVBAR - 依比例縮放 */
+.r-nav{height:54px;display:flex;align-items:flex-end;padding:0 12px 10px;background:rgba(6,11,22,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.05);flex-shrink:0;}
+.r-nav-title{font-size:14px;font-weight:800;color:#fff;flex:1;}
+.r-aud-chip{display:flex;align-items:center;gap:4px;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.25);border-radius:14px;padding:3px 6px 3px 4px;margin-right:6px;cursor: pointer;}
+.r-aud-av{width:16px;height:16px;border-radius:50%;overflow:hidden;flex-shrink:0;}
 .r-aud-av img{width:100%;height:100%;object-fit:cover;display:block;}
-.r-aud-name{font-size:12px;font-weight:600;color:#38bdf8;}
-.r-gear{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:16px;cursor: pointer;}
+.r-aud-name{font-size:9px;font-weight:600;color:#38bdf8;}
+.r-gear{width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:11px;cursor: pointer;}
 
-/* MAIN BODY */
-.r-home{flex:1;min-height:0;display:flex;flex-direction:column;padding:12px 16px;gap:14px;overflow:hidden;}
+/* HOME BODY */
+.r-home{flex:1;min-height:0;display:flex;flex-direction:column;padding:8px 12px 10px;gap:8px;overflow:hidden;}
 
-/* 分頁指示器 */
-.r-dots{display:flex;align-items:center;justify-content:center;gap:6px;height:12px;flex-shrink:0;}
-.r-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);cursor: pointer;}
-.r-dot.on{width:16px;border-radius:3px;background:#38bdf8;box-shadow: 0 0 8px rgba(56,189,248,0.6);}
-.r-hint{font-size:11px;color:rgba(255,255,255,.2);font-weight:700;}
+/* Swipe dots */
+.r-dots{display:flex;align-items:center;justify-content:center;gap:5px;height:12px;flex-shrink:0;}
+.r-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);}
+.r-dot.on{width:14px;border-radius:3px;background:#38bdf8;box-shadow: 0 0 6px rgba(56,189,248,0.6);}
+.r-hint{font-size:9px;color:rgba(255,255,255,.2);font-weight:700;}
 
 /* PROFILE CARD */
 .r-profile {
   background: linear-gradient(135deg, #0f1e36, #091222);
-  border-radius: 20px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 20px;
+  gap: 12px;
+  padding: 10px 14px;
   border: 1px solid rgba(56, 189, 248, 0.2);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.05);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
   flex-shrink: 0;
 }
-.r-prof-left{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;}
+.r-prof-left{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;}
 .r-avatar {
-  width: 64px;
-  height: 64px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   overflow: hidden;
-  border: 2.5px solid #38bdf8;
+  border: 1.5px solid #38bdf8;
   background: #0b1329;
-  box-shadow: 0 0 15px rgba(56,189,248,0.35);
+  box-shadow: 0 0 8px rgba(56,189,248,0.35);
 }
 .r-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
-.r-pname{font-size:16px;font-weight:700;color:#fff;}
+.r-pname{font-size:12px;font-weight:700;color:#fff;}
 
 /* Profile Stats */
-.r-prof-right{flex:1;display:flex;flex-direction:column;justify-content:center;gap:2px;}
-.r-stat{display:flex;align-items:center;justify-content:space-between;padding:6px 0;}
+.r-prof-right{flex:1;display:flex;flex-direction:column;justify-content:center;}
+.r-stat{display:flex;align-items:baseline;justify-content:space-between;padding:3px 0;}
 .r-stat+.r-stat{border-top:1px solid rgba(255,255,255,.06);}
-.r-stat-label{font-size:13px;color:#64748b;font-weight:700;letter-spacing: 0.5px;}
-.r-stat-num{font-size:28px;font-weight:800;letter-spacing:-0.5px;}
-.r-stat-num.t{color:#38bdf8;text-shadow: 0 0 12px rgba(56,189,248,0.25);}
-.r-stat-num.o{color:#fb923c;text-shadow: 0 0 12px rgba(251,146,60,0.25);}
+.r-stat-label{font-size:10px;color:#64748b;font-weight:700;letter-spacing: 0.3px;}
+.r-stat-num{font-size:18px;font-weight:800;letter-spacing:-0.3px;}
+.r-stat-num.t{color:#38bdf8;text-shadow: 0 0 8px rgba(56,189,248,0.25);}
+.r-stat-num.o{color:#fb923c;text-shadow: 0 0 8px rgba(251,146,60,0.25);}
 
-/* 群組標籤 */
-.r-lbl{font-size:12px;font-weight:700;letter-spacing:0.8px;color:#475569;margin-bottom: 8px;display:flex;align-items:center;gap:6px;}
+/* Section labels */
+.r-lbl{font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:#475569;flex-shrink:0;height:11px;display:flex;align-items:center;}
 
-/* 網格系統 */
-.r-grid-top{flex:2;display:flex;flex-direction:column;min-height:0;}
-.r-grid-bot{flex:1;display:flex;flex-direction:column;min-height:0;}
-.r-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:0;}
+/* Grids */
+.r-grid-top{flex:2;display:flex;flex-direction:column;gap:4px;min-height:0;max-height:220px;}
+.r-grid-bot{flex:1;display:flex;flex-direction:column;gap:4px;min-height:0;max-height:115px;}
+.r-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;min-height:0;}
 .r-grid-2row{grid-template-rows:1fr 1fr;}
 
 /* 精緻任務磚塊 */
 .r-tile {
   background: linear-gradient(145deg, #0d172a, #070d1a);
-  border-radius: 18px;
+  border-radius: 12px;
   border: 1px solid rgba(255,255,255,.04);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 12px 14px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  padding: 10px 8px 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   cursor: pointer;
-  transition: transform 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.1s ease;
 }
 .r-tile:active {
-  transform: scale(0.96);
+  transform: scale(0.95);
 }
-/* 依據功能微調邊框色 */
 .r-tile.task { border-color: rgba(56,189,248,0.1); }
 .r-tile.ob { border-color: rgba(56,189,248,0.15); background: linear-gradient(145deg, #0f1830, #080d1c); }
 .r-tile.am { border-color: rgba(239,68,68,0.15); }
 
 /* 立體圓形徽章 */
 .r-tile-badge {
-  width: 48px;
-  height: 48px;
+  width: 32px;
+  height: 32px;
   background: linear-gradient(135deg, #1e293b, #0f172a);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1);
+  font-size: 18px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1);
   border: 1px solid rgba(255,255,255,0.05);
   flex-shrink: 0;
 }
 
-.r-tile-bottom{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;}
-.r-tile-name{font-size:14px;font-weight:600;color:#cbd5e1;text-align:center;}
+.r-tile-bottom{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;}
+.r-tile-name{font-size:11px;font-weight:600;color:#cbd5e1;text-align:center;white-space: nowrap;}
 
-/* 數據膠囊標籤 */
+/* 圖中的「高對比彩色膠囊數據標籤」 */
 .r-pill {
-  font-size: 11px;
+  font-size: 9px;
   font-weight: 700;
   text-align: center;
-  padding: 4px 12px;
-  border-radius: 12px;
-  letter-spacing: 0.2px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  padding: 2px 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  line-height: 1.2;
 }
 .r-pill.green { color: #fff; background: #22c55e; }     /* 綠底白字 */
 .r-pill.blue { color: #fff; background: #2563eb; }      /* 藍底白字 */
 .r-pill.red { color: #fff; background: #dc2626; }       /* 紅底白字 */
+.r-pill.empty { display: none; }                        /* 隱藏無效欄位 */
 
 </style>
 </head>
 <body>
 
-<h1>KidsAPP · 視覺對齊豪華修復版</h1>
-<div class="sub">修復了因為 CSS Scale 造成的點擊判定錯位問題（加入點擊微動效）</div>
+<h1>KidsAPP · 視覺對齊功能修復版</h1>
+<div class="sub">1:1 重構版面：完全解決舊版 Scale 導致點擊失效與錯位的問題</div>
 
 <div class="phones">
   <div class="iphone">
     <div class="screen">
       <div class="island"></div>
-      <div class="app-real">
+      
+      <div class="app-container">
 
         <div class="r-nav">
           <div class="r-nav-title">🏅 KidsAPP</div>
-          <div class="r-aud-chip" onclick="alert('切換使用者')">
+          <div class="r-aud-chip" onclick="alert('切換帳號：Albert')">
             <div class="r-aud-av">
               <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23081428'/%3E%3Ccircle cx='20' cy='14' r='9' fill='%2338bdf8'/%3E%3Cellipse cx='20' cy='33' rx='14' ry='10' fill='%2338bdf8'/%3E%3C/svg%3E">
             </div>
@@ -177,8 +165,8 @@ h1{text-align:center;font-size:18px;font-weight:700;margin-bottom:4px;color: #f1
 
           <div class="r-dots">
             <span class="r-hint">←</span>
-            <div class="r-dot on" onclick="alert('第 1 頁')"></div>
-            <div class="r-dot" onclick="alert('第 2 頁')"></div>
+            <div class="r-dot on"></div>
+            <div class="r-dot"></div>
             <span class="r-hint">→</span>
           </div>
 
@@ -204,28 +192,28 @@ h1{text-align:center;font-size:18px;font-weight:700;margin-bottom:4px;color: #f1
           <div class="r-grid-top">
             <div class="r-lbl">🎯 Learning &amp; Tasks</div>
             <div class="r-grid r-grid-2row">
-              <div class="r-tile task" onclick="alert('進入 Vocabulary')">
+              <div class="r-tile task" onclick="alert('點擊了 Vocabulary')">
                 <div class="r-tile-badge">📚</div>
                 <div class="r-tile-bottom">
                   <div class="r-tile-name">Vocabulary</div>
                   <div class="r-pill green">+200 mins</div>
                 </div>
               </div>
-              <div class="r-tile task" onclick="alert('進入 School Exam')">
+              <div class="r-tile task" onclick="alert('點擊了 School Exam')">
                 <div class="r-tile-badge">📝</div>
                 <div class="r-tile-bottom">
                   <div class="r-tile-name">School Exam</div>
                   <div class="r-pill blue">+800 NTD</div>
                 </div>
               </div>
-              <div class="r-tile task" onclick="alert('進入 Housework')">
+              <div class="r-tile task" onclick="alert('點擊了 Housework')">
                 <div class="r-tile-badge">🏠</div>
                 <div class="r-tile-bottom">
                   <div class="r-tile-name">Housework</div>
                   <div class="r-pill green">+50 mins</div>
                 </div>
               </div>
-              <div class="r-tile task" onclick="alert('進入 Sport')">
+              <div class="r-tile task" onclick="alert('點擊了 Sport')">
                 <div class="r-tile-badge">⚽</div>
                 <div class="r-tile-bottom">
                   <div class="r-tile-name">Sport</div>
@@ -238,14 +226,14 @@ h1{text-align:center;font-size:18px;font-weight:700;margin-bottom:4px;color: #f1
           <div class="r-grid-bot">
             <div class="r-lbl">💳 Money &amp; Behavior</div>
             <div class="r-grid">
-              <div class="r-tile ob" onclick="alert('進入 Transactions')">
+              <div class="r-tile ob" onclick="alert('點擊了 Transactions')">
                 <div class="r-tile-badge">💳</div>
                 <div class="r-tile-bottom">
                   <div class="r-tile-name">Transactions</div>
                   <div class="r-pill blue">+2,000 NTD</div>
                 </div>
               </div>
-              <div class="r-tile am" onclick="alert('進入 Behavior')">
+              <div class="r-tile am" onclick="alert('點擊了 Behavior')">
                 <div class="r-tile-badge">⭐</div>
                 <div class="r-tile-bottom">
                   <div class="r-tile-name">Behavior</div>
@@ -257,6 +245,7 @@ h1{text-align:center;font-size:18px;font-weight:700;margin-bottom:4px;color: #f1
 
         </div>
       </div>
+
     </div>
   </div>
 </div>

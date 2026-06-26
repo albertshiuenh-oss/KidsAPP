@@ -3,498 +3,345 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>KidsAPP · Style C 佈局優化</title>
+<title>KidsAPP · V1修正版確認</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,'SF Pro Display',sans-serif;background:radial-gradient(ellipse at top,#0d2035 0%,#070d18 60%);min-height:100vh;padding:24px 10px 48px;color:#fff;}
+body{font-family:-apple-system,'SF Pro Display',sans-serif;background:radial-gradient(ellipse at top,#0d2035 0%,#060c17 70%);min-height:100vh;padding:24px 10px 48px;color:#fff;}
+h1{text-align:center;font-size:17px;font-weight:700;margin-bottom:3px;}
+.sub{text-align:center;font-size:11px;opacity:.35;margin-bottom:20px;}
 
-h1{text-align:center;font-size:17px;font-weight:700;margin-bottom:3px;letter-spacing:-.3px;}
-.sub{text-align:center;font-size:11px;opacity:.4;margin-bottom:20px;}
+/* ── Change badges ── */
+.changes{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:22px;}
+.ch{font-size:10px;padding:3px 10px;border-radius:16px;background:rgba(48,213,245,.1);border:1px solid rgba(48,213,245,.2);color:#30d5f5;}
 
-/* ── improvement badges ── */
-.improvements{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:22px;}
-.imp{font-size:10px;padding:4px 12px;border-radius:20px;background:rgba(48,213,245,.1);border:1px solid rgba(48,213,245,.2);color:#30d5f5;}
+/* ── Phones ── */
+.phones{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+.phone-col{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.ver-name{font-size:13px;font-weight:700;color:#e8f4f8;}
+.ver-sub{font-size:10px;opacity:.4;text-align:center;max-width:190px;line-height:1.5;}
 
-/* ── Section label ── */
-.section-lbl{text-align:center;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;opacity:.35;margin:16px 0 12px;}
-
-/* ── Phones row ── */
-.phones{display:flex;gap:14px;justify-content:center;overflow-x:auto;padding:4px 4px 16px;flex-wrap:nowrap;}
-
-/* ── iPhone 15 Pro ── */
-.phone-col{display:flex;flex-direction:column;align-items:center;gap:10px;flex-shrink:0;}
+/* ── iPhone 15 Pro frame ── */
 .iphone{
-  width:192px;
-  background:linear-gradient(145deg,#2e2e2e 0%,#1a1a1a 50%,#242424 100%);
-  border-radius:46px;padding:9px;
-  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 30px 90px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.08);
+  width:196px;
+  background:linear-gradient(145deg,#2f2f2f 0%,#1a1a1a 50%,#242424 100%);
+  border-radius:47px;
+  padding:9px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.1),
+    0 32px 90px rgba(0,0,0,.8),
+    inset 0 1px 0 rgba(255,255,255,.09);
   position:relative;
 }
-.iphone::before{content:'';position:absolute;left:-3px;top:88px;width:3px;height:26px;background:#3a3a3a;border-radius:2px 0 0 2px;}
-.iphone::after{content:'';position:absolute;right:-3px;top:108px;width:3px;height:48px;background:#3a3a3a;border-radius:0 2px 2px 0;}
-.screen{width:174px;height:378px;border-radius:38px;overflow:hidden;background:#080e1a;position:relative;}
-.island{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:70px;height:19px;background:#000;border-radius:13px;z-index:30;}
+/* Volume buttons */
+.iphone::before{content:'';position:absolute;left:-3px;top:86px;width:3px;height:28px;background:#3c3c3c;border-radius:2px 0 0 2px;box-shadow:0 36px 0 #3c3c3c;}
+/* Power button */
+.iphone::after{content:'';position:absolute;right:-3px;top:110px;width:3px;height:52px;background:#3c3c3c;border-radius:0 2px 2px 0;}
 
-/* ── Labels ── */
-.ver-name{font-size:13px;font-weight:700;color:#e8f4f8;}
-.ver-tag{font-size:10px;opacity:.45;text-align:center;max-width:180px;line-height:1.4;}
+/* Screen */
+.screen{width:178px;height:386px;border-radius:40px;overflow:hidden;background:#070d18;position:relative;}
 
-/* ══════════════════════════════
-   SHARED DARK STYLE C elements
-══════════════════════════════ */
-.bg{background:#080e1a;}
-.nav-bar{height:54px;display:flex;align-items:flex-end;padding:0 11px 9px;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.05);}
-.app-name{font-size:13px;font-weight:700;color:#d4e8f0;flex:1;}
-.aud-chip{display:flex;align-items:center;gap:4px;background:rgba(48,213,245,.12);border:1px solid rgba(48,213,245,.25);border-radius:16px;padding:3px 8px 3px 5px;margin-right:6px;cursor:pointer;}
-.aud-av-tiny{width:18px;height:18px;border-radius:50%;background:rgba(48,213,245,.2);display:flex;align-items:center;justify-content:center;font-size:10px;overflow:hidden;}
-.aud-av-tiny img{width:100%;height:100%;object-fit:cover;display:block;}
-.aud-chip-name{font-size:9px;font-weight:600;color:#30d5f5;}
-.gear-btn{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:13px;}
+/* Dynamic Island */
+.island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:72px;height:21px;background:#000;border-radius:14px;z-index:30;box-shadow:0 0 0 1px rgba(255,255,255,.04);}
 
-/* Scroll content */
-.scr{overflow-y:auto;height:calc(100% - 54px);scrollbar-width:none;}
-.scr::-webkit-scrollbar{display:none;}
-.pad{padding:7px 8px;}
+/* ══ HOMEPAGE LAYOUT ══ */
+/* Navbar */
+.pnav{height:52px;display:flex;align-items:flex-end;padding:0 11px 8px;background:rgba(255,255,255,.025);border-bottom:1px solid rgba(255,255,255,.05);}
+.ptitle{font-size:13px;font-weight:700;color:#cce6f0;flex:1;}
+.aud-chip{display:flex;align-items:center;gap:3px;background:rgba(48,213,245,.12);border:1px solid rgba(48,213,245,.22);border-radius:14px;padding:3px 7px 3px 4px;margin-right:5px;}
+.aud-av{width:17px;height:17px;border-radius:50%;overflow:hidden;background:rgba(48,213,245,.2);}
+.aud-av img{width:100%;height:100%;object-fit:cover;display:block;}
+.aud-name{font-size:8px;font-weight:600;color:#30d5f5;}
+.gear{width:24px;height:24px;border-radius:7px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:12px;}
+
+/* Swipe dots */
+.sdots{display:flex;align-items:center;justify-content:center;gap:4px;height:14px;}
+.sd{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.15);}
+.sd.on{width:14px;border-radius:2px;background:#30d5f5;}
+.swipe-hint{font-size:7px;color:rgba(255,255,255,.18);margin-left:5px;}
+
+/* Profile card: avatar+name LEFT | stats RIGHT */
+.profile-card{
+  background:#0d1a2e;
+  border-radius:13px;
+  padding:9px 10px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin:5px 6px;
+  border:1px solid rgba(255,255,255,.06);
+}
+.prof-left{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;}
+.av{width:48px;height:48px;border-radius:50%;overflow:hidden;border:2px solid rgba(48,213,245,.5);box-shadow:0 0 18px rgba(48,213,245,.18);}
+.av img{width:100%;height:100%;object-fit:cover;display:block;}
+.pname{font-size:10px;font-weight:700;color:#ddeef5;}
+.divider{width:1px;height:44px;background:rgba(255,255,255,.07);flex-shrink:0;}
+.prof-right{flex:1;display:flex;flex-direction:column;gap:0;}
+.stat-row{display:flex;align-items:baseline;gap:4px;padding:4px 2px;}
+.stat-row+.stat-row{border-top:1px solid rgba(255,255,255,.05);}
+.stat-ico{font-size:10px;width:14px;}
+.stat-num{font-size:19px;font-weight:800;letter-spacing:-.4px;line-height:1;}
+.stat-num.t{color:#30d5f5;}
+.stat-num.o{color:#ff7043;}
+.stat-unit{font-size:8px;color:rgba(180,210,225,.35);font-weight:400;}
 
 /* Category grid */
-.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:5px;}
-.ctile{background:#0e1829;border-radius:12px;padding:7px;border:1px solid rgba(48,213,245,.18);position:relative;}
-.ctile.ob{border-color:rgba(255,112,67,.2);}
-.ctile.am{border-color:rgba(255,213,79,.15);}
-.te{font-size:15px;margin-bottom:2px;}
-.tn{font-size:8px;font-weight:700;color:#b8d4e0;margin-bottom:1px;}
+.slbl{font-size:7px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:rgba(170,200,215,.3);margin:4px 6px 3px;}
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:0 6px;margin-bottom:3px;}
+.ctile{background:#0d1828;border-radius:11px;padding:7px 8px;border:1px solid rgba(48,213,245,.16);}
+.ctile.ob{border-color:rgba(255,112,67,.18);}
+.ctile.am{border-color:rgba(255,213,79,.14);}
+.te{font-size:14px;margin-bottom:2px;}
+.tn{font-size:8px;font-weight:700;color:#aecbd8;margin-bottom:1px;}
 .tv{font-size:8px;font-weight:600;color:#30d5f5;}
 .tv.o{color:#ff7043;}
 .tv.g{color:#66bb6a;}
-.sec{font-size:7px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:rgba(180,210,225,.35);margin:4px 0 4px 2px;}
+.tv.dim{color:rgba(170,200,215,.35);}
 
-/* ══ GOAL DETAIL shared ══ */
-.goal-card-d{background:#0e1829;border-radius:11px;padding:8px;margin-bottom:4px;border:1px solid rgba(48,213,245,.15);}
-.gf-badge{font-size:8px;font-weight:700;background:rgba(48,213,245,.15);color:#30d5f5;border-radius:5px;padding:2px 7px;display:inline-block;margin-bottom:4px;}
-.gf-desc{font-size:9px;color:#c5dce8;margin-bottom:5px;line-height:1.4;}
-.gpills{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:5px;}
-.gp{font-size:8px;font-weight:600;padding:2px 6px;border-radius:5px;}
-.gpp{background:rgba(26,122,64,.4);color:#66bb6a;}
-.gpf{background:rgba(201,64,16,.3);color:#ff7043;}
-.gbtns{display:flex;gap:3px;}
-.gbp{flex:1;padding:5px;border-radius:7px;background:rgba(26,122,64,.25);border:1px solid rgba(102,187,106,.4);color:#66bb6a;font-size:8px;font-weight:700;text-align:center;}
-.gbf{flex:1;padding:5px;border-radius:7px;background:rgba(201,64,16,.2);border:1px solid rgba(255,112,67,.35);color:#ff7043;font-size:8px;font-weight:700;text-align:center;}
+/* ══ GOAL DETAIL LAYOUT ══ */
+.goal-stats-strip{display:flex;gap:4px;padding:5px 6px;}
+.gstat{flex:1;background:#0d1828;border-radius:9px;padding:6px 7px;border:1px solid rgba(48,213,245,.14);text-align:center;}
+.gstat.o{border-color:rgba(255,112,67,.14);}
+.gstat-lbl{font-size:7px;color:rgba(170,200,215,.35);margin-bottom:2px;}
+.gstat-val{font-size:16px;font-weight:800;letter-spacing:-.3px;}
+.gstat-val.t{color:#30d5f5;}
+.gstat-val.o{color:#ff7043;}
+.gstat-unit{font-size:7px;color:rgba(170,200,215,.3);}
+.gadd-btn{width:42px;background:#0d1828;border-radius:9px;border:1px solid rgba(48,213,245,.2);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;cursor:pointer;}
+.gadd-plus{font-size:16px;color:#30d5f5;font-weight:300;line-height:1;}
+.gadd-lbl{font-size:6px;color:rgba(48,213,245,.5);}
 
-/* ══════ VERSION 1: 星環中心 ══════ */
-/* Swipe dots */
-.swipe-dots{display:flex;align-items:center;justify-content:center;gap:5px;padding:5px 0;}
-.sdot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);}
-.sdot.on{width:18px;border-radius:3px;background:#30d5f5;}
-/* Profile V1: centered large avatar */
-.prof1{display:flex;flex-direction:column;align-items:center;padding:8px 8px 6px;gap:4px;}
-.av1{width:72px;height:72px;border-radius:50%;border:2px solid rgba(48,213,245,.5);overflow:hidden;box-shadow:0 0 24px rgba(48,213,245,.2);}
-.av1 img{width:100%;height:100%;object-fit:cover;display:block;}
-.name1{font-size:13px;font-weight:700;color:#e8f4f8;}
-/* Stats V1: two rows, same format, aligned */
-.stats1{width:100%;background:#0e1829;border-radius:11px;border:1px solid rgba(255,255,255,.06);overflow:hidden;margin-top:2px;}
-.stat1-row{display:flex;align-items:center;padding:7px 12px;gap:8px;}
-.stat1-row+.stat1-row{border-top:1px solid rgba(255,255,255,.05);}
-.stat1-icon{font-size:13px;width:20px;text-align:center;}
-.stat1-val{font-size:20px;font-weight:800;letter-spacing:-.5px;flex:1;}
-.stat1-val.t{color:#30d5f5;}
-.stat1-val.o{color:#ff7043;}
-.stat1-unit{font-size:9px;color:rgba(180,210,225,.4);font-weight:500;}
-
-/* ══════ VERSION 2: 分割頁首 ══════ */
-/* Profile V2: avatar left+name, stats right as two equal chips */
-.prof2{background:#0e1829;border-radius:14px;padding:10px;margin:6px 0;border:1px solid rgba(255,255,255,.06);}
-.prof2-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.av2-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;}
-.av2{width:52px;height:52px;border-radius:50%;border:2px solid rgba(48,213,245,.45);overflow:hidden;}
-.av2 img{width:100%;height:100%;object-fit:cover;display:block;}
-.name2{font-size:12px;font-weight:700;color:#e8f4f8;}
-.stats2{display:flex;gap:5px;}
-.stat2-chip{flex:1;background:#111d30;border-radius:9px;padding:7px 8px;border:1px solid rgba(255,255,255,.05);}
-.stat2-label{font-size:7px;color:rgba(180,210,225,.4);margin-bottom:2px;}
-.stat2-val{font-size:17px;font-weight:800;letter-spacing:-.3px;}
-.stat2-val.t{color:#30d5f5;}
-.stat2-val.o{color:#ff7043;}
-.stat2-unit{font-size:8px;color:rgba(180,210,225,.4);margin-top:1px;}
-/* Swipe V2: child name + arrows */
-.swipe2{display:flex;align-items:center;justify-content:space-between;padding:5px 10px 2px;}
-.sarrow{font-size:12px;color:rgba(48,213,245,.5);padding:2px 6px;}
-.sname2{font-size:11px;font-weight:600;color:#e8f4f8;}
-.sdots2{display:flex;gap:4px;justify-content:center;padding:3px 0;}
-.sd2{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.15);}
-.sd2.on{width:14px;border-radius:2px;background:#30d5f5;}
-
-/* ══════ VERSION 3: 懸浮卡片 ══════ */
-/* Profile V3: glassmorphism card, avatar top-center, name, stats */
-.prof3{margin:6px;border-radius:18px;padding:12px 10px;background:rgba(14,24,46,.8);backdrop-filter:blur(12px);border:1px solid rgba(48,213,245,.12);box-shadow:0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05);}
-.prof3-av-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;margin-bottom:9px;}
-.av3{width:64px;height:64px;border-radius:50%;overflow:hidden;border:2.5px solid rgba(48,213,245,.6);box-shadow:0 0 0 4px rgba(48,213,245,.08),0 0 20px rgba(48,213,245,.2);}
-.av3 img{width:100%;height:100%;object-fit:cover;display:block;}
-.name3{font-size:13px;font-weight:700;color:#e8f4f8;letter-spacing:-.2px;}
-/* Stats V3: two rows full width, same style */
-.stats3{border-top:1px solid rgba(255,255,255,.06);padding-top:8px;}
-.stat3-row{display:flex;align-items:baseline;padding:3px 4px;gap:0;}
-.stat3-row+.stat3-row{margin-top:2px;}
-.stat3-ico{font-size:11px;width:18px;}
-.stat3-num{font-size:21px;font-weight:800;letter-spacing:-.4px;flex:1;}
-.stat3-num.t{color:#30d5f5;}
-.stat3-num.o{color:#ff7043;}
-.stat3-unit{font-size:9px;color:rgba(180,210,225,.35);align-self:flex-end;padding-bottom:2px;}
-/* Swipe V3: child carousel strip */
-.swipe3{display:flex;align-items:center;gap:6px;padding:5px 8px 4px;overflow:hidden;}
-.schildpill{display:flex;align-items:center;gap:4px;padding:4px 9px;border-radius:12px;background:rgba(48,213,245,.15);border:1px solid rgba(48,213,245,.3);}
-.schildpill.off{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08);}
-.spfoto{width:18px;height:18px;border-radius:50%;overflow:hidden;background:rgba(48,213,245,.2);}
-.spfoto img{width:100%;height:100%;object-fit:cover;display:block;}
-.spname{font-size:9px;font-weight:600;color:#30d5f5;}
-.spname.off{color:rgba(255,255,255,.4);}
-.swipe-hint{font-size:8px;color:rgba(255,255,255,.2);margin-left:auto;}
+.goal-card{background:#0d1828;border-radius:10px;padding:8px 9px;border:1px solid rgba(48,213,245,.15);margin-bottom:3px;}
+.gf-badge{font-size:7px;font-weight:700;background:rgba(48,213,245,.12);color:#30d5f5;border-radius:4px;padding:2px 6px;display:inline-block;margin-bottom:3px;}
+.gf-row{display:flex;align-items:flex-start;gap:6px;}
+.gf-desc{font-size:9px;color:#b8d4e0;flex:1;line-height:1.4;}
+.gf-pills{display:flex;flex-direction:column;gap:2px;flex-shrink:0;}
+.gp{font-size:7px;font-weight:600;padding:2px 5px;border-radius:4px;white-space:nowrap;}
+.gpp{background:rgba(26,122,64,.35);color:#66bb6a;}
+.gpf{background:rgba(201,64,16,.25);color:#ff7043;}
+.gbtns{display:flex;gap:3px;margin-top:5px;}
+.gbp{flex:1;padding:5px;border-radius:7px;background:rgba(26,122,64,.2);border:1px solid rgba(102,187,106,.35);color:#66bb6a;font-size:8px;font-weight:700;text-align:center;}
+.gbf{flex:1;padding:5px;border-radius:7px;background:rgba(201,64,16,.18);border:1px solid rgba(255,112,67,.3);color:#ff7043;font-size:8px;font-weight:700;text-align:center;}
+.gdone{background:#0d1828;border-radius:10px;padding:7px 9px;border:1px solid rgba(255,255,255,.04);border-style:dashed;margin-bottom:3px;opacity:.45;}
+.gdone-badge{font-size:7px;color:rgba(170,200,215,.35);margin-bottom:2px;}
+.gdone-desc{font-size:8px;color:rgba(170,200,215,.3);}
+.manual-btn{display:flex;align-items:center;justify-content:center;padding:5px;margin:4px 6px 0;border:1px solid rgba(48,213,245,.12);border-radius:8px;}
+.manual-txt{font-size:8px;color:rgba(48,213,245,.45);}
 </style>
 </head>
 <body>
 
-<h1>KidsAPP · Style C 佈局優化</h1>
-<div class="sub">深色主題 · 四項改進套用</div>
+<h1>KidsAPP · V1修正版確認</h1>
+<div class="sub">Style C 深色 · 請確認佈局是否符合預期</div>
 
-<div class="improvements">
-  <span class="imp">① 目標單頁不捲動</span>
-  <span class="imp">② 審核人移至導覽列</span>
-  <span class="imp">③ 左右滑換帳號</span>
-  <span class="imp">④ 頭像+名字+統計重整</span>
+<div class="changes">
+  <span class="ch">✓ 頭像+名字靠左</span>
+  <span class="ch">✓ 統計靠右同格式</span>
+  <span class="ch">✓ 6磚塊不需捲動</span>
+  <span class="ch">✓ 審核人在導覽列</span>
 </div>
 
-<div class="section-lbl">── 首頁佈局版本選擇 ──</div>
-
 <div class="phones">
 
-  <!-- ══ V1: 星環中心 ══ -->
+  <!-- ══ PHONE 1: 修正後首頁 ══ -->
   <div class="phone-col">
     <div class="iphone">
-      <div class="screen bg">
+      <div class="screen">
         <div class="island"></div>
-        <!-- Nav with auditor -->
-        <div class="nav-bar">
-          <span class="app-name">🏅 KidsAPP</span>
+
+        <!-- Navbar -->
+        <div class="pnav">
+          <span class="ptitle">🏅 KidsAPP</span>
           <div class="aud-chip">
-            <div class="aud-av-tiny"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' fill='%23081428'/%3E%3Ccircle cx='10' cy='7' r='4' fill='%2330d5f5'/%3E%3Cellipse cx='10' cy='17' rx='7' ry='5' fill='%2330d5f5'/%3E%3C/svg%3E"></div>
-            <span class="aud-chip-name">Hang</span>
+            <div class="aud-av">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' fill='%23081428'/%3E%3Ccircle cx='10' cy='7' r='4' fill='%2330d5f5'/%3E%3Cellipse cx='10' cy='17' rx='7' ry='5' fill='%2330d5f5'/%3E%3C/svg%3E">
+            </div>
+            <span class="aud-name">Hang ▾</span>
           </div>
-          <div class="gear-btn">⚙️</div>
+          <div class="gear">⚙️</div>
         </div>
-        <div class="scr">
-          <!-- Swipe dots indicator -->
-          <div class="swipe-dots">
-            <div class="sdot"></div>
-            <div class="sdot on"></div>
-            <div class="sdot"></div>
-            <div style="font-size:7px;color:rgba(255,255,255,.2);margin-left:4px;">滑動切換</div>
+
+        <!-- Swipe dots -->
+        <div class="sdots" style="padding:3px 0;">
+          <div class="sd"></div>
+          <div class="sd on"></div>
+          <div class="sd"></div>
+          <span class="swipe-hint">← 左右滑動切換 →</span>
+        </div>
+
+        <!-- Profile: LEFT = avatar+name | RIGHT = stats -->
+        <div class="profile-card">
+          <!-- Left -->
+          <div class="prof-left">
+            <div class="av">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%230a1422'/%3E%3Ccircle cx='30' cy='21' r='13' fill='%2330d5f5'/%3E%3Cellipse cx='30' cy='50' rx='21' ry='15' fill='%2330d5f5'/%3E%3C/svg%3E">
+            </div>
+            <div class="pname">小明</div>
           </div>
-          <!-- Profile: centered avatar + name + stats -->
-          <div class="prof1">
-            <div class="av1">
-              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23081428'/%3E%3Ccircle cx='40' cy='28' r='18' fill='%2330d5f5'/%3E%3Cellipse cx='40' cy='68' rx='28' ry='20' fill='%2330d5f5'/%3E%3C/svg%3E">
+          <!-- Divider -->
+          <div class="divider"></div>
+          <!-- Right: stats same format stacked -->
+          <div class="prof-right">
+            <div class="stat-row">
+              <span class="stat-ico">💰</span>
+              <span class="stat-num t">1,800</span>
+              <span class="stat-unit">NTD</span>
             </div>
-            <div class="name1">小明</div>
-            <div class="stats1">
-              <div class="stat1-row">
-                <div class="stat1-icon">💰</div>
-                <div class="stat1-val t">1,800</div>
-                <div class="stat1-unit">NTD</div>
-              </div>
-              <div class="stat1-row">
-                <div class="stat1-icon">⏱</div>
-                <div class="stat1-val o">1,120</div>
-                <div class="stat1-unit">mins</div>
-              </div>
-            </div>
-          </div>
-          <div class="pad">
-            <div class="sec">🎯 Learning & Tasks</div>
-            <div class="cgrid">
-              <div class="ctile"><div class="te">📚</div><div class="tn">Vocabulary</div><div class="tv">+500 NTD</div><div class="tv">+200 mins</div></div>
-              <div class="ctile"><div class="te">📝</div><div class="tn">School Exam</div><div class="tv">+800 NTD</div></div>
-              <div class="ctile"><div class="te">🏠</div><div class="tn">Housework</div><div class="tv">+300 NTD</div><div class="tv">+150 mins</div></div>
-              <div class="ctile"><div class="te">⚽</div><div class="tn">Sport</div><div class="tv">+200 NTD</div><div class="tv">+100 mins</div></div>
-            </div>
-            <div class="sec">💳 Money & Behavior</div>
-            <div class="cgrid">
-              <div class="ctile ob"><div class="te">💳</div><div class="tn">Transactions</div><div class="tv o">-200 NTD</div></div>
-              <div class="ctile am"><div class="te">⭐</div><div class="tn">Behavior</div><div class="tv g">+100 NTD</div></div>
+            <div class="stat-row">
+              <span class="stat-ico">⏱</span>
+              <span class="stat-num o">1,120</span>
+              <span class="stat-unit">mins</span>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="ver-name">V1 · 星環中心</div>
-    <div class="ver-tag">大頭像居中 · 數字等行</div>
+
+        <!-- Learning & Tasks (4 tiles) -->
+        <div class="slbl">🎯 Learning &amp; Tasks</div>
+        <div class="cgrid">
+          <div class="ctile">
+            <div class="te">📚</div>
+            <div class="tn">Vocabulary</div>
+            <div class="tv">+500 NTD</div>
+            <div class="tv">+200 mins</div>
+          </div>
+          <div class="ctile">
+            <div class="te">📝</div>
+            <div class="tn">School Exam</div>
+            <div class="tv">+800 NTD</div>
+            <div class="tv dim">— mins</div>
+          </div>
+          <div class="ctile">
+            <div class="te">🏠</div>
+            <div class="tn">Housework</div>
+            <div class="tv">+300 NTD</div>
+            <div class="tv">+150 mins</div>
+          </div>
+          <div class="ctile">
+            <div class="te">⚽</div>
+            <div class="tn">Sport</div>
+            <div class="tv">+200 NTD</div>
+            <div class="tv">+100 mins</div>
+          </div>
+        </div>
+
+        <!-- Money & Behavior (2 tiles) -->
+        <div class="slbl">💳 Money &amp; Behavior</div>
+        <div class="cgrid">
+          <div class="ctile ob">
+            <div class="te">💳</div>
+            <div class="tn">Transactions</div>
+            <div class="tv o">-200 NTD</div>
+            <div class="tv o">-60 mins</div>
+          </div>
+          <div class="ctile am">
+            <div class="te">⭐</div>
+            <div class="tn">Behavior</div>
+            <div class="tv g">+100 NTD</div>
+            <div class="tv o">-50 mins</div>
+          </div>
+        </div>
+
+      </div><!-- /screen -->
+    </div><!-- /iphone -->
+    <div class="ver-name">首頁 · V1 修正版</div>
+    <div class="ver-sub">頭像+名字靠左 · 統計靠右<br>6個磚塊全部可見 · 不需捲動</div>
   </div>
 
-  <!-- ══ V2: 分割頁首 ══ -->
+  <!-- ══ PHONE 2: 目標頁「統計在上」 ══ -->
   <div class="phone-col">
     <div class="iphone">
-      <div class="screen bg">
+      <div class="screen">
         <div class="island"></div>
-        <div class="nav-bar">
-          <span class="app-name">🏅 KidsAPP</span>
+
+        <!-- Detail navbar -->
+        <div class="pnav">
+          <span style="font-size:9px;color:rgba(48,213,245,.6);margin-right:5px;">‹ 返回</span>
+          <span style="font-size:13px;font-weight:700;color:#cce6f0;flex:1;">📚 Vocabulary</span>
           <div class="aud-chip">
-            <div class="aud-av-tiny"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' fill='%23081428'/%3E%3Ccircle cx='10' cy='7' r='4' fill='%2330d5f5'/%3E%3Cellipse cx='10' cy='17' rx='7' ry='5' fill='%2330d5f5'/%3E%3C/svg%3E"></div>
-            <span class="aud-chip-name">Hang ▾</span>
-          </div>
-          <div class="gear-btn">⚙️</div>
-        </div>
-        <div class="scr">
-          <!-- Swipe: arrows + dots -->
-          <div class="swipe2">
-            <span class="sarrow">‹</span>
-            <div>
-              <div class="sname2">小明</div>
+            <div class="aud-av">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' fill='%23081428'/%3E%3Ccircle cx='10' cy='7' r='4' fill='%2330d5f5'/%3E%3Cellipse cx='10' cy='17' rx='7' ry='5' fill='%2330d5f5'/%3E%3C/svg%3E">
             </div>
-            <span class="sarrow">›</span>
-          </div>
-          <div class="sdots2" style="display:flex;gap:4px;justify-content:center;padding:2px 0 4px;">
-            <div class="sd2"></div><div class="sd2 on"></div><div class="sd2"></div>
-          </div>
-          <!-- Profile: avatar+name left, stats right -->
-          <div style="padding:0 7px;">
-            <div class="prof2">
-              <div class="prof2-top">
-                <div class="av2-wrap">
-                  <div class="av2">
-                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%23081428'/%3E%3Ccircle cx='30' cy='21' r='14' fill='%2330d5f5'/%3E%3Cellipse cx='30' cy='51' rx='21' ry='15' fill='%2330d5f5'/%3E%3C/svg%3E">
-                  </div>
-                  <div class="name2">小明</div>
-                </div>
-                <div class="stats2" style="flex:1;flex-direction:column;gap:4px;">
-                  <div class="stat2-chip">
-                    <div class="stat2-label">💰 存款</div>
-                    <div class="stat2-val t">1,800</div>
-                    <div class="stat2-unit">NTD</div>
-                  </div>
-                  <div class="stat2-chip">
-                    <div class="stat2-label">⏱ 時間</div>
-                    <div class="stat2-val o">1,120</div>
-                    <div class="stat2-unit">mins</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="pad" style="padding-top:3px;">
-            <div class="sec">🎯 Learning & Tasks</div>
-            <div class="cgrid">
-              <div class="ctile"><div class="te">📚</div><div class="tn">Vocabulary</div><div class="tv">+500 NTD</div><div class="tv">+200 mins</div></div>
-              <div class="ctile"><div class="te">📝</div><div class="tn">School Exam</div><div class="tv">+800 NTD</div></div>
-              <div class="ctile"><div class="te">🏠</div><div class="tn">Housework</div><div class="tv">+300 NTD</div></div>
-              <div class="ctile"><div class="te">⚽</div><div class="tn">Sport</div><div class="tv">+200 NTD</div></div>
-            </div>
-            <div class="sec">💳 Money & Behavior</div>
-            <div class="cgrid">
-              <div class="ctile ob"><div class="te">💳</div><div class="tn">Transactions</div><div class="tv o">-200 NTD</div></div>
-              <div class="ctile am"><div class="te">⭐</div><div class="tn">Behavior</div><div class="tv g">+100 NTD</div></div>
-            </div>
+            <span class="aud-name">Hang</span>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="ver-name">V2 · 分割頁首</div>
-    <div class="ver-tag">頭像+名字左，統計右 · 左右箭頭</div>
-  </div>
 
-  <!-- ══ V3: 懸浮卡片 ══ -->
-  <div class="phone-col">
-    <div class="iphone">
-      <div class="screen bg">
-        <div class="island"></div>
-        <div class="nav-bar">
-          <span class="app-name">🏅 KidsAPP</span>
-          <div class="aud-chip">
-            <div class="aud-av-tiny"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' fill='%23081428'/%3E%3Ccircle cx='10' cy='7' r='4' fill='%2330d5f5'/%3E%3Cellipse cx='10' cy='17' rx='7' ry='5' fill='%2330d5f5'/%3E%3C/svg%3E"></div>
-            <span class="aud-chip-name">Hang</span>
+        <!-- Stats strip: accumulated NTD | mins | + button -->
+        <div class="goal-stats-strip">
+          <div class="gstat">
+            <div class="gstat-lbl">💰 累積</div>
+            <div class="gstat-val t">+500</div>
+            <div class="gstat-unit">NTD</div>
           </div>
-          <div class="gear-btn">⚙️</div>
-        </div>
-        <div class="scr">
-          <!-- Swipe: child pills carousel -->
-          <div class="swipe3">
-            <div class="schildpill off">
-              <div class="spfoto"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' fill='%23111'/%3E%3Ccircle cx='10' cy='7' r='4' fill='%23aaa'/%3E%3Cellipse cx='10' cy='17' rx='7' ry='5' fill='%23aaa'/%3E%3C/svg%3E"></div>
-              <span class="spname off">小花</span>
-            </div>
-            <div class="schildpill">
-              <div class="spfoto"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' fill='%23081428'/%3E%3Ccircle cx='10' cy='7' r='4' fill='%2330d5f5'/%3E%3Cellipse cx='10' cy='17' rx='7' ry='5' fill='%2330d5f5'/%3E%3C/svg%3E"></div>
-              <span class="spname">小明</span>
-            </div>
-            <span class="swipe-hint">← 滑動 →</span>
+          <div class="gstat o">
+            <div class="gstat-lbl">⏱ 累積</div>
+            <div class="gstat-val o">+200</div>
+            <div class="gstat-unit">mins</div>
           </div>
-          <!-- Profile: glassmorphism floating card -->
-          <div class="prof3">
-            <div class="prof3-av-wrap">
-              <div class="av3">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 70'%3E%3Crect width='70' height='70' fill='%230a1422'/%3E%3Ccircle cx='35' cy='24' r='16' fill='%2330d5f5'/%3E%3Cellipse cx='35' cy='60' rx='24' ry='18' fill='%2330d5f5'/%3E%3C/svg%3E">
-              </div>
-              <div class="name3">小明</div>
-            </div>
-            <div class="stats3">
-              <div class="stat3-row">
-                <div class="stat3-ico">💰</div>
-                <div class="stat3-num t">1,800</div>
-                <div class="stat3-unit">NTD</div>
-              </div>
-              <div class="stat3-row">
-                <div class="stat3-ico">⏱</div>
-                <div class="stat3-num o">1,120</div>
-                <div class="stat3-unit">mins</div>
-              </div>
-            </div>
-          </div>
-          <div class="pad" style="padding-top:2px;">
-            <div class="sec">🎯 Learning & Tasks</div>
-            <div class="cgrid">
-              <div class="ctile"><div class="te">📚</div><div class="tn">Vocabulary</div><div class="tv">+500 NTD</div><div class="tv">+200 mins</div></div>
-              <div class="ctile"><div class="te">📝</div><div class="tn">School Exam</div><div class="tv">+800 NTD</div></div>
-              <div class="ctile"><div class="te">🏠</div><div class="tn">Housework</div><div class="tv">+300 NTD</div></div>
-              <div class="ctile"><div class="te">⚽</div><div class="tn">Sport</div><div class="tv">+200 NTD</div></div>
-            </div>
-            <div class="sec">💳 Money & Behavior</div>
-            <div class="cgrid">
-              <div class="ctile ob"><div class="te">💳</div><div class="tn">Transactions</div><div class="tv o">-200 NTD</div></div>
-              <div class="ctile am"><div class="te">⭐</div><div class="tn">Behavior</div><div class="tv g">+100 NTD</div></div>
-            </div>
+          <div class="gadd-btn">
+            <div class="gadd-plus">＋</div>
+            <div class="gadd-lbl">新增</div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="ver-name">V3 · 懸浮卡片</div>
-    <div class="ver-tag">玻璃質感卡 · 子女切換帶照片</div>
-  </div>
 
-</div><!-- /phones row 1 -->
+        <!-- Section label -->
+        <div class="slbl" style="margin-left:7px;">🎯 Active Goals</div>
 
-<!-- ── Row 2: Goal detail page ── -->
-<div class="section-lbl">── 目標頁（單頁不捲動）對比 ──</div>
-
-<div class="phones">
-
-  <!-- Goal page V1 style: compact list -->
-  <div class="phone-col">
-    <div class="iphone">
-      <div class="screen bg">
-        <div class="island"></div>
-        <!-- Detail nav -->
-        <div class="nav-bar" style="background:rgba(255,255,255,.03);">
-          <span style="font-size:10px;color:rgba(48,213,245,.7);margin-right:6px;">‹ 返回</span>
-          <span style="font-size:13px;font-weight:700;color:#d4e8f0;flex:1;">📚 Vocabulary</span>
-          <span style="font-size:8px;background:rgba(48,213,245,.15);color:#30d5f5;padding:2px 7px;border-radius:7px;">+500 NTD</span>
-        </div>
-        <div class="scr pad">
-          <!-- Goals section header -->
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
-            <div class="sec" style="margin:0;">🎯 Active Goals</div>
-            <span style="font-size:8px;background:rgba(48,213,245,.15);color:#30d5f5;padding:2px 7px;border-radius:6px;">＋ 新增</span>
-          </div>
-          <!-- Goal 1 compact -->
-          <div class="goal-card-d">
+        <!-- Goal 1 -->
+        <div style="padding:0 6px;">
+          <div class="goal-card">
             <div class="gf-badge">🔄 每週一、三</div>
-            <div class="gf-desc">背10個新單字</div>
-            <div class="gpills"><span class="gp gpp">✅ +50 NTD</span><span class="gp gpp">+30 mins</span><span class="gp gpf">❌ -10 mins</span></div>
-            <div class="gbtns"><div class="gbp">✅ Passed</div><div class="gbf">❌ Failed</div></div>
+            <div class="gf-row">
+              <div class="gf-desc">背10個新單字</div>
+              <div class="gf-pills">
+                <span class="gp gpp">✅ +50 NTD</span>
+                <span class="gp gpp">+30 mins</span>
+                <span class="gp gpf">❌ -10m</span>
+              </div>
+            </div>
+            <div class="gbtns">
+              <div class="gbp">✅ Passed</div>
+              <div class="gbf">❌ Failed</div>
+            </div>
           </div>
-          <!-- Goal 2 compact -->
-          <div class="goal-card-d">
+
+          <!-- Goal 2 -->
+          <div class="goal-card">
             <div class="gf-badge">📅 2026 Jul 01 · 單次</div>
-            <div class="gf-desc">背15個進階單字，apple banana…</div>
-            <div class="gpills"><span class="gp gpp">✅ +80 NTD</span><span class="gp gpf">❌ -20 NTD</span></div>
-            <div class="gbtns"><div class="gbp">✅ Passed</div><div class="gbf">❌ Failed</div></div>
+            <div class="gf-row">
+              <div class="gf-desc">背15個進階單字<br>apple, banana…</div>
+              <div class="gf-pills">
+                <span class="gp gpp">✅ +80 NTD</span>
+                <span class="gp gpf">❌ -20</span>
+              </div>
+            </div>
+            <div class="gbtns">
+              <div class="gbp">✅ Passed</div>
+              <div class="gbf">❌ Failed</div>
+            </div>
           </div>
-          <!-- Goal 3 compact -->
-          <div class="goal-card-d" style="opacity:.5;border-style:dashed;">
-            <div class="gf-badge" style="background:rgba(255,255,255,.06);color:rgba(180,210,225,.4);">✅ 已完成 · 2026 Jun 22</div>
-            <div class="gf-desc" style="color:rgba(180,210,225,.4);">背10個動物單字</div>
-            <div style="font-size:8px;color:rgba(102,187,106,.6);">Passed → +50 NTD</div>
+
+          <!-- Completed goal (archived) -->
+          <div class="gdone">
+            <div class="gdone-badge">✅ 已完成 · 2026 Jun 22</div>
+            <div class="gdone-desc">背10個動物單字 → +50 NTD</div>
           </div>
+
           <!-- Manual entry -->
-          <div style="text-align:center;margin-top:6px;">
-            <span style="font-size:9px;color:rgba(48,213,245,.4);border:1px solid rgba(48,213,245,.15);padding:4px 14px;border-radius:8px;">＋ 手動新增記錄</span>
+          <div class="manual-btn">
+            <span class="manual-txt">＋ 手動新增記錄</span>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="ver-name">目標頁 · 緊湊列表</div>
-    <div class="ver-tag">2-3個目標同時可見<br>不需上下捲動</div>
-  </div>
 
-  <!-- Goal page V2 style: card with header stats -->
-  <div class="phone-col">
-    <div class="iphone">
-      <div class="screen bg">
-        <div class="island"></div>
-        <div class="nav-bar" style="background:rgba(255,255,255,.03);">
-          <span style="font-size:10px;color:rgba(48,213,245,.7);margin-right:6px;">‹</span>
-          <span style="font-size:13px;font-weight:700;color:#d4e8f0;flex:1;">📚 Vocabulary</span>
-          <div class="aud-chip" style="margin-right:0;">
-            <span class="aud-chip-name" style="font-size:8px;">Hang</span>
-          </div>
-        </div>
-        <div class="scr pad">
-          <!-- Stats strip -->
-          <div style="display:flex;gap:4px;margin-bottom:7px;">
-            <div style="flex:1;background:#0e1829;border-radius:9px;padding:6px 8px;border:1px solid rgba(48,213,245,.15);text-align:center;">
-              <div style="font-size:7px;color:rgba(180,210,225,.4);margin-bottom:2px;">累計</div>
-              <div style="font-size:16px;font-weight:800;color:#30d5f5;">+500</div>
-              <div style="font-size:8px;color:rgba(180,210,225,.35);">NTD</div>
-            </div>
-            <div style="flex:1;background:#0e1829;border-radius:9px;padding:6px 8px;border:1px solid rgba(255,112,67,.15);text-align:center;">
-              <div style="font-size:7px;color:rgba(180,210,225,.4);margin-bottom:2px;">累計</div>
-              <div style="font-size:16px;font-weight:800;color:#ff7043;">+200</div>
-              <div style="font-size:8px;color:rgba(180,210,225,.35);">mins</div>
-            </div>
-            <div style="width:50px;background:#0e1829;border-radius:9px;padding:6px 5px;border:1px solid rgba(255,255,255,.05);text-align:center;display:flex;align-items:center;justify-content:center;">
-              <span style="font-size:18px;">+</span>
-            </div>
-          </div>
-          <!-- Goals -->
-          <div class="sec" style="margin-bottom:4px;">Active Goals</div>
-          <div class="goal-card-d" style="border-color:rgba(48,213,245,.25);">
-            <div style="display:flex;align-items:flex-start;gap:6px;">
-              <div style="flex:1;">
-                <div class="gf-badge">🔄 每週一、三</div>
-                <div class="gf-desc">背10個新單字</div>
-              </div>
-              <div style="text-align:right;flex-shrink:0;">
-                <div style="font-size:8px;color:#66bb6a;font-weight:600;">✅ +50 NTD</div>
-                <div style="font-size:8px;color:#66bb6a;">+30 mins</div>
-                <div style="font-size:8px;color:#ff7043;">❌ -10m</div>
-              </div>
-            </div>
-            <div class="gbtns" style="margin-top:5px;"><div class="gbp">✅ Passed</div><div class="gbf">❌ Failed</div></div>
-          </div>
-          <div class="goal-card-d">
-            <div style="display:flex;align-items:flex-start;gap:6px;">
-              <div style="flex:1;">
-                <div class="gf-badge">📅 Jul 01</div>
-                <div class="gf-desc">背15個進階單字</div>
-              </div>
-              <div style="text-align:right;flex-shrink:0;">
-                <div style="font-size:8px;color:#66bb6a;font-weight:600;">✅ +80 NTD</div>
-                <div style="font-size:8px;color:#ff7043;">❌ -20</div>
-              </div>
-            </div>
-            <div class="gbtns" style="margin-top:5px;"><div class="gbp">✅ Passed</div><div class="gbf">❌ Failed</div></div>
-          </div>
-          <div class="goal-card-d" style="opacity:.45;border-style:dashed;">
-            <div class="gf-badge" style="background:rgba(255,255,255,.05);color:rgba(180,210,225,.35);">✅ 已完成</div>
-            <div class="gf-desc" style="color:rgba(180,210,225,.35);">背10個動物單字 · Jun 22</div>
-          </div>
-        </div>
-      </div>
-    </div>
+      </div><!-- /screen -->
+    </div><!-- /iphone -->
     <div class="ver-name">目標頁 · 統計在上</div>
-    <div class="ver-tag">頁頂顯示累積統計<br>目標卡片資訊並排</div>
+    <div class="ver-sub">累積統計頂部顯示<br>2個待驗證 + 1個已完成<br>全部可見不需捲動</div>
   </div>
 
-</div>
+</div><!-- /phones -->
 
-<div style="text-align:center;margin-top:16px;font-size:11px;opacity:.35;line-height:1.8;">
-  選定版本組合後告訴我（例：首頁V3 + 目標頁右）<br>我直接套用至正式 index.html
+<div style="text-align:center;margin-top:20px;font-size:11px;line-height:1.9;opacity:.35;">
+  確認佈局正確後告訴我「OK」<br>
+  我直接套用至正式 index.html
 </div>
 
 </body>

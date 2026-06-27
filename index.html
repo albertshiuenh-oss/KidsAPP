@@ -2,253 +2,754 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>KidsAPP · 視覺對齊功能修復版</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>KidsAPP</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070d18">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="KidsAPP">
+<link rel="apple-touch-icon" href="icon-180.png">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:radial-gradient(circle at top,#111a2e,#050a14);min-height:100vh;padding:30px 16px 50px;color:#fff;-webkit-font-smoothing:antialiased;}
-h1{text-align:center;font-size:17px;font-weight:700;margin-bottom:3px;}
-.sub{text-align:center;font-size:11px;opacity:.35;margin-bottom:24px;}
-.phones{display:flex;gap:32px;justify-content:center;align-items:flex-start;flex-wrap:wrap;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#070d18;--bg2:#0d1828;--bg3:#111d30;
+  --teal:#30d5f5;--teal-dim:rgba(48,213,245,.12);--teal-border:rgba(48,213,245,.22);
+  --orange:#ff7043;--orange-dim:rgba(255,112,67,.12);--orange-border:rgba(255,112,67,.2);
+  --green:#66bb6a;--green-dim:rgba(102,187,106,.2);--green-border:rgba(102,187,106,.35);
+  --amber:#ffd54f;--amber-border:rgba(255,213,79,.18);
+  --text:#cce6f0;--sub:rgba(180,210,225,.4);--border:rgba(255,255,255,.06);
+  --sys-green:#34c759;--red:#ff5252;
+  --shadow:0 4px 24px rgba(0,0,0,.5);
+}
+body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100svh;-webkit-font-smoothing:antialiased;}
 
-/* iPhone 15 Pro frame */
-.iphone{width:232px;background:linear-gradient(145deg,#2f2f2f,#1a1a1a);border-radius:52px;padding:10px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 36px 100px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.09);position:relative;}
-.iphone::before{content:'';position:absolute;left:-3px;top:96px;width:3px;height:30px;background:#3c3c3c;border-radius:2px 0 0 2px;box-shadow:0 40px 0 #3c3c3c;}
-.iphone::after{content:'';position:absolute;right:-3px;top:122px;width:3px;height:58px;background:#3c3c3c;border-radius:0 2px 2px 0;}
-.screen{width:212px;height:460px;border-radius:44px;overflow:hidden;position:relative;background:#060b16;}
-.island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:86px;height:25px;background:#000;border-radius:16px;z-index:30;}
+/* ── Screens ── */
+.screen{display:none;}.screen.active{display:flex;flex-direction:column;}
+#screenHome{height:100svh;overflow:hidden;}
 
-/* 關鍵修正：不再使用 app-real 放大再縮小，直接用 1:1 適應 screen 的彈性佈局 */
-.app-container{width:100%;height:100%;display:flex;flex-direction:column;background:#060b16;}
+/* ── Navbar ── */
+.navbar{
+  background:rgba(7,13,24,.92);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  color:var(--text);padding:13px 14px 11px;
+  display:flex;align-items:center;
+  position:sticky;top:0;z-index:100;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.nav-title{font-size:15px;font-weight:700;flex:1;letter-spacing:-.2px;}
+.nav-btn{width:30px;height:30px;border-radius:8px;border:none;background:rgba(255,255,255,.07);color:var(--text);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.nav-back{background:none;border:none;color:var(--teal);font-size:13px;font-weight:500;cursor:pointer;padding:0;opacity:.9;margin-right:8px;}
+.nav-center{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;flex:1;}
+.nav-badges{display:flex;gap:4px;margin-left:auto;}
+.nav-badge{background:var(--teal-dim);color:var(--teal);font-size:9px;padding:2px 7px;border-radius:7px;border:1px solid var(--teal-border);white-space:nowrap;}
 
-/* NAVBAR - 依比例縮放 */
-.r-nav{height:54px;display:flex;align-items:flex-end;padding:0 12px 10px;background:rgba(6,11,22,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.05);flex-shrink:0;}
-.r-nav-title{font-size:14px;font-weight:800;color:#fff;flex:1;}
-.r-aud-chip{display:flex;align-items:center;gap:4px;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.25);border-radius:14px;padding:3px 6px 3px 4px;margin-right:6px;cursor: pointer;}
-.r-aud-av{width:16px;height:16px;border-radius:50%;overflow:hidden;flex-shrink:0;}
-.r-aud-av img{width:100%;height:100%;object-fit:cover;display:block;}
-.r-aud-name{font-size:9px;font-weight:600;color:#38bdf8;}
-.r-gear{width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:11px;cursor: pointer;}
+/* Auditor chip in navbar */
+.aud-chip{display:flex;align-items:center;gap:3px;background:var(--teal-dim);border:1px solid var(--teal-border);border-radius:14px;padding:3px 8px 3px 4px;margin-right:6px;cursor:pointer;}
+.aud-chip-av{width:18px;height:18px;border-radius:50%;overflow:hidden;background:rgba(48,213,245,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;}
+.aud-chip-av img{width:100%;height:100%;object-fit:cover;display:block;}
+.aud-chip-name{font-size:9px;font-weight:600;color:var(--teal);white-space:nowrap;}
+.aud-chip-offline{background:rgba(255,255,255,.06);border-color:var(--border);}
+.aud-chip-offline .aud-chip-name{color:var(--sub);}
 
-/* HOME BODY */
-.r-home{flex:1;min-height:0;display:flex;flex-direction:column;padding:8px 12px 10px;gap:8px;overflow:hidden;}
+/* ── HOME BODY: flex fill screen ── */
+.home-body{
+  flex:1;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  padding:12px 14px;
+  gap:16px;
+  overflow-y:auto;
+}
 
 /* Swipe dots */
-.r-dots{display:flex;align-items:center;justify-content:center;gap:5px;height:12px;flex-shrink:0;}
-.r-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.2);}
-.r-dot.on{width:14px;border-radius:3px;background:#38bdf8;box-shadow: 0 0 6px rgba(56,189,248,0.6);}
-.r-hint{font-size:9px;color:rgba(255,255,255,.2);font-weight:700;}
+.swipe-dots{display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;height:16px;}
+.sdot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.14);transition:all .2s;}
+.sdot.on{width:16px;border-radius:3px;background:var(--teal);}
+.swipe-hint{font-size:7px;color:rgba(255,255,255,.18);margin-left:6px;}
 
-/* PROFILE CARD */
-.r-profile {
-  background: linear-gradient(135deg, #0f1e36, #091222);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  border: 1px solid rgba(56, 189, 248, 0.2);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-  flex-shrink: 0;
+/* Profile card: avatar+name LEFT | stats RIGHT */
+.profile-card{
+  background:linear-gradient(135deg, var(--bg2), var(--bg3));border-radius:16px;
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:var(--shadow);
+  flex-shrink:0;
 }
-.r-prof-left{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;}
-.r-avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 1.5px solid #38bdf8;
-  background: #0b1329;
-  box-shadow: 0 0 8px rgba(56,189,248,0.35);
-}
-.r-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
-.r-pname{font-size:12px;font-weight:700;color:#fff;}
-
-/* Profile Stats */
-.r-prof-right{flex:1;display:flex;flex-direction:column;justify-content:center;}
-.r-stat{display:flex;align-items:baseline;justify-content:space-between;padding:3px 0;}
-.r-stat+.r-stat{border-top:1px solid rgba(255,255,255,.06);}
-.r-stat-label{font-size:10px;color:#64748b;font-weight:700;letter-spacing: 0.3px;}
-.r-stat-num{font-size:18px;font-weight:800;letter-spacing:-0.3px;}
-.r-stat-num.t{color:#38bdf8;text-shadow: 0 0 8px rgba(56,189,248,0.25);}
-.r-stat-num.o{color:#fb923c;text-shadow: 0 0 8px rgba(251,146,60,0.25);}
+.prof-left{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;}
+.p-avatar{width:52px;height:52px;border-radius:50%;overflow:hidden;border:2px solid var(--teal-border);box-shadow:0 0 16px rgba(48,213,245,.16);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.p-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+.p-name{font-size:12px;font-weight:700;color:var(--text);}
+.prof-div{width:1px;height:46px;background:var(--border);flex-shrink:0;}
+.prof-right{flex:1;display:flex;flex-direction:column;gap:4px;}
+.stat-row{display:flex;align-items:baseline;gap:6px;padding:2px 4px;}
+.stat-ico{display:none;}
+.stat-num{font-size:22px;font-weight:800;letter-spacing:-.4px;line-height:1;}
+.stat-num.t{color:var(--teal);}
+.stat-num.o{color:var(--orange);}
+.stat-unit{font-size:10px;color:var(--sub);font-weight:600;}
 
 /* Section labels */
-.r-lbl{font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:#475569;flex-shrink:0;height:11px;display:flex;align-items:center;}
+.sec-lbl{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--teal);padding-left:2px;margin-bottom:4px;flex-shrink:0;display:flex;align-items:center;gap:6px;}
+.sec-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(90deg, rgba(48,213,245,.2), transparent);margin-left:8px;}
 
-/* Grids */
-.r-grid-top{flex:2;display:flex;flex-direction:column;gap:4px;min-height:0;max-height:220px;}
-.r-grid-bot{flex:1;display:flex;flex-direction:column;gap:4px;min-height:0;max-height:115px;}
-.r-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;min-height:0;}
-.r-grid-2row{grid-template-rows:1fr 1fr;}
+/* Category grid sections (附圖樣式：置中大 icon 區塊) */
+.grid-section{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.cat-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;}
 
-/* 精緻任務磚塊 */
-.r-tile {
-  background: linear-gradient(145deg, #0d172a, #070d1a);
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,.04);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 8px 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  cursor: pointer;
-  transition: transform 0.1s ease;
+/* 根據附圖修改的全新 Category Tiles 樣式 */
+.cat-tile{
+  background:var(--bg2);
+  border:1.5px solid var(--border);
+  border-radius:16px;
+  padding:16px 10px;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  text-align:center;
+  transition:all .2s cubic-bezier(0.4, 0, 0.2, 1);
+  position:relative;
+  overflow:hidden;
 }
-.r-tile:active {
-  transform: scale(0.95);
+.cat-tile:active{transform:scale(.95);background:var(--bg3);}
+.cat-tile::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:transparent;transition:background .2s;
 }
-.r-tile.task { border-color: rgba(56,189,248,0.1); }
-.r-tile.ob { border-color: rgba(56,189,248,0.15); background: linear-gradient(145deg, #0f1830, #080d1c); }
-.r-tile.am { border-color: rgba(239,68,68,0.15); }
+/* 個別種類點綴色（上邊條指示燈） */
+.cat-tile.vocab::before { background: var(--teal); }
+.cat-tile.school::before { background: var(--amber); }
+.cat-tile.housework::before { background: var(--green); }
+.cat-tile.sport::before { background: #e040fb; }
+.cat-tile.transactions::before { background: var(--orange); }
+.cat-tile.behavior::before { background: #651fff; }
 
-/* 立體圓形徽章 */
-.r-tile-badge {
-  width: 32px;
-  height: 32px;
-  background: linear-gradient(135deg, #1e293b, #0f172a);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.05);
-  flex-shrink: 0;
+.tile-emoji{font-size:28px;line-height:1;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3));}
+.tile-bottom{display:flex;flex-direction:column;gap:4px;width:100%;}
+.tile-name{font-size:12px;font-weight:700;color:var(--text);letter-spacing:-.1px;}
+
+/* 數據改為更精簡的標籤附註，保持主畫面乾淨 */
+.tile-info-badge{
+  font-size:9px;font-weight:600;padding:2px 4px;border-radius:4px;
+  background:rgba(255,255,255,.04);color:var(--sub);
+  display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
+.tile-info-badge.has-val{background:var(--teal-dim);color:var(--teal);}
+.tile-info-badge.neg{background:var(--orange-dim);color:var(--orange);}
 
-.r-tile-bottom{display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;}
-.r-tile-name{font-size:11px;font-weight:600;color:#cbd5e1;text-align:center;white-space: nowrap;}
+/* ── 建議：下層類別詳細頁面設計 (Detail view style) ── */
+.detail-body{flex:1;overflow-y:auto;scrollbar-width:none;}
+.detail-body::-webkit-scrollbar{display:none;}
+.detail-pad{padding:14px 14px 50px;display:flex;flex-direction:column;gap:12px;}
 
-/* 圖中的「高對比彩色膠囊數據標籤」 */
-.r-pill {
-  font-size: 9px;
-  font-weight: 700;
-  text-align: center;
-  padding: 2px 8px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-  line-height: 1.2;
-}
-.r-pill.green { color: #fff; background: #22c55e; }     /* 綠底白字 */
-.r-pill.blue { color: #fff; background: #2563eb; }      /* 藍底白字 */
-.r-pill.red { color: #fff; background: #dc2626; }       /* 紅底白字 */
-.r-pill.empty { display: none; }                        /* 隱藏無效欄位 */
+/* 頂部數據看板 */
+.goal-stats-strip{display:flex;gap:8px;padding:14px 14px 2px;}
+.gstat-card{flex:1;background:var(--bg2);border-radius:14px;padding:12px;border:1px solid var(--border);position:relative;}
+.gstat-card::after{content:'';position:absolute;left:12px;top:12px;width:4px;height:16px;border-radius:2px;}
+.gstat-card.t::after{background:var(--teal);}
+.gstat-card.o::after{background:var(--orange);}
+.gstat-lbl{font-size:10px;color:var(--sub);margin-bottom:4px;padding-left:10px;font-weight:600;}
+.gstat-val{font-size:20px;font-weight:800;letter-spacing:-.3px;padding-left:10px;}
+.gstat-val.t{color:var(--teal);}
+.gstat-val.o{color:var(--orange);}
+.gstat-unit{font-size:9px;color:var(--sub);margin-left:2px;}
 
+.gadd-goal-btn{width:64px;background:var(--bg2);border-radius:14px;border:1px solid var(--teal-border);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;cursor:pointer;}
+.gadd-goal-btn:active{background:var(--bg3);}
+.gadd-plus{font-size:22px;color:var(--teal);font-weight:400;line-height:1;}
+.gadd-lbl{font-size:8px;color:var(--teal);font-weight:600;}
+
+/* 卡片式目標項目 */
+.goal-card{background:var(--bg2);border-radius:16px;padding:14px;border:1px solid var(--border);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;}
+.goal-card.completed{opacity:.4;border-style:dashed;}
+.goal-freq-row{display:flex;align-items:center;justify-content:space-between;}
+.goal-freq-badge{font-size:9px;font-weight:700;padding:3px 8px;border-radius:6px;background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-border);text-transform:uppercase;}
+.goal-freq-badge.recurring{background:rgba(255,213,79,.1);color:var(--amber);border-color:var(--amber-border);}
+.goal-desc{font-size:13px;font-weight:600;color:var(--text);line-height:1.4;}
+.goal-rewards{display:flex;gap:6px;flex-wrap:wrap;}
+.goal-reward-pill{font-size:9px;font-weight:700;padding:3px 8px;border-radius:6px;display:flex;align-items:center;gap:3px;}
+.reward-pass{background:var(--green-dim);color:var(--green);}
+.reward-fail{background:var(--orange-dim);color:var(--orange);}
+
+.goal-verify-row{display:flex;gap:6px;margin-top:2px;}
+.btn-pass{flex:1;padding:10px;background:var(--green);color:#070d18;border:none;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(102,187,106,.2);}
+.btn-fail{flex:1;padding:10px;background:var(--orange-dim);color:var(--orange);border:1px solid var(--orange-border);border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;}
+.btn-edit-inline{width:36px;border:none;background:rgba(255,255,255,.05);border-radius:10px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--text);}
+
+/* 紀錄列表 */
+.add-rec-btn{width:100%;padding:12px;background:var(--bg2);color:var(--teal);border:1px dashed var(--teal-border);border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.add-rec-btn:active{background:var(--bg3);}
+.add-rec-btn.locked{color:var(--sub);border-color:var(--border);cursor:not-allowed;}
+
+.rec-card{background:var(--bg2);border-radius:14px;padding:12px;border:1px solid var(--border);display:flex;flex-direction:column;gap:6px;}
+.rec-top{display:flex;align-items:center;justify-content:space-between;}
+.rec-meta{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--sub);}
+.rec-badge{font-size:9px;padding:2px 6px;border-radius:5px;font-weight:700;}
+.rec-badge.pass{background:var(--green-dim);color:var(--green);}
+.rec-badge.fail{background:var(--orange-dim);color:var(--orange);}
+.rec-main{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.rec-left-info{display:flex;flex-direction:column;gap:2px;}
+.rec-note{font-size:12px;color:var(--text);font-weight:500;}
+.rec-aud{font-size:10px;color:var(--sub);}
+.rec-amts{display:flex;flex-direction:column;align-items:flex-end;gap:1px;}
+.rec-amt{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;}
+.pos{color:var(--sys-green);}.neg{color:var(--orange);}
+
+/* ── 其餘元件 (保持設定與彈窗) ── */
+.tx-summary{display:flex;gap:8px;}
+.tx-sum-card{flex:1;background:var(--bg2);border-radius:12px;padding:10px 12px;border:1px solid var(--border);}
+.tx-sum-label{font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--sub);margin-bottom:4px;}
+.tx-sum-val{font-size:14px;font-weight:700;}
+.filter-row{display:flex;gap:6px;}
+.filter-btn{flex:1;padding:8px;border-radius:8px;border:1px solid var(--border);background:transparent;font-size:11px;font-weight:600;color:var(--sub);cursor:pointer;}
+.filter-btn.active{border-color:var(--teal);background:var(--teal-dim);color:var(--teal);}
+
+.settings-section{background:var(--bg2);border-radius:14px;overflow:hidden;margin-bottom:12px;border:1px solid var(--border);}
+.settings-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;border-bottom:1px solid var(--border);}
+.settings-section-title{font-size:12px;font-weight:700;color:var(--text);}
+.settings-add-btn{font-size:11px;font-weight:600;color:var(--teal);background:var(--teal-dim);border:none;border-radius:7px;padding:3px 9px;cursor:pointer;}
+.person-row{display:flex;align-items:center;gap:10px;padding:10px 13px;border-bottom:1px solid var(--border);}
+.person-row:last-child{border-bottom:none;}
+.person-av{width:44px;height:44px;border-radius:10px;background:var(--teal-dim);border:1.5px solid var(--teal-border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;}
+.person-av img{width:100%;height:100%;object-fit:cover;display:block;}
+.person-name{font-size:13px;font-weight:600;color:var(--text);}
+.person-sub{font-size:10px;color:var(--sub);margin-top:1px;}
+.person-acts{display:flex;gap:5px;margin-left:auto;}
+.person-act{width:28px;height:28px;border:none;border-radius:7px;background:rgba(255,255,255,.05);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.person-act.del{background:rgba(255,82,82,.1);}
+.settings-info{background:var(--bg2);border-radius:14px;padding:14px;border:1px solid var(--border);text-align:center;}
+.settings-info-title{font-size:13px;font-weight:700;margin-bottom:3px;}
+.settings-info-sub{font-size:11px;color:var(--sub);}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-overlay.show{opacity:1;pointer-events:all;}
+.modal-sheet{background:#0f1829;border-radius:24px 24px 0 0;width:100%;max-width:430px;padding:16px 16px 44px;transform:translateY(100%);transition:transform .28s cubic-bezier(.34,1.2,.64,1);max-height:90vh;overflow-y:auto;border-top:1px solid var(--border);}
+.modal-overlay.show .modal-sheet{transform:translateY(0);}
+.modal-handle{width:36px;height:5px;border-radius:2.5px;background:rgba(255,255,255,.1);margin:0 auto 16px;}
+.modal-title{font-size:16px;font-weight:700;text-align:center;margin-bottom:14px;color:var(--text);}
+
+.form-grp{margin-bottom:12px;}
+.form-lbl{font-size:11px;font-weight:600;color:var(--sub);margin-bottom:5px;display:block;}
+.form-inp{width:100%;padding:11px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;background:var(--bg3);color:var(--text);outline:none;font-family:inherit;}
+.form-inp:focus{border-color:var(--teal);}
+.save-btn{width:100%;padding:13px;background:var(--teal);color:#070d18;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;}
+
+.toast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(13,24,40,.96);color:var(--text);padding:10px 20px;border-radius:20px;font-size:12px;font-weight:600;opacity:0;transition:all .22s;pointer-events:none;z-index:999;border:1px solid var(--border);box-shadow:var(--shadow);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
 
-<h1>KidsAPP · 視覺對齊功能修復版</h1>
-<div class="sub">1:1 重構版面：完全解決舊版 Scale 導致點擊失效與錯位的問題</div>
+<input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoSelected(event)">
 
-<div class="phones">
-  <div class="iphone">
-    <div class="screen">
-      <div class="island"></div>
-      
-      <div class="app-container">
-
-        <div class="r-nav">
-          <div class="r-nav-title">🏅 KidsAPP</div>
-          <div class="r-aud-chip" onclick="alert('切換帳號：Albert')">
-            <div class="r-aud-av">
-              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23081428'/%3E%3Ccircle cx='20' cy='14' r='9' fill='%2338bdf8'/%3E%3Cellipse cx='20' cy='33' rx='14' ry='10' fill='%2338bdf8'/%3E%3C/svg%3E">
-            </div>
-            <span class="r-aud-name">Albert ▾</span>
-          </div>
-          <div class="r-gear" onclick="alert('開啟設定')">⚙️</div>
+<div id="screenHome" class="screen active">
+  <div class="navbar">
+    <div class="nav-title">🏅 KidsAPP</div>
+    <div class="aud-chip aud-chip-offline" id="audChip" onclick="openAuditorModal()">
+      <div class="aud-chip-av" id="audChipAv">👤</div>
+      <span class="aud-chip-name" id="audChipName">未登入</span>
+    </div>
+    <button class="nav-btn" onclick="openSettings()">⚙️</button>
+  </div>
+  <div class="home-body">
+    <div class="swipe-dots" id="swipeDots">
+      <span class="swipe-hint">← </span>
+      <div class="sdot on" id="dot0"></div>
+      <span class="swipe-hint"> →</span>
+    </div>
+    <div class="profile-card">
+      <div class="prof-left">
+        <div class="p-avatar" id="childAvatar">👶</div>
+        <div class="p-name" id="childName">…</div>
+      </div>
+      <div class="prof-div"></div>
+      <div class="prof-right">
+        <div class="stat-row">
+          <span class="stat-num t" id="statNTD">—</span>
+          <span class="stat-unit">NTD</span>
         </div>
-
-        <div class="r-home">
-
-          <div class="r-dots">
-            <span class="r-hint">←</span>
-            <div class="r-dot on"></div>
-            <div class="r-dot"></div>
-            <span class="r-hint">→</span>
-          </div>
-
-          <div class="r-profile">
-            <div class="r-prof-left">
-              <div class="r-avatar">
-                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%230a1422'/%3E%3Ccircle cx='30' cy='21' r='14' fill='%2338bdf8'/%3E%3Cellipse cx='30' cy='52' rx='22' ry='16' fill='%2338bdf8'/%3E%3C/svg%3E">
-              </div>
-              <span class="r-pname">Nathan</span>
-            </div>
-            <div class="r-prof-right">
-              <div class="r-stat">
-                <span class="r-stat-label">NTD</span>
-                <span class="r-stat-num t">15,800</span>
-              </div>
-              <div class="r-stat">
-                <span class="r-stat-label">mins</span>
-                <span class="r-stat-num o">7,800</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="r-grid-top">
-            <div class="r-lbl">🎯 Learning &amp; Tasks</div>
-            <div class="r-grid r-grid-2row">
-              <div class="r-tile task" onclick="alert('點擊了 Vocabulary')">
-                <div class="r-tile-badge">📚</div>
-                <div class="r-tile-bottom">
-                  <div class="r-tile-name">Vocabulary</div>
-                  <div class="r-pill green">+200 mins</div>
-                </div>
-              </div>
-              <div class="r-tile task" onclick="alert('點擊了 School Exam')">
-                <div class="r-tile-badge">📝</div>
-                <div class="r-tile-bottom">
-                  <div class="r-tile-name">School Exam</div>
-                  <div class="r-pill blue">+800 NTD</div>
-                </div>
-              </div>
-              <div class="r-tile task" onclick="alert('點擊了 Housework')">
-                <div class="r-tile-badge">🏠</div>
-                <div class="r-tile-bottom">
-                  <div class="r-tile-name">Housework</div>
-                  <div class="r-pill green">+50 mins</div>
-                </div>
-              </div>
-              <div class="r-tile task" onclick="alert('點擊了 Sport')">
-                <div class="r-tile-badge">⚽</div>
-                <div class="r-tile-bottom">
-                  <div class="r-tile-name">Sport</div>
-                  <div class="r-pill green">+10 mins</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="r-grid-bot">
-            <div class="r-lbl">💳 Money &amp; Behavior</div>
-            <div class="r-grid">
-              <div class="r-tile ob" onclick="alert('點擊了 Transactions')">
-                <div class="r-tile-badge">💳</div>
-                <div class="r-tile-bottom">
-                  <div class="r-tile-name">Transactions</div>
-                  <div class="r-pill blue">+2,000 NTD</div>
-                </div>
-              </div>
-              <div class="r-tile am" onclick="alert('點擊了 Behavior')">
-                <div class="r-tile-badge">⭐</div>
-                <div class="r-tile-bottom">
-                  <div class="r-tile-name">Behavior</div>
-                  <div class="r-pill red">-20 mins</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
+        <div class="stat-row">
+          <span class="stat-num o" id="statMins">—</span>
+          <span class="stat-unit">mins</span>
         </div>
       </div>
+    </div>
 
+    <div class="grid-section">
+      <div class="sec-lbl">🎯 Learning &amp; Tasks</div>
+      <div class="cat-grid" id="gridTop"></div>
+    </div>
+    <div class="grid-section">
+      <div class="sec-lbl">💳 Money &amp; Behavior</div>
+      <div class="cat-grid" id="gridBot"></div>
     </div>
   </div>
 </div>
 
+<div id="screenDetail" class="screen">
+  <div class="navbar">
+    <button class="nav-back" onclick="closeDetail()">‹ 返回</button>
+    <div class="nav-center" id="detailTitle"></div>
+    <div class="nav-badges" id="detailBadges"></div>
+  </div>
+  <div class="detail-body">
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<div id="screenSettings" class="screen">
+  <div class="navbar">
+    <button class="nav-back" onclick="closeSettings()">‹ 返回</button>
+    <div class="nav-title">⚙️ 設定</div>
+  </div>
+  <div class="detail-body">
+    <div class="detail-pad" id="settingsContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalAud" onclick="handleOverlay(event,'modalAud')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div id="step1">
+      <div class="modal-title">選擇審核人</div>
+      <div class="aud-list" id="audList"></div>
+    </div>
+    <div class="pin-section" id="step2">
+      <div class="modal-title" id="pinTitle">輸入 PIN</div>
+      <div class="pin-dots" id="pinDots">
+        <div class="pin-dot-el">•</div><div class="pin-dot-el">•</div>
+        <div class="pin-dot-el">•</div><div class="pin-dot-el">•</div>
+      </div>
+      <input type="password" inputmode="numeric" maxlength="4" class="pin-input" id="pinInput" placeholder="••••" oninput="handlePinInput()">
+      <div class="pin-err" id="pinErr"></div>
+      <button class="pin-ok" onclick="confirmPin()">確認登入</button>
+      <button class="pin-back" onclick="backToStep1()">← 返回</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalPerson" onclick="handleOverlay(event,'modalPerson')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="personTitle">新增孩子</div>
+    <div id="personForm"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalGoal" onclick="handleOverlay(event,'modalGoal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="goalModalTitle">新增目標</div>
+    <div id="goalForm"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalEntry" onclick="handleOverlay(event,'modalEntry')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="entryTitle">新增記錄</div>
+    <div id="entryForm"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalConfirm" onclick="handleOverlay(event,'modalConfirm')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div id="confirmBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══ Firebase 配置保持不變 ══ */
+const FB={apiKey:"AIzaSyBCuSVVPZGb76D4OKkIklOck50Mm-wbdsA",authDomain:"kidsapp-e9a8d.firebaseapp.com",databaseURL:"https://kidsapp-e9a8d-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"kidsapp-e9a8d",storageBucket:"kidsapp-e9a8d.firebasestorage.app",messagingSenderId:"240270025549",appId:"1:240270025549:web:98777be0532c7cc97ecd04"};
+firebase.initializeApp(FB);
+const db=firebase.database();
+
+const CATS=[
+  {id:'vocab',       name:'Vocabulary',  emoji:'📚',type:'goal',        group:'top'},
+  {id:'school',      name:'School Exam', emoji:'📝',type:'goal',        group:'top'},
+  {id:'housework',   name:'Housework',   emoji:'🏠',type:'goal',        group:'top'},
+  {id:'sport',       name:'Sport',       emoji:'⚽',type:'goal',        group:'top'},
+  {id:'transactions',name:'Transactions',emoji:'💳',type:'transactions',group:'bot'},
+  {id:'behavior',    name:'Behavior',    emoji:'⭐',type:'mixed',       group:'bot'},
+];
+const GOAL_CATS=['vocab','school','housework','sport'];
+
+const S={
+  children:{},auditors:{},entries:{},goals:{},
+  currentChildId:null,currentCat:null,
+  currentAuditor:null,pendingAuditor:null,
+  editingEntryId:null,editingGoalId:null,
+  editingPersonType:null,editingPersonId:null,
+  pendingPhoto:null,pendingVerify:null,
+  txFilter:'all',rtMain:null,rtGoal:null
+};
+
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DAY_NAMES=['一','二','三','四','五','六','日'];
+const WEEK_NUMS=['第一','第二','第三','第四','最後'];
+
+function fmtDate(iso){const[y,m,d]=iso.split('-');return `${y} ${MON[+m-1]} ${d.padStart(2,'0')}`;}
+function todayISO(){return new Date().toISOString().split('T')[0];}
+function amtStr(v,u){return v===0?'':`${v>0?'+':''}${v.toLocaleString()} ${u}`;}
+function amtCls(v){return v>0?'pos':v<0?'neg':'';}
+function txDirection(e){const n=Number(e.ntd||0),m=Number(e.mins||0);if(n<0||m<0)return 'withdraw';if(n>0||m>0)return 'deposit';return 'unknown';}
+function fmtFreq(g){
+  if(g.freq==='once')return `📅 ${g.dueDate||''}`;
+  if(g.freq==='daily')return '🔄 每天';
+  if(g.freq==='weekly'){const ds=(g.freqDays||[]).map(d=>DAY_NAMES[d]).join('、');return `🔄 每週 (${ds||'—'})`;}
+  if(g.freq==='monthly')return `🔄 每月 ${WEEK_NUMS[(g.freqWeekNum||1)-1]}週 週${DAY_NAMES[g.freqWeekDay||0]}`;return '';
+}
+function isRecurring(g){return g.freq!=='once';}
+
+async function compressImage(file){
+  return new Promise(resolve=>{
+    const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d'),img=new Image(),url=URL.createObjectURL(file);
+    img.onload=()=>{const min=Math.min(img.width,img.height),sx=(img.width-min)/2,sy=(img.height-min)/2;canvas.width=canvas.height=200;ctx.drawImage(img,sx,sy,min,min,0,0,200,200);URL.revokeObjectURL(url);resolve(canvas.toDataURL('image/jpeg',.72));};
+    img.onerror=()=>{URL.revokeObjectURL(url);resolve(null);};img.src=url;
+  });
+}
+async function handlePhotoSelected(e){
+  const file=e.target.files[0];if(!file)return;showToast('壓縮照片中…',1500);
+  const b64=await compressImage(file);S.pendingPhoto=b64;
+  const box=document.getElementById('photoPreviewBox');
+  if(box)box.innerHTML=b64?`<img src="${b64}" style="width:100%;height:100%;object-fit:cover;display:block;">`:`<span style="font-size:32px;">⚠️</span>`;
+  e.target.value='';
+}
+function pickPhoto(){document.getElementById('photoInput').click();}
+
+async function init(){
+  try{
+    const[as,cs]=await Promise.all([db.ref('/auditors').once('value'),db.ref('/children').once('value')]);
+    S.auditors=as.val()||{};S.children=cs.val()||{};
+    S.currentChildId=Object.keys(S.children)[0]||null;
+    if(S.currentChildId){
+      const[es,gs]=await Promise.all([db.ref(`/entries/${S.currentChildId}`).once('value'),db.ref(`/goals/${S.currentChildId}`).once('value')]);
+      S.entries[S.currentChildId]=es.val()||{};S.goals[S.currentChildId]=gs.val()||{};
+      attachMainListener(S.currentChildId);attachGoalListener(S.currentChildId);cleanupOldDeleted();
+    }
+    renderAll();initSwipe();
+  }catch(err){console.error(err);showToast('⚠️ 連線失敗',4000);}
+}
+
+function attachMainListener(cid){
+  if(S.rtMain)db.ref(`/entries/${S.rtMain}`).off();S.rtMain=cid;
+  db.ref(`/entries/${cid}`).on('value',snap=>{S.entries[cid]=snap.val()||{};renderDashboard();if(S.currentCat)renderDetailContent(S.currentCat);});
+}
+function attachGoalListener(cid){
+  if(S.rtGoal)db.ref(`/goals/${S.rtGoal}`).off();S.rtGoal=cid;
+  db.ref(`/goals/${cid}`).on('value',snap=>{S.goals[cid]=snap.val()||{};if(S.currentCat&&GOAL_CATS.includes(S.currentCat))renderDetailContent(S.currentCat);});
+}
+async function cleanupOldDeleted(){
+  const cid=S.currentChildId;if(!cid)return;const weekAgo=Date.now()-7*24*60*60*1000;const tasks=[];
+  CATS.forEach(cat=>{Object.entries((S.entries[cid]||{})[cat.id]||{}).forEach(([id,e])=>{if(e.deletedAt&&e.deletedAt<weekAgo)tasks.push(db.ref(`/entries/${cid}/${cat.id}/${id}`).remove());});});
+  if(tasks.length)await Promise.all(tasks);
+}
+
+function initSwipe(){
+  let tx=0,ty=0;const home=document.getElementById('screenHome');
+  home.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+  home.addEventListener('touchend',e=>{
+    const dx=tx-e.changedTouches[0].clientX,dy=ty-e.changedTouches[0].clientY;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){
+      const ids=Object.keys(S.children),idx=ids.indexOf(S.currentChildId);
+      if(dx>0&&idx<ids.length-1)selectChild(ids[idx+1]);else if(dx<0&&idx>0)selectChild(ids[idx-1]);
+    }
+  },{passive:true});
+}
+
+function renderAll(){renderAudChip();renderDashboard();}
+
+function renderAudChip(){
+  const chip=document.getElementById('audChip'),av=document.getElementById('audChipAv'),nm=document.getElementById('audChipName');
+  if(S.currentAuditor){chip.classList.remove('aud-chip-offline');const a=S.currentAuditor;av.innerHTML=a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤');nm.textContent=a.name;}
+  else{chip.classList.add('aud-chip-offline');av.innerHTML='👤';nm.textContent='未登入';}
+}
+
+function renderDashboard(){
+  const child=S.children[S.currentChildId];if(!child)return;
+  document.getElementById('childAvatar').innerHTML=child.photoB64?`<img src="${child.photoB64}">`:(child.emoji||'👤');
+  document.getElementById('childName').textContent=child.name;
+  const ids=Object.keys(S.children),idx=ids.indexOf(S.currentChildId);
+  document.getElementById('swipeDots').innerHTML='<span class="swipe-hint">← </span>'+ids.map((_,i)=>`<div class="sdot ${i===idx?'on':''}"></div>`).join('')+'<span class="swipe-hint"> →</span>';
+  const entries=S.entries[S.currentChildId]||{};let ntd=0,mins=0;
+  CATS.forEach(cat=>Object.values(entries[cat.id]||{}).filter(e=>!e.deletedAt).forEach(e=>{ntd+=Number(e.ntd||0);mins+=Number(e.mins||0);}));
+  document.getElementById('statNTD').textContent=ntd.toLocaleString();
+  document.getElementById('statMins').textContent=mins.toLocaleString();
+  renderGrid('gridTop','top',entries);renderGrid('gridBot','bot',entries);
+}
+
+/* 根據附圖重新設計的主畫面九宮格渲染邏輯 */
+function renderGrid(gid,grp,entries){
+  document.getElementById(gid).innerHTML=CATS.filter(c=>c.group===grp).map(cat=>{
+    let ntd=0,mins=0;
+    Object.values(entries[cat.id]||{}).filter(e=>!e.deletedAt).forEach(e=>{ntd+=Number(e.ntd||0);mins+=Number(e.mins||0);});
+    let infoBadgeStr='無紀錄';let badgeCls='tile-info-badge';
+    if(ntd!==0){infoBadgeStr=`${ntd>0?'+':''}${ntd} NTD`;badgeCls+=' has-val';if(ntd<0)badgeCls+=' neg';}
+    else if(mins!==0){infoBadgeStr=`${mins>0?'+':''}${mins} m`;badgeCls+=' has-val';if(mins<0)badgeCls+=' neg';}
+    return `<div class="cat-tile ${cat.id}" onclick="openCat('${cat.id}')">
+      <div class="tile-emoji">${cat.emoji}</div>
+      <div class="tile-bottom">
+        <div class="tile-name">${cat.name}</div>
+        <div class="${badgeCls}">${infoBadgeStr}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openCat(catId){
+  S.currentCat=catId;S.txFilter='all';const cat=CATS.find(c=>c.id===catId);
+  const entries=S.entries[S.currentChildId]||{};let ntd=0,mins=0;
+  Object.values(entries[catId]||{}).filter(e=>!e.deletedAt).forEach(e=>{ntd+=Number(e.ntd||0);mins+=Number(e.mins||0);});
+  document.getElementById('detailTitle').innerHTML=`<span>${cat.emoji}</span><span>${cat.name}</span>`;
+  document.getElementById('detailBadges').innerHTML=[ntd!==0?`<span class="nav-badge">${ntd>0?'+':''}${ntd} NTD</span>`:'',mins!==0?`<span class="nav-badge">${mins>0?'+':''}${mins} m</span>`:''].join('');
+  renderDetailContent(catId);showScreen('screenDetail');
+}
+function closeDetail(){S.currentCat=null;showScreen('screenHome');}
+
+/* ── 建議：下層類別全新列表與卡片樣式渲染 ── */
+function renderDetailContent(catId){
+  const cat=CATS.find(c=>c.id===catId);let html='';
+  if(cat.type==='goal'){
+    const entries=S.entries[S.currentChildId]||{};let tNTD=0,tMins=0;
+    Object.values(entries[catId]||{}).filter(e=>!e.deletedAt).forEach(e=>{tNTD+=Number(e.ntd||0);tMins+=Number(e.mins||0);});
+    html+=`<div class="goal-stats-strip">
+      <div class="gstat-card t"><div class="gstat-lbl">💰 累積</div><div class="gstat-val t">${tNTD>0?'+':''}${tNTD}<span class="gstat-unit">NTD</span></div></div>
+      <div class="gstat-card o"><div class="gstat-lbl">⏱ 累積</div><div class="gstat-val o">${tMins>0?'+':''}${tMins}<span class="gstat-unit">mins</span></div></div>
+      <button class="gadd-goal-btn" onclick="openAddGoal(null,'${catId}')"><div class="gadd-plus">＋</div><div class="gadd-lbl">新目標</div></button>
+    </div><div class="detail-pad">`;
+    const goals=S.goals[S.currentChildId]?.[catId]||{};
+    const active=Object.entries(goals).filter(([,g])=>g.active!==false).sort((a,b)=>a[1].createdAt-b[1].createdAt);
+    const completed=Object.entries(goals).filter(([,g])=>g.active===false).sort((a,b)=>(b[1].completedAt||0)-(a[1].completedAt||0));
+    html+=`<div class="sec-lbl">🎯 進行中目標</div>`;
+    html+=active.length?active.map(([gid,g])=>buildGoalCard(gid,g,catId,false)).join(''):`<div class="add-rec-btn style="text-align:center;color:var(--sub);border-style:dashed;">暫無進行中目標</div>`;
+    if(completed.length){html+=`<div class="sec-lbl" style="margin-top:8px;">✅ 已完成目標</div>`;html+=completed.slice(0,3).map(([gid,g])=>buildGoalCard(gid,g,catId,true)).join('');}
+    html+=`<div class="sec-lbl" style="margin-top:8px;">📋 審核紀錄歷史</div>`;
+    html+=`<button class="add-rec-btn ${S.currentAuditor?'':'locked'}" onclick="openAddEntry(null)">${S.currentAuditor?'＋ 手動新增記錄':'🔐 請先登入審核人'}</button>`;
+    html+=buildRecordsList(catId)+`</div>`;
+  } else if(cat.type==='transactions'){
+    const entries=Object.values((S.entries[S.currentChildId]||{})[catId]||{}).filter(e=>!e.deletedAt);
+    let wNTD=0,wMins=0,dNTD=0,dMins=0;
+    entries.forEach(e=>{const n=Number(e.ntd||0),m=Number(e.mins||0);if(n<0)wNTD+=n;else if(n>0)dNTD+=n;if(m<0)wMins+=m;else if(m>0)dMins+=m;});
+    html+=`<div class="detail-pad">
+      <button class="add-rec-btn ${S.currentAuditor?'':'locked'}" onclick="openAddEntry(null)">${S.currentAuditor?'＋ 新增提領/存入':'🔐 請先登入審核人'}</button>
+      <div class="tx-summary">
+        <div class="tx-sum-card" style="border-left: 4px solid var(--orange);"><div class="tx-sum-label" style="color:var(--orange);">💸 支出 (Withdraw)</div><div class="tx-sum-val neg">${wNTD} NTD / ${wMins} m</div></div>
+        <div class="tx-sum-card" style="border-left: 4px solid var(--green);"><div class="tx-sum-label" style="color:var(--green);">💰 存入 (Deposit)</div><div class="tx-sum-val pos">+${dNTD} NTD / +${dMins} m</div></div>
+      </div>
+      <div class="filter-row">
+        <button class="filter-btn ${S.txFilter==='all'?'active':''}" onclick="setTxFilter('all')">全部</button>
+        <button class="filter-btn ${S.txFilter==='withdraw'?'active':''}" onclick="setTxFilter('withdraw')">💸 支出</button>
+        <button class="filter-btn ${S.txFilter==='deposit'?'active':''}" onclick="setTxFilter('deposit')">💰 存入</button>
+      </div>
+      <div class="sec-lbl">紀錄歷史</div>${buildRecordsList(catId)}</div>`;
+  } else {
+    html+=`<div class="detail-pad"><button class="add-rec-btn ${S.currentAuditor?'':'locked'}" onclick="openAddEntry(null)">${S.currentAuditor?'＋ 新增記錄':'🔐 請先登入審核人'}</button><div class="sec-lbl">紀錄歷史</div>${buildRecordsList(catId)}</div>`;
+  }
+  document.getElementById('detailContent').innerHTML=html;
+}
+
+function buildGoalCard(gid,g,catId,isCompleted){
+  const isRec=isRecurring(g);const pills=[];
+  if(g.rewardNTD)pills.push(`<span class="goal-reward-pill reward-pass">💰 +${g.rewardNTD} NTD</span>`);
+  if(g.rewardMins)pills.push(`<span class="goal-reward-pill reward-pass">⏱ +${g.rewardMins} m</span>`);
+  if(g.penaltyNTD)pills.push(`<span class="goal-reward-pill reward-fail">⚠️ -${g.penaltyNTD} NTD</span>`);
+  if(g.penaltyMins)pills.push(`<span class="goal-reward-pill reward-fail">⚠️ -${g.penaltyMins} m</span>`);
+  const bottom=isCompleted?`<span class="rec-badge ${g.completedResult==='pass'?'pass':'fail'}" style="align-self:flex-end;">${g.completedResult==='pass'?'Passed':'Failed'}</span>`:
+    `<div class="goal-verify-row">
+      <button class="btn-pass" onclick="verifyGoal('${catId}','${gid}','pass')" ${S.currentAuditor?'':'disabled'}>打勾 Passed</button>
+      <button class="btn-fail" onclick="verifyGoal('${catId}','${gid}','fail')" ${S.currentAuditor?'':'disabled'}>未完成</button>
+      <button class="btn-edit-inline" onclick="openAddGoal('${gid}','${catId}')">✏️</button>
+    </div>`;
+  return `<div class="goal-card ${isCompleted?'completed':''}">
+    <div class="goal-freq-row"><span class="goal-freq-badge ${isRec?'recurring':''}">${fmtFreq(g)}</span></div>
+    <div class="goal-desc">${g.desc||'—'}</div>
+    <div class="goal-rewards">${pills.join('')||'<span style="font-size:10px;color:var(--sub);">（無獎懲設定）</span>'}</div>
+    ${bottom}
+  </div>`;
+}
+
+function buildRecordsList(catId){
+  const cat=CATS.find(c=>c.id===catId);const all=Object.entries((S.entries[S.currentChildId]||{})[catId]||{});
+  let active=all.filter(([,e])=>!e.deletedAt).sort((a,b)=>(b[1].createdAt||0)-(a[1].createdAt||0));
+  const deleted=all.filter(([,e])=>!!e.deletedAt).sort((a,b)=>(b[1].deletedAt||0)-(a[1].deletedAt||0));
+  if(cat.type==='transactions'&&S.txFilter!=='all')active=active.filter(([,e])=>txDirection(e)===S.txFilter);
+  if(!active.length)return `<div style="text-align:center;padding:20px;color:var(--sub);font-size:12px;">📭 尚無歷史紀錄</div>`;
+  
+  let html=active.map(([id,e])=>{
+    const ns=amtStr(Number(e.ntd||0),'NTD'),ms=amtStr(Number(e.mins||0),'mins');
+    const nc=amtCls(Number(e.ntd||0)),mc=amtCls(Number(e.mins||0));
+    let badge='';
+    if(cat.type==='transactions'){badge=txDirection(e)==='withdraw'?`<span class="rec-badge fail">支出</span>`:`<span class="rec-badge pass">存入</span>`;}
+    else{if(e.passed===true)badge=`<span class="rec-badge pass">Passed</span>`;if(e.passed===false)badge=`<span class="rec-badge fail">Failed</span>`;}
+    return `<div class="rec-card">
+      <div class="rec-top">
+        <div class="rec-meta"><span>📅 ${e.date||'—'}</span></div>
+        ${badge}
+      </div>
+      <div class="rec-main">
+        <div class="rec-left-info">
+          <div class="rec-note">${e.note||'手動調整紀錄'}</div>
+          <div class="rec-aud">審核人: ${e.auditor||'—'}</div>
+        </div>
+        <div class="rec-amts">
+          ${ns?`<span class="rec-amt ${nc}">${ns}</span>`:''}
+          ${ms?`<span class="rec-amt ${mc}">${ms}</span>`:''}
+        </div>
+      </div>
+      ${S.currentAuditor?`<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px;"><span style="color:var(--teal);font-size:11px;cursor:pointer;" onclick="openAddEntry('${id}')">編輯</span><span style="color:var(--red);font-size:11px;cursor:pointer;" onclick="confirmDelete('${catId}','${id}')">刪除</span></div>`:''}
+    </div>`;
+  }).join('');
+
+  if(deleted.length && S.currentAuditor){
+    html+=`<div class="sec-lbl" style="color:var(--red);margin-top:12px;">🗑️ 最近刪除</div>`+deleted.map(([id,e])=>`
+      <div class="rec-card" style="opacity:0.5;border-style:dashed;">
+        <div class="rec-main">
+          <div class="rec-note" style="text-decoration:line-through;">${e.note||'記錄'} (${amtStr(Number(e.ntd||0),'NTD')})</div>
+          <button class="filter-btn" style="width:auto;padding:2px 8px;font-size:10px;" onclick="restoreEntry('${catId}','${id}')">恢復</button>
+        </div>
+      </div>`).join('');
+  }
+  return html;
+}
+
+/* ── 其餘核心前端邏輯 (與舊版完全相容並做局部防錯優化) ── */
+function openAddGoal(goalId,catId){
+  if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');openAuditorModal();return;}
+  S.editingGoalId=goalId||null;const existing=goalId?(S.goals[S.currentChildId]?.[catId||S.currentCat]?.[goalId]):null;
+  document.getElementById('goalModalTitle').textContent=goalId?'編輯目標':'＋ 新增目標';
+  document.getElementById('goalForm').innerHTML=buildGoalForm(catId||S.currentCat,existing);showModal('modalGoal');
+}
+function buildGoalForm(catId,ex){
+  ex=ex||{};const freq=ex.freq||'once';const fLabels=['單次','每天','每週','每月'];const fKeys=['once','daily','weekly','monthly'];
+  let h=`<div class="form-grp"><label class="form-lbl">📋 目標描述</label><textarea class="form-inp" id="gDesc" rows="2">${ex.desc||''}</textarea></div>`;
+  h+=`<div class="form-grp"><label class="form-lbl">🔄 頻率</label><div class="tog-row">${fKeys.map((f,i)=>`<button class="tog-btn ${freq===f?'active t-teal':''}" id="gFreq_${f}" onclick="setGoalFreq('${f}')">${fLabels[i]}</button>`).join('')}</div></div>`;
+  h+=`<div id="freqDetails">${buildFreqDetails(freq,ex)}</div>`;
+  h+=`<div class="form-grp"><label class="form-lbl">🎁 Pass 獎勵</label><div class="amt-row"><div class="amt-grp"><span class="amt-lbl">+NTD</span><input type="number" class="amt-inp" id="gRNTD" value="${ex.rewardNTD||''}"></div><div class="amt-grp"><span class="amt-lbl">+Mins</span><input type="number" class="amt-inp" id="gRMins" value="${ex.rewardMins||''}"></div></div></div>`;
+  h+=`<div class="form-grp"><label class="form-lbl">⚠️ Fail 懲罰</label><div class="amt-row"><div class="amt-grp"><span class="amt-lbl">-NTD</span><input type="number" class="amt-inp" id="gPNTD" value="${ex.penaltyNTD||''}"></div><div class="amt-grp"><span class="amt-lbl">-Mins</span><input type="number" class="amt-inp" id="gPMins" value="${ex.penaltyMins||''}"></div></div></div>`;
+  h+=`<button class="save-btn" onclick="saveGoal('${catId}')">💾 儲存目標</button>`;return h;
+}
+function buildFreqDetails(freq,ex){
+  if(freq=='once')return `<div class="form-grp"><label class="form-lbl">📅 截止日期</label><input type="date" class="form-inp" id="gDueDate" value="${ex.dueDate||todayISO()}"></div>`;
+  if(freq=='weekly')return `<div class="form-grp"><label class="form-lbl">選擇星期</label><div class="day-grid">${DAY_NAMES.map((d,i)=>`<button class="day-btn" data-day="${i}" onclick="toggleDay(this)">${d}</button>`).join('')}</div></div>`;
+  return `<div style="font-size:11px;color:var(--sub);padding:6px 0;">固定週期循環觸發</div>`;
+}
+function setGoalFreq(f){setGoalFreqLogic(f);} // 用簡化代理
+function toggleDay(b){b.classList.toggle('active');}
+
+async function saveGoal(catId){
+  const desc=document.getElementById('gDesc').value.trim();if(!desc)return;
+  const goal={desc,freq:'once',active:true,rewardNTD:Math.abs(parseInt(document.getElementById('gRNTD').value)||0),rewardMins:Math.abs(parseInt(document.getElementById('gRMins').value)||0),penaltyNTD:Math.abs(parseInt(document.getElementById('gPNTD').value)||0),penaltyMins:Math.abs(parseInt(document.getElementById('gPMins').value)||0),createdBy:S.currentAuditor.name};
+  const dd=document.getElementById('gDueDate');if(dd)goal.dueDate=dd.value;
+  if(S.editingGoalId)await db.ref(`/goals/${S.currentChildId}/${catId}/${S.editingGoalId}`).update(goal);
+  else await db.ref(`/goals/${S.currentChildId}/${catId}`).push(goal);
+  closeModal('modalGoal');showToast('✅ 目標已儲存');
+}
+
+function verifyGoal(catId,goalId,result){
+  const goal=S.goals[S.currentChildId]?.[catId]?.[goalId];if(!goal)return;
+  const ntd=result==='pass'?(goal.rewardNTD||0):-(goal.penaltyNTD||0);
+  const mins=result==='pass'?(goal.rewardMins||0):-(goal.penaltyMins||0);
+  document.getElementById('confirmBody').innerHTML=`<div class="confirm-box">
+    <div class="confirm-msg">確認更改此目標狀態為 <strong>${result.toUpperCase()}</strong>？<br>將同步計入錢包流水紀錄。</div>
+    <div class="confirm-row"><button class="confirm-cancel" onclick="closeModal('modalConfirm')">取消</button><button class="save-btn" onclick="confirmVerify('${catId}','${goalId}','${result}')">確認核可</button></div>
+  </div>`;showModal('modalConfirm');
+}
+async function confirmVerify(catId,goalId,result){
+  closeModal('modalConfirm');const goal=S.goals[S.currentChildId]?.[catId]?.[goalId];
+  const ntd=result==='pass'?(goal.rewardNTD||0):-(goal.penaltyNTD||0);
+  const mins=result==='pass'?(goal.rewardMins||0):-(goal.penaltyMins||0);
+  await db.ref(`/entries/${S.currentChildId}/${catId}`).push({date:fmtDate(todayISO()),ntd,mins,auditor:S.currentAuditor.name,note:`[目標達成] ${goal.desc}`,passed:result==='pass',createdAt:Date.now()});
+  if(goal.freq==='once')await db.ref(`/goals/${S.currentChildId}/${catId}/${goalId}`).update({active:false,completedAt:Date.now(),completedResult:result});
+  showToast('✅ 審核完成！');
+}
+
+function openAddEntry(entryId){
+  S.editingEntryId=entryId||null;const cat=CATS.find(c=>c.id===S.currentCat);
+  const existing=entryId?(S.entries[S.currentChildId]?.[S.currentCat]?.[entryId]):null;
+  document.getElementById('entryTitle').textContent=entryId?'✏️ 編輯記錄':'➕ 新增記錄';
+  document.getElementById('entryForm').innerHTML=buildEntryForm(cat,existing);showModal('modalEntry');
+}
+function buildEntryForm(cat,existing){
+  const ex=existing||{};
+  let h=`<div class="form-grp"><label class="form-lbl">📝 項目內容/備註</label><input type="text" class="form-inp" id="fNote" value="${ex.note||''}"></div>`;
+  if(cat.type==='transactions'){
+    h+=`<div class="form-grp"><label class="form-lbl">金額與類別 (負數代表支出/扣款)</label><div class="amt-row">
+      <div class="amt-grp"><span class="amt-lbl">NTD</span><input type="number" class="amt-inp" id="fNTD" value="${ex.ntd||''}"></div>
+      <div class="amt-grp"><span class="amt-lbl">Mins</span><input type="number" class="amt-inp" id="fMins" value="${ex.mins||''}"></div>
+    </div></div>`;
+  }else{
+    h+=`<div class="form-grp"><label class="form-lbl">給予獎懲數值</label><div class="amt-row">
+      <div class="amt-grp"><span class="amt-lbl">NTD</span><input type="number" class="amt-inp" id="fNTD" value="${ex.ntd||''}"></div>
+      <div class="amt-grp"><span class="amt-lbl">Mins</span><input type="number" class="amt-inp" id="fMins" value="${ex.mins||''}"></div>
+    </div></div>`;
+  }
+  h+=`<button class="save-btn" onclick="saveEntry('${cat.id}')">💾 確定儲存</button>`;return h;
+}
+
+async function saveEntry(catId){
+  const note=document.getElementById('fNote').value.trim();
+  const ntd=parseInt(document.getElementById('fNTD').value)||0;
+  const mins=parseInt(document.getElementById('fMins').value)||0;
+  if(S.editingEntryId)await db.ref(`/entries/${S.currentChildId}/${catId}/${S.editingEntryId}`).update({ntd,mins,note,auditor:S.currentAuditor.name,editedAt:Date.now()});
+  else await db.ref(`/entries/${S.currentChildId}/${catId}`).push({date:fmtDate(todayISO()),ntd,mins,note,auditor:S.currentAuditor.name,createdAt:Date.now()});
+  closeModal('modalEntry');showToast('✅ 紀錄已變更');
+}
+
+function confirmDelete(catId,id){
+  document.getElementById('confirmBody').innerHTML=`<div class="confirm-box"><div class="confirm-msg">確定要刪除此紀錄？</div><div class="confirm-row"><button class="confirm-cancel" onclick="closeModal('modalConfirm')">取消</button><button class="confirm-del" onclick="deleteEntry('${catId}','${id}')">刪除</button></div></div>`;showModal('modalConfirm');
+}
+async function deleteEntry(catId,id){closeModal('modalConfirm');await db.ref(`/entries/${S.currentChildId}/${catId}/${id}/deletedAt`).set(Date.now());showToast('已移至刪除桶');}
+async function restoreEntry(catId,id){await db.ref(`/entries/${S.currentChildId}/${catId}/${id}/deletedAt`).remove();showToast('✅ 紀錄已恢復');}
+
+/* ── 設定與其餘邏輯 (保持與原架構一致) ── */
+function openSettings(){if(!S.currentAuditor){showToast('⚠️ 請先點選「未登入」選取審核人');openAuditorModal();return;}renderSettings();showScreen('screenSettings');}
+function closeSettings(){showScreen('screenHome');}
+function renderSettings(){
+  let html=`<div class="settings-section"><div class="settings-section-hdr"><span class="settings-section-title">👧 孩子切換與管理</span><button class="settings-add-btn" onclick="openPersonModal('child',null)">＋ 新增</button></div>`;
+  Object.entries(S.children).forEach(([id,c])=>{html+=`<div class="person-row" onclick="selectChild('${id}');closeSettings();" style="cursor:pointer;"><div class="person-av">${c.emoji||'👧'}</div><div><div class="person-name">${c.name} ${id===S.currentChildId?'(目前選取)':''}</div></div></div>`;});
+  html+=`</div><div class="settings-info"><div class="settings-info-title">KidsAPP Mobile Dashboard</div><button onclick="clearCache()" class="save-btn" style="background:var(--red);color:#fff;margin-top:10px;">重整並清除快取</button></div>`;
+  document.getElementById('settingsContent').innerHTML=html;
+}
+function openPersonModal(t,id){S.editingPersonType=t;S.editingPersonId=id;document.getElementById('personForm').innerHTML=`<div class="form-grp"><label class="form-lbl">名字</label><input type="text" class="form-inp" id="pName"></div><button class="save-btn" onclick="savePerson()">新增</button>`;showModal('modalPerson');}
+async function savePerson(){
+  const name=document.getElementById('pName').value.trim();if(!name)return;
+  if(S.editingPersonType==='child'){await db.ref('/children').push({name,emoji:'👦'});const snap=await db.ref('/children').once('value');S.children=snap.val()||{};if(!S.currentChildId)S.currentChildId=Object.keys(S.children)[0];}
+  closeModal('modalPerson');init();
+}
+function selectChild(id){S.currentChildId=id;init();}
+
+function openAuditorModal(){
+  document.getElementById('audList').innerHTML=Object.entries(S.auditors).map(([id,a])=>`<div class="person-row" onclick="selectAuditor('${id}')" style="background:var(--bg3);margin-bottom:6px;border-radius:10px;cursor:pointer;"><div class="person-av">${a.emoji||'👤'}</div><div><div class="person-name">${a.name}</div><div class="person-sub">${a.role||'審核家長'}</div></div></div>`).join('');
+  if(!Object.keys(S.auditors).length){document.getElementById('audList').innerHTML=`<div style="text-align:center;padding:12px;"><button class="filter-btn" onclick="db.ref('/auditors').push({name:'預設家長',pin:'1234',role:'管理員'});setTimeout(init,800);">初始化預設家長 (PIN: 1234)</button></div>`;}
+  document.getElementById('step1').style.display='block';document.getElementById('step2').classList.remove('show');showModal('modalAud');
+}
+function selectAuditor(id){const a=S.auditors[id];S.pendingAuditor={id,...a};document.getElementById('step1').style.display='none';document.getElementById('step2').classList.add('show');document.getElementById('pinInput').value='';document.getElementById('pinInput').focus();}
+function handlePinInput(){if(document.getElementById('pinInput').value.length===4)confirmPin();}
+function confirmPin(){
+  if(document.getElementById('pinInput').value===S.pendingAuditor.pin){S.currentAuditor=S.pendingAuditor;closeModal('modalAud');renderAudChip();showToast(`歡迎回來，${S.currentAuditor.name}`);if(S.currentCat)renderDetailContent(S.currentCat);}
+  else{showToast('❌ PIN 碼不正確');document.getElementById('pinInput').value='';}
+}
+function backToStep1(){document.getElementById('step2').classList.remove('show');document.getElementById('step1').style.display='block';}
+function handleOverlay(e,id){if(e.target.id===id)closeModal(id);}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function showModal(id){const el=document.getElementById(id);el.style.display='flex';setTimeout(()=>el.classList.add('show'),20);}
+function closeModal(id){const el=document.getElementById(id);el.classList.remove('show');setTimeout(()=>{el.style.display='none';},250);}
+function setTxFilter(v){S.txFilter=v;renderDetailContent(S.currentCat);}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function clearCache(){location.reload(true);}
+
+init();
+</script>
 </body>
 </html>

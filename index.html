@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>KidsAPP</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#070d18">
+<meta name="theme-color" content="#07102a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="KidsAPP">
@@ -15,187 +15,171 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
-  --bg:#070d18;--bg2:#0d1828;--bg3:#111d30;
-  --teal:#30d5f5;--teal-dim:rgba(48,213,245,.12);--teal-border:rgba(48,213,245,.22);
-  --orange:#ff7043;--orange-dim:rgba(255,112,67,.12);--orange-border:rgba(255,112,67,.2);
-  --green:#66bb6a;--green-dim:rgba(102,187,106,.2);--green-border:rgba(102,187,106,.35);
-  --amber:#ffd54f;--amber-border:rgba(255,213,79,.18);
-  --text:#cce6f0;--sub:rgba(180,210,225,.4);--border:rgba(255,255,255,.06);
-  --sys-green:#34c759;--red:#ff5252;
+  --bg:#07102a;
+  --cyan:#48c4ff;--cyan-dim:rgba(72,196,255,.14);--cyan-border:rgba(72,196,255,.35);
+  --orange:#ff8040;--orange-dim:rgba(255,128,64,.12);--orange-border:rgba(255,128,64,.3);
+  --green:#00b248;--green-dim:rgba(0,178,72,.18);--green-border:rgba(0,178,72,.4);
+  --red:#c81c1c;--red-dim:rgba(200,28,28,.2);
+  --teal:#30d5f5;--teal-dim:rgba(48,213,245,.12);--teal-border:rgba(48,213,245,.25);
+  --amber:#ff7043;
+  --text:#e8f4ff;--sub:rgba(180,210,230,.45);--border:rgba(255,255,255,.08);
+  --sys-green:#34c759;--del-red:#ff5252;
+  --card:#0d1e50;--card2:#0a1640;
   --shadow:0 4px 24px rgba(0,0,0,.5);
 }
 body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100svh;-webkit-font-smoothing:antialiased;}
-
-/* ── Screens ── */
 .screen{display:none;}.screen.active{display:flex;flex-direction:column;}
-#screenHome{height:100svh;overflow:hidden;}
 
-/* ── Navbar ── */
-.navbar{
-  background:rgba(7,13,24,.92);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  color:var(--text);padding:13px 14px 11px;
-  display:flex;align-items:center;
-  position:sticky;top:0;z-index:100;
-  border-bottom:1px solid var(--border);
-  flex-shrink:0;
-}
-.nav-title{font-size:15px;font-weight:700;flex:1;letter-spacing:-.2px;}
-.nav-btn{width:30px;height:30px;border-radius:8px;border:none;background:rgba(255,255,255,.07);color:var(--text);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.nav-back{background:none;border:none;color:var(--teal);font-size:13px;font-weight:500;cursor:pointer;padding:0;opacity:.9;margin-right:8px;}
+/* ── NAVBAR ── */
+.navbar{background:rgba(7,16,42,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:var(--text);padding:13px 16px 11px;display:flex;align-items:center;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);flex-shrink:0;}
+.nav-title{font-size:18px;font-weight:800;color:#fff;flex:1;letter-spacing:-.3px;}
+.nav-title span{color:#f9c642;}
+.nav-btn{width:34px;height:34px;border-radius:9px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.nav-back{background:none;border:none;color:var(--cyan);font-size:13px;font-weight:500;cursor:pointer;padding:0;opacity:.9;margin-right:8px;}
 .nav-center{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;flex:1;}
 .nav-badges{display:flex;gap:4px;margin-left:auto;}
-.nav-badge{background:var(--teal-dim);color:var(--teal);font-size:9px;padding:2px 7px;border-radius:7px;border:1px solid var(--teal-border);white-space:nowrap;}
+.nav-badge{background:var(--cyan-dim);color:var(--cyan);font-size:9px;padding:2px 7px;border-radius:7px;border:1px solid var(--cyan-border);white-space:nowrap;}
 
-/* Auditor chip in navbar */
-.aud-chip{display:flex;align-items:center;gap:3px;background:var(--teal-dim);border:1px solid var(--teal-border);border-radius:14px;padding:3px 8px 3px 4px;margin-right:6px;cursor:pointer;}
-.aud-chip-av{width:18px;height:18px;border-radius:50%;overflow:hidden;background:rgba(48,213,245,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;}
+/* Auditor chip */
+.aud-chip{display:flex;align-items:center;gap:5px;background:var(--cyan-dim);border:1.5px solid var(--cyan-border);border-radius:20px;padding:4px 10px 4px 5px;margin-right:8px;cursor:pointer;}
+.aud-chip-av{width:22px;height:22px;border-radius:50%;overflow:hidden;background:rgba(72,196,255,.25);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;}
 .aud-chip-av img{width:100%;height:100%;object-fit:cover;display:block;}
-.aud-chip-name{font-size:9px;font-weight:600;color:var(--teal);white-space:nowrap;}
-.aud-chip-offline{background:rgba(255,255,255,.06);border-color:var(--border);}
+.aud-chip-name{font-size:10px;font-weight:600;color:var(--cyan);white-space:nowrap;}
+.aud-chip-offline{background:rgba(255,255,255,.05);border-color:var(--border);}
 .aud-chip-offline .aud-chip-name{color:var(--sub);}
 
-/* ── HOME BODY: flex fill screen ── */
-.home-body{
-  flex:1;
-  min-height:0;
-  display:flex;
-  flex-direction:column;
-  padding:6px 11px 8px;
-  gap:4px;
-  overflow:hidden;
-}
+/* ── HOME BODY ── */
+.home-body{flex:1;display:flex;flex-direction:column;padding:8px 14px 8px;gap:8px;overflow:hidden;height:calc(100svh - 50px);}
 
 /* Swipe dots */
-.swipe-dots{display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;height:16px;}
-.sdot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.14);transition:all .2s;}
-.sdot.on{width:16px;border-radius:3px;background:var(--teal);}
-.swipe-hint{font-size:7px;color:rgba(255,255,255,.18);margin-left:6px;}
+.swipe-dots{display:flex;align-items:center;justify-content:center;gap:5px;height:12px;flex-shrink:0;}
+.sdot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.15);transition:all .2s;}
+.sdot.on{width:18px;border-radius:3px;background:var(--cyan);}
 
-/* Profile card: avatar+name LEFT | stats RIGHT */
+/* ── PROFILE CARD (new: gradient bg, square avatar, 2-col stats) ── */
 .profile-card{
-  background:var(--bg2);border-radius:13px;
-  display:flex;align-items:center;gap:9px;
-  padding:8px 11px;
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-  flex-shrink:0;
+  background:linear-gradient(135deg,#0e2080 0%,#380860 100%);
+  border-radius:18px;display:flex;align-items:center;gap:14px;
+  padding:14px 16px;flex-shrink:0;
+  border:2px solid rgba(72,196,255,.35);
+  box-shadow:0 0 36px rgba(72,196,255,.18),0 0 60px rgba(140,30,200,.1);
 }
-.prof-left{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;}
-.p-avatar{width:46px;height:46px;border-radius:50%;overflow:hidden;border:2px solid var(--teal-border);box-shadow:0 0 16px rgba(48,213,245,.16);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-.p-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
-.p-name{font-size:11px;font-weight:700;color:var(--text);}
-.prof-div{width:1px;height:46px;background:var(--border);flex-shrink:0;}
-.prof-right{flex:1;display:flex;flex-direction:column;}
-.stat-row{display:flex;align-items:baseline;gap:5px;padding:4px 2px;}
-.stat-row+.stat-row{border-top:1px solid var(--border);}
-.stat-ico{display:none;}
-.stat-num{font-size:19px;font-weight:800;letter-spacing:-.4px;line-height:1;}
-.stat-num.t{color:var(--teal);}
-.stat-num.o{color:var(--orange);}
-.stat-unit{font-size:9px;color:var(--sub);}
+.p-avatar-box{
+  width:72px;height:72px;border-radius:14px;
+  overflow:hidden;flex-shrink:0;
+  border:2.5px solid rgba(72,196,255,.7);
+  box-shadow:0 0 20px rgba(72,196,255,.35);
+  background:#061830;display:flex;align-items:center;justify-content:center;font-size:32px;
+}
+.p-avatar-box img{width:100%;height:100%;object-fit:cover;display:block;}
+.p-info{flex:1;display:flex;flex-direction:column;gap:8px;}
+.p-name{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.3px;}
+.p-stats{display:flex;gap:18px;}
+.p-stat{display:flex;flex-direction:column;gap:2px;}
+.p-stat-lbl{font-size:12px;color:rgba(255,255,255,.55);font-weight:500;}
+.p-stat-num{font-size:26px;font-weight:800;letter-spacing:-.5px;line-height:1;}
+.p-stat-num.t{color:#48c4ff;}
+.p-stat-num.o{color:#ff8040;}
 
-/* Section labels */
-.sec-lbl{font-size:8px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:rgba(180,210,225,.28);padding-left:1px;flex-shrink:0;}
+/* ── SECTION HEADERS ── */
+.sec-hdr{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;flex-shrink:0;height:18px;}
 
-/* Category grid sections */
-.grid-section{flex:2;display:flex;flex-direction:column;gap:4px;min-height:110px;}
-.grid-section-bot{flex:1;display:flex;flex-direction:column;gap:4px;min-height:55px;}
-.cat-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:4px;min-height:0;}
-.cat-grid-top{grid-template-rows:1fr 1fr;}
+/* ── GRID SECTIONS ── */
+.grid-section{flex:2;display:flex;flex-direction:column;gap:5px;min-height:0;max-height:272px;}
+.grid-section-bot{flex:1;display:flex;flex-direction:column;gap:5px;min-height:0;max-height:136px;}
+.cat-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px;min-height:0;}
+.cat-grid-2row{grid-template-rows:1fr 1fr;}
 
-/* Category tiles */
+/* ── TILES (emoji + name only, no values) ── */
 .cat-tile{
-  background:var(--bg2);border-radius:12px;
-  padding:11px 10px 10px;cursor:pointer;
-  border:1px solid var(--teal-border);
-  display:flex;flex-direction:column;justify-content:space-between;
-  overflow:hidden;
-  transition:transform .1s,background .1s;
-  min-height:0;
-  -webkit-user-select:none;user-select:none;
+  border-radius:16px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;
+  overflow:hidden;min-height:0;cursor:pointer;
+  position:relative;border:1px solid rgba(255,255,255,.08);
+  transition:transform .1s;-webkit-user-select:none;user-select:none;
 }
-.cat-tile:active{transform:scale(.97);background:var(--bg3);}
-.cat-tile.ob{border-color:var(--orange-border);}
-.cat-tile.am{border-color:var(--amber-border);}
-.tile-emoji{font-size:30px;line-height:1;flex-shrink:0;}
-.tile-bottom{display:flex;flex-direction:column;gap:1px;}
-.tile-name{font-size:11px;font-weight:700;color:var(--text);}
-.tile-ntd{font-size:10px;font-weight:600;color:var(--teal);}
-.tile-mins{font-size:10px;font-weight:600;color:var(--teal);}
-.tile-ntd.neg,.tile-mins.neg{color:var(--orange);}
-.tile-ntd.dim,.tile-mins.dim{color:var(--sub);}
+.cat-tile:active{transform:scale(.96);}
+.cat-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.07),transparent);pointer-events:none;}
+/* Category gradients */
+.tile-vocab  {background:linear-gradient(145deg,#0e1e6a,#162890);border-color:rgba(60,100,255,.2);}
+.tile-school {background:linear-gradient(145deg,#14063a,#5a16a8);border-color:rgba(120,60,255,.2);}
+.tile-hw     {background:linear-gradient(145deg,#052214,#187040);border-color:rgba(30,150,80,.2);}
+.tile-sport  {background:linear-gradient(145deg,#2a0800,#b03010);border-color:rgba(200,80,20,.2);}
+.tile-trans  {background:linear-gradient(145deg,#261800,#503000);border-color:rgba(200,140,20,.2);}
+.tile-behav  {background:linear-gradient(145deg,#1a0428,#6010a0);border-color:rgba(160,40,180,.2);}
+.tile-behav-neg{background:linear-gradient(145deg,#3a0820,#6a1030);border-color:rgba(200,30,60,.2);}
+.tile-emoji{font-size:54px;line-height:1;position:relative;z-index:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5));}
+.tile-name{font-size:15px;font-weight:700;color:#fff;text-align:center;position:relative;z-index:1;}
 
-/* ── Detail screen ── */
+/* ── DETAIL PAGE ── */
 .detail-body{flex:1;overflow-y:auto;scrollbar-width:none;}
 .detail-body::-webkit-scrollbar{display:none;}
-.detail-pad{padding:10px 12px 50px;}
+.detail-pad{padding:10px 14px 50px;}
 
 /* Goal stats strip */
-.goal-stats-strip{display:flex;gap:5px;padding:10px 12px 0;}
-.gstat-card{flex:1;background:var(--bg2);border-radius:10px;padding:8px 10px;border:1px solid var(--teal-border);text-align:center;}
+.goal-stats-strip{display:flex;gap:5px;padding:10px 14px 0;}
+.gstat-card{flex:1;background:var(--card);border-radius:10px;padding:8px 10px;border:1px solid var(--teal-border);text-align:center;}
 .gstat-card.o{border-color:var(--orange-border);}
 .gstat-lbl{font-size:8px;color:var(--sub);margin-bottom:2px;}
 .gstat-val{font-size:17px;font-weight:800;letter-spacing:-.3px;}
 .gstat-val.t{color:var(--teal);}
-.gstat-val.o{color:var(--orange);}
+.gstat-val.o{color:var(--amber);}
 .gstat-unit{font-size:8px;color:var(--sub);}
-.gadd-goal-btn{width:52px;background:var(--bg2);border-radius:10px;border:1px solid var(--teal-border);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;cursor:pointer;}
-.gadd-goal-btn:active{background:var(--bg3);}
+.gadd-goal-btn{width:52px;background:var(--card);border-radius:10px;border:1px solid var(--teal-border);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;cursor:pointer;}
+.gadd-goal-btn:active{background:var(--card2);}
 .gadd-plus{font-size:20px;color:var(--teal);font-weight:300;line-height:1;}
 .gadd-lbl{font-size:7px;color:rgba(48,213,245,.5);}
 
-/* Goal section header */
+/* Goal section */
 .goal-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:0 1px;margin-bottom:6px;}
 .add-goal-btn{font-size:10px;font-weight:600;color:var(--teal);background:var(--teal-dim);border:none;border-radius:8px;padding:4px 10px;cursor:pointer;}
-
-/* Goal cards */
-.goal-card{background:var(--bg2);border-radius:13px;padding:11px 12px;margin-bottom:6px;border:1px solid var(--teal-border);}
+.goal-card{background:var(--card);border-radius:13px;padding:11px 12px;margin-bottom:6px;border:1px solid var(--teal-border);}
 .goal-card.completed{opacity:.5;border-color:var(--border);border-style:dashed;}
 .goal-freq-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
 .goal-freq-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-border);}
-.goal-freq-badge.recurring{background:rgba(255,213,79,.1);color:var(--amber);border-color:var(--amber-border);}
+.goal-freq-badge.recurring{background:rgba(255,213,79,.1);color:#ffd54f;border-color:rgba(255,213,79,.2);}
 .goal-desc{font-size:11px;color:var(--text);margin-bottom:7px;line-height:1.4;}
 .goal-rewards{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
 .goal-reward-pill{font-size:9px;font-weight:600;padding:3px 8px;border-radius:7px;}
 .reward-pass{background:var(--green-dim);color:var(--green);}
-.reward-fail{background:var(--orange-dim);color:var(--orange);}
+.reward-fail{background:var(--orange-dim);color:var(--amber);}
 .goal-verify-row{display:flex;gap:5px;}
 .btn-pass{flex:1;padding:8px;background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;}
-.btn-fail{flex:1;padding:8px;background:var(--orange-dim);color:var(--orange);border:1px solid var(--orange-border);border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;}
+.btn-fail{flex:1;padding:8px;background:var(--orange-dim);color:var(--amber);border:1px solid var(--orange-border);border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;}
 .goal-completed-badge{font-size:10px;padding:3px 8px;border-radius:7px;background:rgba(255,255,255,.06);color:var(--sub);margin-left:auto;}
-.no-goals{text-align:center;padding:16px;color:var(--sub);font-size:11px;background:var(--bg2);border-radius:12px;border:1px dashed var(--border);}
+.no-goals{text-align:center;padding:16px;color:var(--sub);font-size:11px;background:var(--card);border-radius:12px;border:1px dashed var(--border);}
 
-/* Record & add buttons */
-.add-rec-btn{width:100%;padding:11px;background:var(--bg2);color:var(--teal);border:1px solid var(--teal-border);border-radius:11px;font-size:12px;font-weight:600;cursor:pointer;margin-bottom:10px;}
-.add-rec-btn:active{background:var(--bg3);}
+/* Records */
+.sec-lbl{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--sub);padding:0 1px;margin-bottom:5px;}
+.add-rec-btn{width:100%;padding:11px;background:var(--card);color:var(--teal);border:1px solid var(--teal-border);border-radius:11px;font-size:12px;font-weight:600;cursor:pointer;margin-bottom:10px;}
+.add-rec-btn:active{background:var(--card2);}
 .add-rec-btn.locked{color:var(--sub);border-color:var(--border);cursor:default;}
-.rec-card{background:var(--bg2);border-radius:11px;padding:10px 12px;margin-bottom:5px;border:1px solid var(--border);}
+.rec-card{background:var(--card);border-radius:11px;padding:10px 12px;margin-bottom:5px;border:1px solid var(--border);}
 .rec-card.deleted-card{opacity:.6;border-style:dashed;}
 .rec-top{display:flex;align-items:center;gap:5px;margin-bottom:3px;flex-wrap:wrap;}
 .rec-date{font-size:10px;color:var(--sub);}
 .rec-aud{font-size:10px;color:var(--sub);}
 .rec-badge{font-size:9px;padding:1px 7px;border-radius:5px;font-weight:600;}
 .rec-badge.pass{background:var(--green-dim);color:var(--green);}
-.rec-badge.fail{background:var(--orange-dim);color:var(--orange);}
+.rec-badge.fail{background:var(--orange-dim);color:var(--amber);}
 .tx-type-badge{font-size:9px;padding:2px 7px;border-radius:5px;font-weight:700;}
-.tx-withdraw{background:var(--orange-dim);color:var(--orange);}
+.tx-withdraw{background:var(--orange-dim);color:var(--amber);}
 .tx-deposit{background:var(--green-dim);color:var(--green);}
 .rec-actions{display:flex;gap:3px;margin-left:auto;}
 .rec-act{width:26px;height:26px;border:none;border-radius:7px;background:rgba(255,255,255,.05);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;}
 .rec-act.del{background:rgba(255,82,82,.12);}
 .rec-amts{display:flex;gap:7px;margin-bottom:2px;}
 .rec-amt{font-size:12px;font-weight:700;}
-.pos{color:var(--teal);}.neg{color:var(--orange);}
+.pos{color:var(--teal);}.neg{color:var(--amber);}
 .rec-note,.rec-edited{font-size:10px;color:var(--sub);}
 .rec-edited{font-style:italic;}
 .restore-btn{font-size:10px;padding:3px 9px;background:var(--teal-dim);color:var(--teal);border:none;border-radius:7px;cursor:pointer;font-weight:600;white-space:nowrap;}
-.days-left{font-size:9px;color:var(--red);margin-left:auto;}
+.days-left{font-size:9px;color:var(--del-red);margin-left:auto;}
 .empty-state{text-align:center;padding:28px 16px;color:var(--sub);font-size:12px;line-height:1.8;}
 
 /* Transactions */
 .tx-summary{display:flex;gap:5px;margin-bottom:8px;}
-.tx-sum-card{flex:1;background:var(--bg2);border-radius:10px;padding:8px 10px;border:1px solid var(--teal-border);}
+.tx-sum-card{flex:1;background:var(--card);border-radius:10px;padding:8px 10px;border:1px solid var(--teal-border);}
 .tx-sum-card.o{border-color:var(--orange-border);}
 .tx-sum-label{font-size:8px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--sub);margin-bottom:2px;}
 .tx-sum-val{font-size:13px;font-weight:700;}
@@ -203,8 +187,8 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 .filter-btn{flex:1;padding:6px;border-radius:9px;border:1px solid var(--border);background:transparent;font-size:10px;font-weight:600;color:var(--sub);cursor:pointer;}
 .filter-btn.active{border-color:var(--teal);background:var(--teal-dim);color:var(--teal);}
 
-/* ── Settings ── */
-.settings-section{background:var(--bg2);border-radius:14px;overflow:hidden;margin-bottom:12px;border:1px solid var(--border);}
+/* Settings */
+.settings-section{background:var(--card);border-radius:14px;overflow:hidden;margin-bottom:12px;border:1px solid var(--border);}
 .settings-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;border-bottom:1px solid var(--border);}
 .settings-section-title{font-size:12px;font-weight:700;color:var(--text);}
 .settings-add-btn{font-size:11px;font-weight:600;color:var(--teal);background:var(--teal-dim);border:none;border-radius:7px;padding:3px 9px;cursor:pointer;}
@@ -217,89 +201,87 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 .person-acts{display:flex;gap:5px;margin-left:auto;}
 .person-act{width:28px;height:28px;border:none;border-radius:7px;background:rgba(255,255,255,.05);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
 .person-act.del{background:rgba(255,82,82,.1);}
-.settings-info{background:var(--bg2);border-radius:14px;padding:14px;border:1px solid var(--border);text-align:center;}
+.settings-info{background:var(--card);border-radius:14px;padding:14px;border:1px solid var(--border);text-align:center;}
 .settings-info-title{font-size:13px;font-weight:700;margin-bottom:3px;}
-.settings-info-sub{font-size:11px;color:var(--sub);}
+.settings-info-sub{font-size:11px;color:var(--sub);margin-bottom:12px;}
+.cache-clear-btn{width:100%;padding:11px;background:rgba(255,82,82,.1);color:#ff5252;border:1px solid rgba(255,82,82,.22);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;}
 
 /* Photo picker */
 .photo-picker-area{text-align:center;margin-bottom:14px;}
 .photo-preview-box{width:86px;height:86px;border-radius:17px;background:var(--teal-dim);border:2px solid var(--teal-border);margin:0 auto 8px;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:36px;}
 .photo-preview-box img{width:100%;height:100%;object-fit:cover;display:block;}
 .photo-pick-btn{font-size:11px;color:var(--teal);background:none;border:none;cursor:pointer;}
-.pin-toggle-btn{width:100%;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;text-align:left;font-size:12px;color:var(--teal);cursor:pointer;margin-bottom:4px;}
-.pin-change-section{background:var(--bg3);border-radius:9px;padding:11px;border:1px solid var(--border);margin-bottom:10px;}
+.pin-toggle-btn{width:100%;padding:9px 12px;background:var(--card2);border:1px solid var(--border);border-radius:9px;text-align:left;font-size:12px;color:var(--teal);cursor:pointer;margin-bottom:4px;}
+.pin-change-section{background:var(--card2);border-radius:9px;padding:11px;border:1px solid var(--border);margin-bottom:10px;}
 .pin-change-input{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:18px;text-align:center;letter-spacing:6px;background:var(--bg);color:var(--text);outline:none;margin-bottom:7px;font-family:inherit;}
 .pin-change-input:focus{border-color:var(--teal);}
 
-/* ── Modal ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
 .modal-overlay.show{opacity:1;pointer-events:all;}
-.modal-sheet{background:#0f1829;border-radius:22px 22px 0 0;width:100%;max-width:430px;padding:15px 17px 44px;transform:translateY(100%);transition:transform .28s cubic-bezier(.34,1.2,.64,1);max-height:90vh;overflow-y:auto;border-top:1px solid var(--border);}
+.modal-sheet{background:#0d1a40;border-radius:22px 22px 0 0;width:100%;max-width:430px;padding:15px 17px 44px;transform:translateY(100%);transition:transform .28s cubic-bezier(.34,1.2,.64,1);max-height:90vh;overflow-y:auto;border-top:1px solid var(--border);}
 .modal-overlay.show .modal-sheet{transform:translateY(0);}
 .modal-handle{width:34px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 15px;}
 .modal-title{font-size:16px;font-weight:700;text-align:center;margin-bottom:13px;color:var(--text);}
 
 /* Auditor list */
 .aud-list{display:flex;flex-direction:column;gap:7px;}
-.aud-item{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;cursor:pointer;}
-.aud-item:active{background:var(--bg3);}
+.aud-item{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--card);border:1px solid var(--border);border-radius:12px;cursor:pointer;}
+.aud-item:active{background:var(--card2);}
 .aud-av{width:38px;height:38px;border-radius:10px;background:var(--teal-dim);display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden;flex-shrink:0;}
 .aud-av img{width:100%;height:100%;object-fit:cover;display:block;}
 .aud-item-name{font-size:13px;font-weight:600;color:var(--text);}
 .aud-item-role{font-size:10px;color:var(--sub);}
 .aud-arrow{margin-left:auto;color:var(--border);font-size:16px;}
-
-/* PIN */
 .pin-section{display:none;}.pin-section.show{display:block;}
 .pin-dots{display:flex;gap:9px;justify-content:center;margin-bottom:13px;}
-.pin-dot-el{width:42px;height:42px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--sub);transition:all .1s;}
+.pin-dot-el{width:42px;height:42px;border-radius:10px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--sub);transition:all .1s;}
 .pin-dot-el.filled{background:var(--teal-dim);border-color:var(--teal-border);color:var(--teal);}
-.pin-input{width:100%;padding:12px;border:1.5px solid var(--border);border-radius:12px;font-size:22px;text-align:center;letter-spacing:8px;background:var(--bg3);color:var(--text);outline:none;}
+.pin-input{width:100%;padding:12px;border:1.5px solid var(--border);border-radius:12px;font-size:22px;text-align:center;letter-spacing:8px;background:var(--card2);color:var(--text);outline:none;}
 .pin-input:focus{border-color:var(--teal);}
-.pin-err{font-size:11px;color:var(--red);text-align:center;min-height:17px;margin:5px 0;}
-.pin-ok{width:100%;padding:13px;background:var(--teal);color:#070d18;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:5px;}
+.pin-err{font-size:11px;color:var(--del-red);text-align:center;min-height:17px;margin:5px 0;}
+.pin-ok{width:100%;padding:13px;background:var(--teal);color:#07102a;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:5px;}
 .pin-back{width:100%;padding:9px;background:transparent;color:var(--sub);border:none;font-size:12px;cursor:pointer;margin-top:3px;}
 
 /* Forms */
 .form-grp{margin-bottom:11px;}
 .form-lbl{font-size:11px;font-weight:600;color:var(--sub);margin-bottom:4px;display:block;}
-.form-inp{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;background:var(--bg3);color:var(--text);outline:none;font-family:inherit;}
+.form-inp{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;background:var(--card2);color:var(--text);outline:none;font-family:inherit;}
 .form-inp:focus{border-color:var(--teal);}
 textarea.form-inp{resize:none;line-height:1.5;}
-.form-hint{font-size:9px;color:var(--sub);margin-top:3px;padding-left:2px;}
 .tog-row{display:flex;gap:5px;}
-.tog-btn{flex:1;padding:8px 5px;border:1.5px solid var(--border);border-radius:9px;background:var(--bg3);color:var(--sub);font-size:10px;font-weight:600;cursor:pointer;transition:all .15s;}
+.tog-btn{flex:1;padding:8px 5px;border:1.5px solid var(--border);border-radius:9px;background:var(--card2);color:var(--sub);font-size:10px;font-weight:600;cursor:pointer;transition:all .15s;}
 .tog-btn.active.t-pass{background:var(--green-dim);border-color:var(--green-border);color:var(--green);}
-.tog-btn.active.t-fail{background:var(--orange-dim);border-color:var(--orange-border);color:var(--orange);}
+.tog-btn.active.t-fail{background:var(--orange-dim);border-color:var(--orange-border);color:var(--amber);}
 .tog-btn.active.t-teal{background:var(--teal-dim);border-color:var(--teal-border);color:var(--teal);}
-.tog-btn.active.t-org{background:var(--orange-dim);border-color:var(--orange-border);color:var(--orange);}
+.tog-btn.active.t-org{background:var(--orange-dim);border-color:var(--orange-border);color:var(--amber);}
 .tog-btn.active.t-green{background:var(--green-dim);border-color:var(--green-border);color:var(--green);}
 .day-grid{display:flex;gap:4px;margin-top:5px;}
-.day-btn{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border);background:var(--bg3);font-size:10px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--sub);}
-.day-btn.active{background:var(--teal);border-color:var(--teal);color:#070d18;}
+.day-btn{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border);background:var(--card2);font-size:10px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--sub);}
+.day-btn.active{background:var(--teal);border-color:var(--teal);color:#07102a;}
 .amt-row{display:flex;gap:7px;}
 .amt-grp{flex:1;}
 .amt-lbl{font-size:9px;font-weight:600;color:var(--sub);margin-bottom:3px;display:block;}
-.amt-inp{width:100%;padding:9px;border:1.5px solid var(--border);border-radius:9px;font-size:16px;font-weight:600;text-align:center;background:var(--bg3);color:var(--text);outline:none;}
+.amt-inp{width:100%;padding:9px;border:1.5px solid var(--border);border-radius:9px;font-size:16px;font-weight:600;text-align:center;background:var(--card2);color:var(--text);outline:none;}
 .amt-inp:focus{border-color:var(--teal);}
-.form-aud-row{display:flex;align-items:center;gap:5px;padding:9px 12px;background:var(--bg3);border-radius:9px;margin-bottom:10px;font-size:11px;color:var(--sub);}
-.save-btn{width:100%;padding:13px;background:var(--teal);color:#070d18;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;}
+.form-aud-row{display:flex;align-items:center;gap:5px;padding:9px 12px;background:var(--card2);border-radius:9px;margin-bottom:10px;font-size:11px;color:var(--sub);}
+.save-btn{width:100%;padding:13px;background:var(--teal);color:#07102a;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;}
 .save-btn:active{opacity:.85;}
-.tx-hint-box{background:var(--bg3);border-radius:9px;padding:8px 11px;margin-top:7px;font-size:11px;color:var(--sub);border-left:3px solid var(--border);}
-.tx-hint-box.withdraw{border-left-color:var(--orange);color:var(--orange);}
+.tx-hint-box{background:var(--card2);border-radius:9px;padding:8px 11px;margin-top:7px;font-size:11px;color:var(--sub);border-left:3px solid var(--border);}
+.tx-hint-box.withdraw{border-left-color:var(--amber);color:var(--amber);}
 .tx-hint-box.deposit{border-left-color:var(--green);color:var(--green);}
 
 /* Confirm */
-.confirm-box{background:var(--bg2);border-radius:15px;padding:16px;margin-bottom:10px;border:1px solid var(--border);}
+.confirm-box{background:var(--card);border-radius:15px;padding:16px;margin-bottom:10px;border:1px solid var(--border);}
 .confirm-msg{font-size:13px;color:var(--text);margin-bottom:13px;line-height:1.5;text-align:center;}
 .confirm-row{display:flex;gap:7px;}
-.confirm-cancel{flex:1;padding:11px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:var(--text);}
-.confirm-del{flex:1;padding:11px;background:var(--red);border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:#fff;}
-.confirm-pass{flex:1;padding:11px;background:var(--green);border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:#070d18;}
-.confirm-fail{flex:1;padding:11px;background:var(--orange);border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:#fff;}
+.confirm-cancel{flex:1;padding:11px;background:var(--card2);border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:var(--text);}
+.confirm-del{flex:1;padding:11px;background:var(--del-red);border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:#fff;}
+.confirm-pass{flex:1;padding:11px;background:var(--green);border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:#07102a;}
+.confirm-fail{flex:1;padding:11px;background:var(--amber);border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:#fff;}
 
 /* Toast */
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(13,24,40,.95);color:var(--text);padding:10px 18px;border-radius:20px;font-size:12px;font-weight:500;opacity:0;transition:all .22s;pointer-events:none;z-index:999;white-space:nowrap;max-width:calc(100vw - 32px);border:1px solid var(--border);}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(10,20,50,.96);color:var(--text);padding:10px 18px;border-radius:20px;font-size:12px;font-weight:500;opacity:0;transition:all .22s;pointer-events:none;z-index:999;white-space:nowrap;max-width:calc(100vw - 32px);border:1px solid var(--border);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
@@ -307,10 +289,10 @@ textarea.form-inp{resize:none;line-height:1.5;}
 
 <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoSelected(event)">
 
-<!-- ══ SCREEN: HOME ══ -->
+<!-- HOME -->
 <div id="screenHome" class="screen active">
   <div class="navbar">
-    <div class="nav-title">🏅 KidsAPP</div>
+    <div class="nav-title">🏅 Kids<span>APP</span></div>
     <div class="aud-chip aud-chip-offline" id="audChip" onclick="openAuditorModal()">
       <div class="aud-chip-av" id="audChipAv">👤</div>
       <span class="aud-chip-name" id="audChipName">未登入</span>
@@ -318,76 +300,61 @@ textarea.form-inp{resize:none;line-height:1.5;}
     <button class="nav-btn" onclick="openSettings()">⚙️</button>
   </div>
   <div class="home-body">
-    <div class="swipe-dots" id="swipeDots">
-      <span class="swipe-hint">← </span>
-      <div class="sdot on" id="dot0"></div>
-      <span class="swipe-hint"> →</span>
-    </div>
+    <div class="swipe-dots" id="swipeDots"><div class="sdot on"></div></div>
     <div class="profile-card">
-      <div class="prof-left">
-        <div class="p-avatar" id="childAvatar">👶</div>
+      <div class="p-avatar-box" id="childAvatar">👶</div>
+      <div class="p-info">
         <div class="p-name" id="childName">…</div>
-      </div>
-      <div class="prof-div"></div>
-      <div class="prof-right">
-        <div class="stat-row">
-          <span class="stat-num t" id="statNTD">—</span>
-          <span class="stat-unit">NTD</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-num o" id="statMins">—</span>
-          <span class="stat-unit">mins</span>
+        <div class="p-stats">
+          <div class="p-stat">
+            <div class="p-stat-lbl">NTD</div>
+            <div class="p-stat-num t" id="statNTD">—</div>
+          </div>
+          <div class="p-stat">
+            <div class="p-stat-lbl">mins</div>
+            <div class="p-stat-num o" id="statMins">—</div>
+          </div>
         </div>
       </div>
     </div>
     <div class="grid-section">
-      <div class="sec-lbl">🎯 Learning &amp; Tasks</div>
-      <div class="cat-grid cat-grid-top" id="gridTop"></div>
+      <div class="sec-hdr">🎯 Learning &amp; Tasks</div>
+      <div class="cat-grid cat-grid-2row" id="gridTop"></div>
     </div>
     <div class="grid-section-bot">
-      <div class="sec-lbl">💳 Money &amp; Behavior</div>
+      <div class="sec-hdr">💳 Money &amp; Behavior</div>
       <div class="cat-grid" id="gridBot"></div>
     </div>
   </div>
 </div>
 
-<!-- ══ SCREEN: DETAIL ══ -->
+<!-- DETAIL -->
 <div id="screenDetail" class="screen">
   <div class="navbar">
     <button class="nav-back" onclick="closeDetail()">‹ 返回</button>
     <div class="nav-center" id="detailTitle"></div>
     <div class="nav-badges" id="detailBadges"></div>
   </div>
-  <div class="detail-body">
-    <div id="detailContent"></div>
-  </div>
+  <div class="detail-body"><div id="detailContent"></div></div>
 </div>
 
-<!-- ══ SCREEN: SETTINGS ══ -->
+<!-- SETTINGS -->
 <div id="screenSettings" class="screen">
   <div class="navbar">
     <button class="nav-back" onclick="closeSettings()">‹ 返回</button>
-    <div class="nav-title">⚙️ 設定</div>
+    <div class="nav-title" style="font-size:16px;">⚙️ 設定</div>
   </div>
-  <div class="detail-body">
-    <div class="detail-pad" id="settingsContent"></div>
-  </div>
+  <div class="detail-body"><div class="detail-pad" id="settingsContent"></div></div>
 </div>
 
-<!-- ══ MODAL: AUDITOR LOGIN ══ -->
+<!-- MODAL: AUDITOR -->
 <div class="modal-overlay" id="modalAud" onclick="handleOverlay(event,'modalAud')">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
-    <div id="step1">
-      <div class="modal-title">選擇審核人</div>
-      <div class="aud-list" id="audList"></div>
-    </div>
+    <div id="step1"><div class="modal-title">選擇審核人</div><div class="aud-list" id="audList"></div></div>
     <div class="pin-section" id="step2">
       <div class="modal-title" id="pinTitle">輸入 PIN</div>
-      <div class="pin-dots" id="pinDots">
-        <div class="pin-dot-el">•</div><div class="pin-dot-el">•</div>
-        <div class="pin-dot-el">•</div><div class="pin-dot-el">•</div>
-      </div>
+      <div class="pin-dots" id="pinDots"><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div></div>
       <input type="password" inputmode="numeric" maxlength="4" class="pin-input" id="pinInput" placeholder="••••" oninput="handlePinInput()">
       <div class="pin-err" id="pinErr"></div>
       <button class="pin-ok" onclick="confirmPin()">確認登入</button>
@@ -396,7 +363,7 @@ textarea.form-inp{resize:none;line-height:1.5;}
   </div>
 </div>
 
-<!-- ══ MODAL: PERSON (child/auditor) ══ -->
+<!-- MODAL: PERSON -->
 <div class="modal-overlay" id="modalPerson" onclick="handleOverlay(event,'modalPerson')">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -405,7 +372,7 @@ textarea.form-inp{resize:none;line-height:1.5;}
   </div>
 </div>
 
-<!-- ══ MODAL: GOAL ══ -->
+<!-- MODAL: GOAL -->
 <div class="modal-overlay" id="modalGoal" onclick="handleOverlay(event,'modalGoal')">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -414,7 +381,7 @@ textarea.form-inp{resize:none;line-height:1.5;}
   </div>
 </div>
 
-<!-- ══ MODAL: ENTRY ══ -->
+<!-- MODAL: ENTRY -->
 <div class="modal-overlay" id="modalEntry" onclick="handleOverlay(event,'modalEntry')">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -423,7 +390,7 @@ textarea.form-inp{resize:none;line-height:1.5;}
   </div>
 </div>
 
-<!-- ══ MODAL: CONFIRM ══ -->
+<!-- MODAL: CONFIRM -->
 <div class="modal-overlay" id="modalConfirm" onclick="handleOverlay(event,'modalConfirm')">
   <div class="modal-sheet" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
@@ -434,12 +401,10 @@ textarea.form-inp{resize:none;line-height:1.5;}
 <div class="toast" id="toast"></div>
 
 <script>
-/* ══ Firebase ══ */
 const FB={apiKey:"AIzaSyBCuSVVPZGb76D4OKkIklOck50Mm-wbdsA",authDomain:"kidsapp-e9a8d.firebaseapp.com",databaseURL:"https://kidsapp-e9a8d-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"kidsapp-e9a8d",storageBucket:"kidsapp-e9a8d.firebasestorage.app",messagingSenderId:"240270025549",appId:"1:240270025549:web:98777be0532c7cc97ecd04"};
 firebase.initializeApp(FB);
 const db=firebase.database();
 
-/* ══ Categories ══ */
 const CATS=[
   {id:'vocab',       name:'Vocabulary',  emoji:'📚',type:'goal',        group:'top'},
   {id:'school',      name:'School Exam', emoji:'📝',type:'goal',        group:'top'},
@@ -448,9 +413,13 @@ const CATS=[
   {id:'transactions',name:'Transactions',emoji:'💳',type:'transactions',group:'bot'},
   {id:'behavior',    name:'Behavior',    emoji:'⭐',type:'mixed',       group:'bot'},
 ];
-const GOAL_CATS=['vocab','school','housework','sport'];
 
-/* ══ State ══ */
+/* Tile CSS class per category */
+const TILE_CLASS={
+  vocab:'tile-vocab',school:'tile-school',housework:'tile-hw',
+  sport:'tile-sport',transactions:'tile-trans',behavior:'tile-behav'
+};
+
 const S={
   children:{},auditors:{},entries:{},goals:{},
   currentChildId:null,currentCat:null,
@@ -461,7 +430,6 @@ const S={
   txFilter:'all',rtMain:null,rtGoal:null
 };
 
-/* ══ Helpers ══ */
 const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const MON_MAP={Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
 const DAY_NAMES=['一','二','三','四','五','六','日'];
@@ -479,7 +447,6 @@ function fmtFreq(g){
 }
 function isRecurring(g){return g.freq!=='once';}
 
-/* ══ Photo compression ══ */
 async function compressImage(file){
   return new Promise(resolve=>{
     const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d'),img=new Image(),url=URL.createObjectURL(file);
@@ -496,7 +463,6 @@ async function handlePhotoSelected(e){
 }
 function pickPhoto(){document.getElementById('photoInput').click();}
 
-/* ══ Init ══ */
 async function init(){
   try{
     const[as,cs]=await Promise.all([db.ref('/auditors').once('value'),db.ref('/children').once('value')]);
@@ -508,7 +474,7 @@ async function init(){
       await migrateWithdraw(S.currentChildId);
       attachMainListener(S.currentChildId);attachGoalListener(S.currentChildId);cleanupOldDeleted();
     }
-    renderAll();initSwipe();
+    renderAll();initSwipe();fixLayout();
   }catch(err){console.error(err);showToast('⚠️ 連線失敗，請重新整理',4000);document.getElementById('childName').textContent='連線失敗';}
 }
 
@@ -516,14 +482,13 @@ async function migrateWithdraw(cid){
   const s=await db.ref(`/entries/${cid}/withdraw`).once('value');
   if(!s.exists())return;await db.ref(`/entries/${cid}/transactions`).update(s.val());await db.ref(`/entries/${cid}/withdraw`).remove();
 }
-
 function attachMainListener(cid){
   if(S.rtMain)db.ref(`/entries/${S.rtMain}`).off();S.rtMain=cid;
   db.ref(`/entries/${cid}`).on('value',snap=>{S.entries[cid]=snap.val()||{};renderDashboard();if(S.currentCat)renderDetailContent(S.currentCat);});
 }
 function attachGoalListener(cid){
   if(S.rtGoal)db.ref(`/goals/${S.rtGoal}`).off();S.rtGoal=cid;
-  db.ref(`/goals/${cid}`).on('value',snap=>{S.goals[cid]=snap.val()||{};if(S.currentCat&&GOAL_CATS.includes(S.currentCat))renderDetailContent(S.currentCat);});
+  db.ref(`/goals/${cid}`).on('value',snap=>{S.goals[cid]=snap.val()||{};if(S.currentCat&&['vocab','school','housework','sport'].includes(S.currentCat))renderDetailContent(S.currentCat);});
 }
 async function cleanupOldDeleted(){
   const cid=S.currentChildId;if(!cid)return;const weekAgo=Date.now()-7*24*60*60*1000;const tasks=[];
@@ -531,7 +496,6 @@ async function cleanupOldDeleted(){
   if(tasks.length)await Promise.all(tasks);
 }
 
-/* ══ Swipe gesture ══ */
 function fixLayout(){
   const scr=document.getElementById('screenHome');
   const nb=scr?.querySelector('.navbar');
@@ -555,7 +519,6 @@ function initSwipe(){
   },{passive:true});
 }
 
-/* ══ Render ══ */
 function renderAll(){renderAudChip();renderDashboard();fixLayout();}
 
 function renderAudChip(){
@@ -567,10 +530,7 @@ function renderAudChip(){
     const a=S.currentAuditor;
     av.innerHTML=a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤');
     nm.textContent=a.name;
-  } else {
-    chip.classList.add('aud-chip-offline');
-    av.innerHTML='👤';nm.textContent='未登入';
-  }
+  }else{chip.classList.add('aud-chip-offline');av.innerHTML='👤';nm.textContent='未登入';}
 }
 
 function renderDashboard(){
@@ -580,40 +540,33 @@ function renderDashboard(){
   document.getElementById('childName').textContent=child.name;
   // Swipe dots
   const ids=Object.keys(S.children),idx=ids.indexOf(S.currentChildId);
-  document.getElementById('swipeDots').innerHTML=
-    '<span class="swipe-hint">← </span>'+
-    ids.map((_,i)=>`<div class="sdot ${i===idx?'on':''}"></div>`).join('')+
-    '<span class="swipe-hint"> →</span>';
+  document.getElementById('swipeDots').innerHTML=ids.map((_,i)=>`<div class="sdot ${i===idx?'on':''}"></div>`).join('');
   // Totals
   const entries=S.entries[S.currentChildId]||{};let ntd=0,mins=0;
   CATS.forEach(cat=>Object.values(entries[cat.id]||{}).filter(e=>!e.deletedAt).forEach(e=>{ntd+=Number(e.ntd||0);mins+=Number(e.mins||0);}));
   document.getElementById('statNTD').textContent=ntd.toLocaleString();
   document.getElementById('statMins').textContent=mins.toLocaleString();
-  // Grids
-  renderGrid('gridTop','top',entries);renderGrid('gridBot','bot',entries);
+  renderGrid('gridTop','top',entries);
+  renderGrid('gridBot','bot',entries);
 }
 
 function renderGrid(gid,grp,entries){
   document.getElementById(gid).innerHTML=CATS.filter(c=>c.group===grp).map(cat=>{
-    let ntd=0,mins=0;
-    Object.values(entries[cat.id]||{}).filter(e=>!e.deletedAt).forEach(e=>{ntd+=Number(e.ntd||0);mins+=Number(e.mins||0);});
-    const nc=ntd<0?'neg':ntd>0?'':'dim';
-    const mc=mins<0?'neg':mins>0?'':'dim';
-    const ns=ntd===0?'— NTD':`${ntd>0?'+':''}${ntd.toLocaleString()} NTD`;
-    const ms=mins===0?'— mins':`${mins>0?'+':''}${mins.toLocaleString()} mins`;
-    const extra=cat.group==='bot'&&cat.id==='transactions'?' ob':cat.id==='behavior'?' am':'';
-    return `<div class="cat-tile${extra}" onclick="openCat('${cat.id}')">
+    // Determine tile class (behavior goes red if negative)
+    let cls=TILE_CLASS[cat.id]||'tile-vocab';
+    if(cat.id==='behavior'){
+      const bMins=Object.values(entries['behavior']||{}).filter(e=>!e.deletedAt).reduce((s,e)=>s+Number(e.mins||0),0);
+      if(bMins<0)cls='tile-behav-neg';
+    }
+    // HOME TILES: only emoji + name, no values
+    return `<div class="cat-tile ${cls}" onclick="openCat('${cat.id}')">
       <div class="tile-emoji">${cat.emoji}</div>
-      <div class="tile-bottom">
-        <div class="tile-name">${cat.name}</div>
-        <div class="tile-ntd ${nc}">${ns}</div>
-        <div class="tile-mins ${mc}">${ms}</div>
-      </div>
+      <div class="tile-name">${cat.name}</div>
     </div>`;
   }).join('');
 }
 
-/* ══ Detail screen ══ */
+/* ══ Detail ══ */
 function openCat(catId){
   S.currentCat=catId;S.txFilter='all';
   const cat=CATS.find(c=>c.id===catId);
@@ -631,7 +584,6 @@ function closeDetail(){S.currentCat=null;showScreen('screenHome');}
 function renderDetailContent(catId){
   const cat=CATS.find(c=>c.id===catId);let html='';
   if(cat.type==='goal'){
-    /* Stats strip */
     const entries=S.entries[S.currentChildId]||{};let tNTD=0,tMins=0;
     Object.values(entries[catId]||{}).filter(e=>!e.deletedAt).forEach(e=>{tNTD+=Number(e.ntd||0);tMins+=Number(e.mins||0);});
     html+=`<div class="goal-stats-strip">
@@ -640,7 +592,6 @@ function renderDetailContent(catId){
       <button class="gadd-goal-btn" onclick="openAddGoal(null,'${catId}')"><div class="gadd-plus">＋</div><div class="gadd-lbl">新增目標</div></button>
     </div>`;
     html+=`<div class="detail-pad">`;
-    /* Goals */
     const goals=S.goals[S.currentChildId]?.[catId]||{};
     const active=Object.entries(goals).filter(([,g])=>g.active!==false).sort((a,b)=>a[1].createdAt-b[1].createdAt);
     const completed=Object.entries(goals).filter(([,g])=>g.active===false).sort((a,b)=>(b[1].completedAt||0)-(a[1].completedAt||0));
@@ -657,14 +608,8 @@ function renderDetailContent(catId){
     html+=`<div class="detail-pad">
       <button class="add-rec-btn ${S.currentAuditor?'':'locked'}" onclick="openAddEntry(null)">${S.currentAuditor?'＋ 新增記錄':'🔐 請先登入審核人'}</button>
       <div class="tx-summary">
-        <div class="tx-sum-card"><div class="tx-sum-label" style="color:var(--orange);">💸 Withdraw</div>
-          ${wNTD!==0?`<div class="tx-sum-val neg">${wNTD.toLocaleString()} NTD</div>`:''}
-          ${wMins!==0?`<div class="tx-sum-val neg">${wMins.toLocaleString()} mins</div>`:''}
-          ${wNTD===0&&wMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}</div>
-        <div class="tx-sum-card o"><div class="tx-sum-label" style="color:var(--green);">💰 Deposit</div>
-          ${dNTD!==0?`<div class="tx-sum-val pos">+${dNTD.toLocaleString()} NTD</div>`:''}
-          ${dMins!==0?`<div class="tx-sum-val pos">+${dMins.toLocaleString()} mins</div>`:''}
-          ${dNTD===0&&dMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}</div>
+        <div class="tx-sum-card"><div class="tx-sum-label" style="color:var(--amber);">💸 Withdraw</div>${wNTD!==0?`<div class="tx-sum-val neg">${wNTD.toLocaleString()} NTD</div>`:''} ${wMins!==0?`<div class="tx-sum-val neg">${wMins.toLocaleString()} mins</div>`:''} ${wNTD===0&&wMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}</div>
+        <div class="tx-sum-card o"><div class="tx-sum-label" style="color:var(--green);">💰 Deposit</div>${dNTD!==0?`<div class="tx-sum-val pos">+${dNTD.toLocaleString()} NTD</div>`:''} ${dMins!==0?`<div class="tx-sum-val pos">+${dMins.toLocaleString()} mins</div>`:''} ${dNTD===0&&dMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}</div>
       </div>
       <div class="filter-row">
         <button class="filter-btn ${S.txFilter==='all'?'active':''}" onclick="setTxFilter('all')">全部</button>
@@ -678,29 +623,17 @@ function renderDetailContent(catId){
   document.getElementById('detailContent').innerHTML=html;
 }
 
-/* ══ Goal Cards ══ */
 function buildGoalCard(gid,g,catId,isCompleted){
-  const freq=g.freq==='once'?'📅':'🔄';const isRec=isRecurring(g);
   const pills=[];
   if(g.rewardNTD)pills.push(`<span class="goal-reward-pill reward-pass">✅ +${g.rewardNTD} NTD</span>`);
   if(g.rewardMins)pills.push(`<span class="goal-reward-pill reward-pass">✅ +${g.rewardMins} mins</span>`);
   if(g.penaltyNTD)pills.push(`<span class="goal-reward-pill reward-fail">❌ -${g.penaltyNTD} NTD</span>`);
   if(g.penaltyMins)pills.push(`<span class="goal-reward-pill reward-fail">❌ -${g.penaltyMins} mins</span>`);
   const bottom=isCompleted?`<span class="goal-completed-badge">${g.completedResult==='pass'?'✅ Passed':'❌ Failed'}</span>`:
-    `<div class="goal-verify-row">
-      <button class="btn-pass" onclick="verifyGoal('${catId}','${gid}','pass')" ${S.currentAuditor?'':'disabled style="opacity:.4;"'}>✅ Passed</button>
-      <button class="btn-fail" onclick="verifyGoal('${catId}','${gid}','fail')" ${S.currentAuditor?'':'disabled style="opacity:.4;"'}>❌ Failed</button>
-      <button style="width:30px;border:none;background:rgba(255,255,255,.05);border-radius:7px;cursor:pointer;font-size:13px;" onclick="openAddGoal('${gid}','${catId}')">✏️</button>
-    </div>`;
-  return `<div class="goal-card ${isCompleted?'completed':''}">
-    <div class="goal-freq-row"><span class="goal-freq-badge ${isRec?'recurring':''}">${fmtFreq(g)}</span></div>
-    <div class="goal-desc">${g.desc||'—'}</div>
-    <div class="goal-rewards">${pills.join('')||'<span style="font-size:10px;color:var(--sub);">（無獎懲設定）</span>'}</div>
-    ${bottom}
-  </div>`;
+    `<div class="goal-verify-row"><button class="btn-pass" onclick="verifyGoal('${catId}','${gid}','pass')" ${S.currentAuditor?'':'disabled style="opacity:.4;"'}>✅ Passed</button><button class="btn-fail" onclick="verifyGoal('${catId}','${gid}','fail')" ${S.currentAuditor?'':'disabled style="opacity:.4;"'}>❌ Failed</button><button style="width:30px;border:none;background:rgba(255,255,255,.05);border-radius:7px;cursor:pointer;font-size:13px;" onclick="openAddGoal('${gid}','${catId}')">✏️</button></div>`;
+  return `<div class="goal-card ${isCompleted?'completed':''}"><div class="goal-freq-row"><span class="goal-freq-badge ${isRecurring(g)?'recurring':''}">${fmtFreq(g)}</span></div><div class="goal-desc">${g.desc||'—'}</div><div class="goal-rewards">${pills.join('')||'<span style="font-size:10px;color:var(--sub);">（無獎懲設定）</span>'}</div>${bottom}</div>`;
 }
 
-/* ══ Goal CRUD ══ */
 function openAddGoal(goalId,catId){
   if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');openAuditorModal();return;}
   S.editingGoalId=goalId||null;
@@ -745,30 +678,13 @@ async function saveGoal(catId){
   }catch(e){console.error(e);showToast('❌ 儲存失敗');}
 }
 
-/* ══ Goal Verification ══ */
 function verifyGoal(catId,goalId,result){
   if(!S.currentAuditor){S.pendingVerify={catId,goalId,result};showToast('⚠️ 請先登入審核人');openAuditorModal();return;}
   const goal=S.goals[S.currentChildId]?.[catId]?.[goalId];if(!goal)return;
   const ntd=result==='pass'?(goal.rewardNTD||0):-(goal.penaltyNTD||0);
   const mins=result==='pass'?(goal.rewardMins||0):-(goal.penaltyMins||0);
   const hasAmt=ntd!==0||mins!==0;
-  document.getElementById('confirmBody').innerHTML=`
-    <div class="confirm-box">
-      <div style="font-size:26px;text-align:center;margin-bottom:7px;">${result==='pass'?'✅':'❌'}</div>
-      <div class="confirm-msg">
-        <strong>${result==='pass'?'Passed':'Failed'}</strong><br>
-        <span style="font-size:11px;color:var(--sub);">${goal.desc}</span>
-        ${hasAmt?`<div style="display:flex;gap:6px;justify-content:center;margin:8px 0;">
-          ${ntd!==0?`<span class="goal-reward-pill ${ntd>0?'reward-pass':'reward-fail'}">${ntd>0?'+':''}${ntd} NTD</span>`:''}
-          ${mins!==0?`<span class="goal-reward-pill ${mins>0?'reward-pass':'reward-fail'}">${mins>0?'+':''}${mins} mins</span>`:''}
-        </div>`:`<div style="color:var(--sub);font-size:11px;margin:7px 0;">（本次無獎懲記錄）</div>`}
-        <span style="font-size:10px;color:var(--sub);">審核人：${S.currentAuditor.name}</span>
-      </div>
-      <div class="confirm-row">
-        <button class="confirm-cancel" onclick="closeModal('modalConfirm')">取消</button>
-        <button class="${result==='pass'?'confirm-pass':'confirm-fail'}" onclick="confirmVerify('${catId}','${goalId}','${result}')">確認 ${result==='pass'?'Passed':'Failed'}</button>
-      </div>
-    </div>`;
+  document.getElementById('confirmBody').innerHTML=`<div class="confirm-box"><div style="font-size:26px;text-align:center;margin-bottom:7px;">${result==='pass'?'✅':'❌'}</div><div class="confirm-msg"><strong>${result==='pass'?'Passed':'Failed'}</strong><br><span style="font-size:11px;color:var(--sub);">${goal.desc}</span>${hasAmt?`<div style="display:flex;gap:6px;justify-content:center;margin:8px 0;">${ntd!==0?`<span class="goal-reward-pill ${ntd>0?'reward-pass':'reward-fail'}">${ntd>0?'+':''}${ntd} NTD</span>`:''}${mins!==0?`<span class="goal-reward-pill ${mins>0?'reward-pass':'reward-fail'}">${mins>0?'+':''}${mins} mins</span>`:''}</div>`:`<div style="color:var(--sub);font-size:11px;margin:7px 0;">（本次無獎懲記錄）</div>`}<span style="font-size:10px;color:var(--sub);">審核人：${S.currentAuditor.name}</span></div><div class="confirm-row"><button class="confirm-cancel" onclick="closeModal('modalConfirm')">取消</button><button class="${result==='pass'?'confirm-pass':'confirm-fail'}" onclick="confirmVerify('${catId}','${goalId}','${result}')">確認 ${result==='pass'?'Passed':'Failed'}</button></div></div>`;
   showModal('modalConfirm');
 }
 async function confirmVerify(catId,goalId,result){
@@ -783,7 +699,6 @@ async function confirmVerify(catId,goalId,result){
   }catch(e){console.error(e);showToast('❌ 記錄失敗');}
 }
 
-/* ══ Entry CRUD ══ */
 function openAddEntry(entryId){
   if(!S.currentAuditor){showToast('⚠️ 請先點「未登入」選擇審核人');openAuditorModal();return;}
   S.editingEntryId=entryId||null;
@@ -795,7 +710,7 @@ function openAddEntry(entryId){
 function buildEntryForm(cat,existing){
   const ex=existing||{};let h='';
   if(!existing)h+=`<div class="form-grp"><label class="form-lbl">📅 日期</label><input type="date" class="form-inp" id="fDate" value="${todayISO()}" max="${todayISO()}"></div>`;
-  else h+=`<div class="form-grp"><label class="form-lbl">📅 日期</label><div style="padding:10px 12px;background:var(--bg3);border-radius:10px;font-size:12px;color:var(--sub);">${ex.date||'—'} <span style="font-size:9px;">（不可更改）</span></div></div>`;
+  else h+=`<div class="form-grp"><label class="form-lbl">📅 日期</label><div style="padding:10px 12px;background:var(--card2);border-radius:10px;font-size:12px;color:var(--sub);">${ex.date||'—'} <span style="font-size:9px;">（不可更改）</span></div></div>`;
   if(cat.type==='transactions'){
     const existDir=existing?txDirection(existing):'withdraw';const existCurr=existing?(Number(ex.ntd||0)!==0?'money':'time'):'money';const existAmt=existing?Math.abs(Number(ex.ntd||0)||Number(ex.mins||0)):0;
     h+=`<div class="form-grp"><label class="form-lbl">操作類型</label><div class="tog-row"><button class="tog-btn ${existDir==='withdraw'?'active ':''}t-org" id="togTxA" onclick="setTxTog('withdraw')">💸 Withdraw</button><button class="tog-btn ${existDir==='deposit'?'active ':''}t-green" id="togTxB" onclick="setTxTog('deposit')">💰 Deposit</button></div></div>`;
@@ -836,7 +751,6 @@ async function saveEntry(catId){
   }catch(e){console.error(e);showToast('❌ 儲存失敗');}
 }
 
-/* ══ Records list ══ */
 function buildRecordsList(catId){
   const cat=CATS.find(c=>c.id===catId);
   const all=Object.entries((S.entries[S.currentChildId]||{})[catId]||{});
@@ -853,17 +767,14 @@ function buildRecordsList(catId){
     if(cat.type==='transactions'){const dir=txDirection(e);badge=dir==='withdraw'?`<span class="tx-type-badge tx-withdraw">💸 Withdraw</span>`:`<span class="tx-type-badge tx-deposit">💰 Deposit</span>`;}
     else{if(e.passed===true)badge=`<span class="rec-badge pass">✅ Passed</span>`;if(e.passed===false)badge=`<span class="rec-badge fail">❌ Failed</span>`;}
     const acts=canAct?`<div class="rec-actions"><button class="rec-act" onclick="openAddEntry('${id}')">✏️</button><button class="rec-act del" onclick="confirmDelete('${catId}','${id}')">🗑️</button></div>`:'';
-    return `<div class="rec-card"><div class="rec-top"><span class="rec-date">${e.date||'—'}</span><span class="rec-aud">· ${e.auditor||'—'}</span>${badge}${acts}</div>
-      <div class="rec-amts">${ns?`<span class="rec-amt ${nc}">${ns}</span>`:''}${ms?`<span class="rec-amt ${mc}">${ms}</span>`:''}</div>
-      ${e.note?`<div class="rec-note">${e.note}</div>`:''}${e.editedAt?`<div class="rec-edited">已編輯</div>`:''}</div>`;
+    return `<div class="rec-card"><div class="rec-top"><span class="rec-date">${e.date||'—'}</span><span class="rec-aud">· ${e.auditor||'—'}</span>${badge}${acts}</div><div class="rec-amts">${ns?`<span class="rec-amt ${nc}">${ns}</span>`:''}${ms?`<span class="rec-amt ${mc}">${ms}</span>`:''}</div>${e.note?`<div class="rec-note">${e.note}</div>`:''}${e.editedAt?`<div class="rec-edited">已編輯</div>`:''}</div>`;
   }).join('');
   if(deleted.length){
-    html+=`<div class="sec-lbl" style="margin-top:14px;margin-bottom:6px;color:var(--red);">🗑️ 最近刪除（7天內可恢復）</div>`;
+    html+=`<div class="sec-lbl" style="margin-top:14px;margin-bottom:6px;color:var(--del-red);">🗑️ 最近刪除（7天內可恢復）</div>`;
     html+=deleted.map(([id,e])=>{
       const daysLeft=Math.max(1,Math.ceil((e.deletedAt+7*24*60*60*1000-Date.now())/(24*60*60*1000)));
       const ns=amtStr(Number(e.ntd||0),'NTD'),ms=amtStr(Number(e.mins||0),'mins');
-      return `<div class="rec-card deleted-card"><div class="rec-top"><span class="rec-date">${e.date||'—'}</span><span class="rec-aud">· ${e.auditor||'—'}</span><span class="days-left">${daysLeft}天後永久刪除</span></div>
-        <div style="display:flex;align-items:center;gap:7px;margin-top:3px;"><div style="flex:1;">${ns?`<span class="rec-amt" style="font-size:11px;color:var(--sub);">${ns}</span> `:''} ${ms?`<span class="rec-amt" style="font-size:11px;color:var(--sub);">${ms}</span>`:''} ${e.note?`<div class="rec-note">${e.note}</div>`:''}</div>${canAct?`<button class="restore-btn" onclick="restoreEntry('${catId}','${id}')">恢復</button>`:''}</div></div>`;
+      return `<div class="rec-card deleted-card"><div class="rec-top"><span class="rec-date">${e.date||'—'}</span><span class="rec-aud">· ${e.auditor||'—'}</span><span class="days-left">${daysLeft}天後永久刪除</span></div><div style="display:flex;align-items:center;gap:7px;margin-top:3px;"><div style="flex:1;">${ns?`<span class="rec-amt" style="font-size:11px;color:var(--sub);">${ns}</span> `:''} ${ms?`<span class="rec-amt" style="font-size:11px;color:var(--sub);">${ms}</span>`:''} ${e.note?`<div class="rec-note">${e.note}</div>`:''}</div>${canAct?`<button class="restore-btn" onclick="restoreEntry('${catId}','${id}')">恢復</button>`:''}</div></div>`;
     }).join('');
   }
   return html;
@@ -872,23 +783,18 @@ function confirmDelete(catId,entryId){document.getElementById('confirmBody').inn
 async function deleteEntry(catId,entryId){closeModal('modalConfirm');if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}try{await db.ref(`/entries/${S.currentChildId}/${catId}/${entryId}/deletedAt`).set(Date.now());showToast('已移至刪除，7天內可恢復');}catch(e){showToast('❌ 刪除失敗');}}
 async function restoreEntry(catId,entryId){if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}try{await db.ref(`/entries/${S.currentChildId}/${catId}/${entryId}/deletedAt`).remove();showToast('✅ 已恢復');}catch(e){showToast('❌ 恢復失敗');}}
 
-/* ══ Settings ══ */
+/* Settings */
 function openSettings(){if(!S.currentAuditor){showToast('⚠️ 請先登入審核人才能進入設定');openAuditorModal();return;}renderSettings();showScreen('screenSettings');}
 function closeSettings(){showScreen('screenHome');}
 function renderSettings(){
-  const ch=S.children,au=S.auditors;let html='';
+  let html='';
   html+=`<div class="settings-section"><div class="settings-section-hdr"><span class="settings-section-title">👧 孩子管理</span><button class="settings-add-btn" onclick="openPersonModal('child',null)">＋ 新增</button></div>`;
-  Object.entries(ch).forEach(([id,c])=>{html+=`<div class="person-row"><div class="person-av">${c.photoB64?`<img src="${c.photoB64}">`:(c.emoji||'👤')}</div><div class="person-info"><div class="person-name">${c.name}</div></div><div class="person-acts"><button class="person-act" onclick="openPersonModal('child','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('child','${id}','${c.name}')">🗑️</button></div></div>`;});
+  Object.entries(S.children).forEach(([id,c])=>{html+=`<div class="person-row"><div class="person-av">${c.photoB64?`<img src="${c.photoB64}">`:(c.emoji||'👤')}</div><div class="person-info"><div class="person-name">${c.name}</div></div><div class="person-acts"><button class="person-act" onclick="openPersonModal('child','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('child','${id}','${c.name}')">🗑️</button></div></div>`;});
   html+=`</div>`;
   html+=`<div class="settings-section"><div class="settings-section-hdr"><span class="settings-section-title">👤 審核人管理</span><button class="settings-add-btn" onclick="openPersonModal('auditor',null)">＋ 新增</button></div>`;
-  Object.entries(au).forEach(([id,a])=>{html+=`<div class="person-row"><div class="person-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div><div class="person-info"><div class="person-name">${a.name}</div><div class="person-sub">${a.role||''}</div></div><div class="person-acts"><button class="person-act" onclick="openPersonModal('auditor','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('auditor','${id}','${a.name}')">🗑️</button></div></div>`;});
+  Object.entries(S.auditors).forEach(([id,a])=>{html+=`<div class="person-row"><div class="person-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div><div class="person-info"><div class="person-name">${a.name}</div><div class="person-sub">${a.role||''}</div></div><div class="person-acts"><button class="person-act" onclick="openPersonModal('auditor','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('auditor','${id}','${a.name}')">🗑️</button></div></div>`;});
   html+=`</div>`;
-  html+=`<div class="settings-info">
-    <div class="settings-info-title">🏅 KidsAPP</div>
-    <div class="settings-info-sub" style="margin-bottom:12px;">Style C · Firebase Realtime DB</div>
-    <button onclick="clearCache()" style="width:100%;padding:11px;background:rgba(255,82,82,.1);color:#ff5252;border:1px solid rgba(255,82,82,.22);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;">🔄 清除快取並重新載入</button>
-    <div style="font-size:10px;color:var(--sub);margin-top:6px;">App 顯示舊版畫面時請點此強制更新</div>
-  </div>`;
+  html+=`<div class="settings-info"><div class="settings-info-title">🏅 KidsAPP</div><div class="settings-info-sub">Firebase Realtime DB</div><button class="cache-clear-btn" onclick="clearCache()">🔄 清除快取並重新載入</button><div style="font-size:10px;color:var(--sub);margin-top:6px;">App 顯示舊版畫面時請點此強制更新</div></div>`;
   document.getElementById('settingsContent').innerHTML=html;
 }
 function openPersonModal(type,id){S.editingPersonType=type;S.editingPersonId=id;S.pendingPhoto=null;const existing=id?(type==='child'?S.children[id]:S.auditors[id]):null;document.getElementById('personTitle').textContent=id?(type==='child'?'✏️ 編輯孩子':'✏️ 編輯審核人'):(type==='child'?'➕ 新增孩子':'➕ 新增審核人');document.getElementById('personForm').innerHTML=buildPersonForm(type,existing);showModal('modalPerson');}
@@ -928,8 +834,7 @@ async function savePerson(){
   }catch(e){console.error(e);showToast('❌ 儲存失敗');}
 }
 function confirmDeletePerson(type,id,name){
-  const tl=type==='child'?'孩子':'審核人';
-  const warn=type==='child'?'<br><span style="font-size:11px;color:var(--red);">⚠️ 同時刪除所有記錄與目標</span>':'';
+  const tl=type==='child'?'孩子':'審核人';const warn=type==='child'?'<br><span style="font-size:11px;color:var(--del-red);">⚠️ 同時刪除所有記錄與目標</span>':'';
   document.getElementById('confirmBody').innerHTML=`<div class="confirm-box"><div class="confirm-msg">確定刪除${tl}「${name}」？${warn}</div><div class="confirm-row"><button class="confirm-cancel" onclick="closeModal('modalConfirm')">取消</button><button class="confirm-del" onclick="deletePerson('${type}','${id}')">刪除</button></div></div>`;showModal('modalConfirm');
 }
 async function deletePerson(type,id){
@@ -945,14 +850,8 @@ function selectChild(id){
   Promise.all([db.ref(`/entries/${id}`).once('value'),db.ref(`/goals/${id}`).once('value')]).then(([es,gs])=>{S.entries[id]=es.val()||{};S.goals[id]=gs.val()||{};attachMainListener(id);attachGoalListener(id);renderAll();});
 }
 
-/* ══ Auditor Modal ══ */
 function openAuditorModal(){
-  document.getElementById('audList').innerHTML=Object.entries(S.auditors).map(([id,a])=>`
-    <div class="aud-item" onclick="selectAuditor('${id}')">
-      <div class="aud-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div>
-      <div><div class="aud-item-name">${a.name}</div><div class="aud-item-role">${a.role||''}</div></div>
-      <div class="aud-arrow">›</div>
-    </div>`).join('');
+  document.getElementById('audList').innerHTML=Object.entries(S.auditors).map(([id,a])=>`<div class="aud-item" onclick="selectAuditor('${id}')"><div class="aud-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div><div><div class="aud-item-name">${a.name}</div><div class="aud-item-role">${a.role||''}</div></div><div class="aud-arrow">›</div></div>`).join('');
   document.getElementById('step1').style.display='block';document.getElementById('step2').classList.remove('show');showModal('modalAud');
 }
 function selectAuditor(id){
@@ -975,32 +874,22 @@ function confirmPin(){
 function backToStep1(){document.getElementById('step2').classList.remove('show');document.getElementById('step1').style.display='block';S.pendingAuditor=null;}
 function handleOverlay(e,id){if(e.target.classList.contains('modal-overlay'))closeModal(id);}
 
-/* ══ Screen / Modal ══ */
+async function clearCache(){
+  try{
+    if('serviceWorker' in navigator){const regs=await navigator.serviceWorker.getRegistrations();for(const r of regs)await r.unregister();}
+    if('caches' in window){const keys=await caches.keys();await Promise.all(keys.map(k=>caches.delete(k)));}
+    showToast('✅ 快取已清除，重新載入中…',1500);setTimeout(()=>location.reload(true),1600);
+  }catch(e){showToast('❌ 清除失敗');}
+}
+
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
 function showModal(id){const el=document.getElementById(id);el.style.display='flex';requestAnimationFrame(()=>el.classList.add('show'));}
 function closeModal(id){const el=document.getElementById(id);el.classList.remove('show');setTimeout(()=>{el.style.display='none';},300);}
 
-/* ══ Toast ══ */
 let _tt;
 function showToast(msg,ms=2600){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),ms);}
 
-/* ══ Service Worker ══ */
 if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>console.log('KidsAPP SW:',r.scope)).catch(e=>console.error(e));});}
-
-async function clearCache(){
-  try{
-    if('serviceWorker' in navigator){
-      const regs=await navigator.serviceWorker.getRegistrations();
-      for(const r of regs)await r.unregister();
-    }
-    if('caches' in window){
-      const keys=await caches.keys();
-      await Promise.all(keys.map(k=>caches.delete(k)));
-    }
-    showToast('✅ 快取已清除，重新載入中…',1500);
-    setTimeout(()=>location.reload(true),1600);
-  }catch(e){showToast('❌ 清除失敗');}
-}
 
 init();
 </script>

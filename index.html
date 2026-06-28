@@ -28,7 +28,7 @@
   --shadow:0 4px 24px rgba(0,0,0,.5);
 }
 body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100svh;-webkit-font-smoothing:antialiased;}
-.screen{display:none;}.screen.active{display:flex;flex-direction:column;}
+.screen{display:none;}.screen.active{display:flex;flex-direction:column;}#screenHome{overflow:hidden;}
 
 /* ── NAVBAR ── */
 .navbar{background:rgba(7,16,42,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:var(--text);padding:13px 16px 11px;display:flex;align-items:center;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);flex-shrink:0;}
@@ -506,20 +506,77 @@ window.addEventListener('resize',fixLayout);
 window.addEventListener('orientationchange',()=>setTimeout(fixLayout,300));
 
 function initSwipe(){
-  let tx=0,ty=0;
-  const home=document.getElementById('screenHome');
-  home.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
-  home.addEventListener('touchend',e=>{
-    const dx=tx-e.changedTouches[0].clientX,dy=ty-e.changedTouches[0].clientY;
-    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){
-      const ids=Object.keys(S.children),idx=ids.indexOf(S.currentChildId);
-      if(dx>0&&idx<ids.length-1)selectChild(ids[idx+1]);
-      else if(dx<0&&idx>0)selectChild(ids[idx-1]);
+  let sx=0,sy=0,cx=0,drag=false;
+  const el=document.getElementById('screenHome');
+
+  el.addEventListener('touchstart',e=>{
+    sx=e.touches[0].clientX;sy=e.touches[0].clientY;cx=0;drag=true;
+    const b=document.querySelector('.home-body');
+    if(b)b.style.transition='none';
+  },{passive:true});
+
+  el.addEventListener('touchmove',e=>{
+    if(!drag)return;
+    const dx=e.touches[0].clientX-sx;
+    const dy=e.touches[0].clientY-sy;
+    if(Math.abs(dy)>Math.abs(dx)&&Math.abs(cx)<8)return; // vertical scroll takes priority
+    cx=dx;
+    const ids=Object.keys(S.children),idx=ids.indexOf(S.currentChildId);
+    // rubber-band at edges
+    let move=dx;
+    if(dx>0&&idx===0)move=dx*0.25;
+    if(dx<0&&idx===ids.length-1)move=dx*0.25;
+    const b=document.querySelector('.home-body');
+    if(b)b.style.transform=`translateX(${move}px)`;
+  },{passive:true});
+
+  el.addEventListener('touchend',()=>{
+    if(!drag)return;drag=false;
+    const dx=cx;cx=0;
+    const b=document.querySelector('.home-body');
+    const ids=Object.keys(S.children),idx=ids.indexOf(S.currentChildId);
+    const W=window.innerWidth;
+    const THRESH=60;
+
+    if(Math.abs(dx)>THRESH){
+      if(dx<0&&idx<ids.length-1){
+        // swipe left → next child: slide out left, slide in from right
+        if(b){b.style.transition='transform 0.22s ease-in';b.style.transform='translateX(-110%)';}
+        setTimeout(()=>{
+          selectChild(ids[idx+1]);
+          const nb=document.querySelector('.home-body');
+          if(nb){nb.style.transition='none';nb.style.transform='translateX(110%)';
+            requestAnimationFrame(()=>requestAnimationFrame(()=>{
+              nb.style.transition='transform 0.25s ease-out';nb.style.transform='translateX(0)';
+            }));}
+        },220);
+      } else if(dx>0&&idx>0){
+        // swipe right → prev child: slide out right, slide in from left
+        if(b){b.style.transition='transform 0.22s ease-in';b.style.transform='translateX(110%)';}
+        setTimeout(()=>{
+          selectChild(ids[idx-1]);
+          const nb=document.querySelector('.home-body');
+          if(nb){nb.style.transition='none';nb.style.transform='translateX(-110%)';
+            requestAnimationFrame(()=>requestAnimationFrame(()=>{
+              nb.style.transition='transform 0.25s ease-out';nb.style.transform='translateX(0)';
+            }));}
+        },220);
+      } else {
+        // at edge: rubber-band bounce back
+        if(b){b.style.transition='transform 0.4s cubic-bezier(0.34,1.56,0.64,1)';b.style.transform='translateX(0)';}
+      }
+    } else {
+      // not enough: spring back
+      if(b){b.style.transition='transform 0.3s cubic-bezier(0.34,1.56,0.64,1)';b.style.transform='translateX(0)';}
     }
   },{passive:true});
 }
 
-function renderAll(){renderAudChip();renderDashboard();fixLayout();}
+function renderAll(){
+  const hb=document.querySelector('.home-body');
+  if(hb){hb.style.transition='none';hb.style.transform='translateX(0)';}
+  renderAudChip();renderDashboard();fixLayout();
+}
 
 function renderAudChip(){
   const chip=document.getElementById('audChip');
@@ -608,8 +665,8 @@ function renderDetailContent(catId){
     html+=`<div class="detail-pad">
       <button class="add-rec-btn ${S.currentAuditor?'':'locked'}" onclick="openAddEntry(null)">${S.currentAuditor?'＋ 新增記錄':'🔐 請先登入審核人'}</button>
       <div class="tx-summary">
-        <div class="tx-sum-card"><div class="tx-sum-label" style="color:var(--amber);">💸 Withdraw</div>${wNTD!==0?`<div class="tx-sum-val neg">${wNTD.toLocaleString()} NTD</div>`:''} ${wMins!==0?`<div class="tx-sum-val neg">${wMins.toLocaleString()} mins</div>`:''} ${wNTD===0&&wMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}</div>
-        <div class="tx-sum-card o"><div class="tx-sum-label" style="color:var(--green);">💰 Deposit</div>${dNTD!==0?`<div class="tx-sum-val pos">+${dNTD.toLocaleString()} NTD</div>`:''} ${dMins!==0?`<div class="tx-sum-val pos">+${dMins.toLocaleString()} mins</div>`:''} ${dNTD===0&&dMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}</div>
+        <div class="tx-sum-card"><div class="tx-sum-label" style="color:var(--amber);">💸 支出</div>${wNTD!==0?`<div class="tx-sum-val neg">${wNTD.toLocaleString()} NTD</div>`:''} ${wMins!==0?`<div class="tx-sum-val neg">${wMins.toLocaleString()} mins</div>`:''} ${wNTD===0&&wMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}</div>
+        <div class="tx-sum-card o"><div class="tx-sum-label" style="color:var(--green);">💰 存入</div>${dNTD!==0?`<div class="tx-sum-val pos">+${dNTD.toLocaleString()} NTD</div>`:''} ${dMins!==0?`<div class="tx-sum-val pos">+${dMins.toLocaleString()} mins</div>`:''} ${dNTD===0&&dMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}</div>
       </div>
       <div class="filter-row">
         <button class="filter-btn ${S.txFilter==='all'?'active':''}" onclick="setTxFilter('all')">全部</button>
@@ -725,7 +782,11 @@ function buildEntryForm(cat,existing){
     h+=`<div class="form-grp"><label class="form-lbl">類型</label><div class="tog-row"><button class="tog-btn ${isReward?'active ':''}t-green" id="togA" onclick="setBTog('reward')">👍 嘉獎</button><button class="tog-btn ${!isReward?'active ':''}t-org" id="togB" onclick="setBTog('punish')">👎 懲罰</button></div></div>`;
     h+=`<div class="form-grp"><label class="form-lbl">金額（正數）</label><div class="amt-row"><div class="amt-grp"><span class="amt-lbl">NTD</span><input type="number" class="amt-inp" id="fNTD" placeholder="0" min="0" step="10" value="${existing?Math.abs(Number(ex.ntd||0)):''}"></div><div class="amt-grp"><span class="amt-lbl">Mins</span><input type="number" class="amt-inp" id="fMins" placeholder="0" min="0" step="10" value="${existing?Math.abs(Number(ex.mins||0)):''}"></div></div></div>`;
   }
-  h+=`<div class="form-grp"><label class="form-lbl">📝 備註（選填）</label><input type="text" class="form-inp" id="fNote" value="${ex.note||''}" placeholder="例：買樂高、主動完成…"></div>`;
+  const isVocab=cat.id==='vocab';
+  const notePlaceholder=isVocab?'記錄今天背的單字，例：apple 蘋果, banana 香蕉, cat 貓…':'例：買樂高、主動完成、頂嘴…';
+  const noteLabel=isVocab?'📚 今天背的單字':'📝 備註（選填）';
+  const noteRows=isVocab?4:3;
+  h+=`<div class="form-grp"><label class="form-lbl">${noteLabel}</label><textarea class="form-inp" id="fNote" rows="${noteRows}" placeholder="${notePlaceholder}" style="resize:none;line-height:1.6;">${ex.note||''}</textarea></div>`;
   h+=`<div class="form-aud-row">審核人：${S.currentAuditor.name}</div>`;
   h+=`<button class="save-btn" onclick="saveEntry('${cat.id}')">💾 ${existing?'更新記錄':'儲存記錄'}</button>`;
   return h;

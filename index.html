@@ -165,7 +165,7 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 .rec-badge{font-size:9px;padding:1px 7px;border-radius:5px;font-weight:600;}
 .rec-badge.pass{background:var(--green-dim);color:var(--green);}
 .rec-badge.fail{background:var(--orange-dim);color:var(--amber);}
-.tx-type-badge{font-size:9px;padding:2px 7px;border-radius:5px;font-weight:700;}
+.tx-type-badge{font-size:9px;padding:2px 7px;border-radius:5px;font-weight:700;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;}
 .tx-withdraw{background:var(--orange-dim);color:var(--amber);}
 .tx-deposit{background:var(--green-dim);color:var(--green);}
 .rec-actions{display:flex;gap:3px;margin-left:auto;}
@@ -286,6 +286,40 @@ textarea.form-inp{resize:none;line-height:1.5;}
 /* Toast */
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(10,20,50,.96);color:var(--text);padding:10px 18px;border-radius:20px;font-size:12px;font-weight:500;opacity:0;transition:all .22s;pointer-events:none;z-index:999;white-space:nowrap;max-width:calc(100vw - 32px);border:1px solid var(--border);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── Detail pages: all fonts ×1.5 ── */
+.nav-badge{font-size:13px;padding:3px 10px;}
+.gstat-lbl{font-size:12px;}
+.gstat-val{font-size:25px;}
+.gstat-unit{font-size:12px;}
+.gadd-plus{font-size:28px;}
+.gadd-lbl{font-size:10px;}
+.goal-section-hdr .add-goal-btn{font-size:14px;}
+.add-goal-btn{font-size:14px;}
+.goal-freq-badge{font-size:13px;padding:3px 11px;}
+.goal-desc{font-size:17px;margin-bottom:10px;}
+.goal-reward-pill{font-size:13px;}
+.btn-pass,.btn-fail{font-size:16px;padding:11px;}
+.goal-completed-badge{font-size:14px;}
+.no-goals{font-size:16px;}
+.sec-lbl{font-size:14px;margin-bottom:6px;}
+.add-rec-btn{font-size:18px;padding:13px;}
+.add-rec-btn.locked{font-size:18px;}
+.rec-date,.rec-aud{font-size:15px;}
+.rec-badge{font-size:13px;padding:3px 10px;}
+.tx-type-badge{font-size:13px;padding:3px 10px;}
+.rec-act{font-size:17px;width:33px;height:33px;}
+.rec-amts{gap:10px;margin-bottom:4px;}
+.rec-amt{font-size:18px;}
+.rec-note{font-size:15px;}
+.rec-edited{display:none;} /* replaced by inline */
+.rec-edited-inline{font-size:13px;color:var(--sub);font-style:italic;white-space:nowrap;}
+.restore-btn{font-size:14px;padding:5px 12px;}
+.days-left{font-size:13px;}
+.empty-state{font-size:16px;}
+.tx-sum-label{font-size:12px;}
+.tx-sum-val{font-size:20px;}
+.filter-btn{font-size:15px;padding:9px;}
 </style>
 </head>
 <body>
@@ -841,11 +875,24 @@ function buildRecordsList(catId){
   else html+=active.map(([id,e])=>{
     const ns=amtStr(Number(e.ntd||0),'NTD'),ms=amtStr(Number(e.mins||0),'mins');
     const nc=amtCls(Number(e.ntd||0)),mc=amtCls(Number(e.mins||0));
-    let badge='';
-    if(cat.type==='transactions'){const dir=txDirection(e);badge=dir==='withdraw'?`<span class="tx-type-badge tx-withdraw">💸 Withdraw</span>`:`<span class="tx-type-badge tx-deposit">💰 Deposit</span>`;}
-    else{if(e.passed===true)badge=`<span class="rec-badge pass">✅ Passed</span>`;if(e.passed===false)badge=`<span class="rec-badge fail">❌ Failed</span>`;}
-    const acts=canAct?`<div class="rec-actions"><button class="rec-act" onclick="openAddEntry('${id}')">✏️</button><button class="rec-act del" onclick="confirmDelete('${catId}','${id}')">🗑️</button></div>`:'';
-    return `<div class="rec-card"><div class="rec-top"><span class="rec-date">${e.date||'—'}</span><span class="rec-aud">· ${e.auditor||'—'}</span>${badge}${acts}</div><div class="rec-amts">${ns?`<span class="rec-amt ${nc}">${ns}</span>`:''}${ms?`<span class="rec-amt ${mc}">${ms}</span>`:''}</div>${e.note?`<div class="rec-note">${e.note}</div>`:''}${e.editedAt?`<div class="rec-edited">已編輯</div>`:''}</div>`;
+    let badge='';let showAmts=true;
+    if(cat.type==='transactions'){
+      const dir=txDirection(e);
+      const txAmts=[ns,ms].filter(Boolean).join(' · ');
+      badge=dir==='withdraw'
+        ?`<span class="tx-type-badge tx-withdraw">💸 Withdraw${txAmts?' '+txAmts:''}</span>`
+        :`<span class="tx-type-badge tx-deposit">💰 Deposit${txAmts?' '+txAmts:''}</span>`;
+      showAmts=false; // amounts already inside badge
+    } else {
+      if(e.passed===true)badge=`<span class="rec-badge pass">✅ Passed</span>`;
+      if(e.passed===false)badge=`<span class="rec-badge fail">❌ Failed</span>`;
+    }
+    const editedTag=e.editedAt?`<span class="rec-edited-inline">已編輯</span>`:'';
+    const acts=canAct
+      ?`<div class="rec-actions">${editedTag}<button class="rec-act" onclick="openAddEntry('${id}')">✏️</button><button class="rec-act del" onclick="confirmDelete('${catId}','${id}')">🗑️</button></div>`
+      :(editedTag?`<div class="rec-actions">${editedTag}</div>`:'');
+    const amtRow=showAmts?`<div class="rec-amts">${ns?`<span class="rec-amt ${nc}">${ns}</span>`:''}${ms?`<span class="rec-amt ${mc}">${ms}</span>`:''}</div>`:'';
+    return `<div class="rec-card"><div class="rec-top"><span class="rec-date">${e.date||'—'}</span><span class="rec-aud">· ${e.auditor||'—'}</span>${badge}${acts}</div>${amtRow}${e.note?`<div class="rec-note">${e.note}</div>`:''}</div>`;
   }).join('');
   if(deleted.length){
     html+=`<div class="sec-lbl" style="margin-top:14px;margin-bottom:6px;color:var(--del-red);">🗑️ 最近刪除（7天內可恢復）</div>`;

@@ -64,7 +64,7 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 .aud-chip-offline{background:rgba(255,255,255,.05);border-color:var(--border);}
 .aud-chip-offline .aud-chip-name{color:var(--sub);}
 
-/* ── HOME BODY 優化：引入底部安全區，允許在有限空間微幅滾動 ── */
+/* ── HOME BODY 優化：引入底部安全區 ── */
 .home-body{
   flex:1;
   display:flex;
@@ -109,7 +109,7 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 /* ── SECTION HEADERS ── */
 .sec-hdr{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;flex-shrink:0;height:18px;}
 
-/* ── GRID SECTIONS 優化：改為 flex 比例分配，設定 min-height 確保 iOS 不會壓扁 ── */
+/* ── GRID SECTIONS 優化 ── */
 .grid-section{
   display:flex;
   flex-direction:column;
@@ -138,14 +138,13 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 }
 .cat-tile:active{transform:scale(.96);}
 .cat-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,.07),transparent);pointer-events:none;}
-/* Category gradients */
+
 .tile-vocab  {background:linear-gradient(145deg,#0e1e6a,#162890);border-color:rgba(60,100,255,.2);}
 .tile-school {background:linear-gradient(145deg,#14063a,#5a16a8);border-color:rgba(120,60,255,.2);}
 .tile-hw     {background:linear-gradient(145deg,#052214,#187040);border-color:rgba(30,150,80,.2);}
 .tile-sport  {background:linear-gradient(145deg,#2a0800,#b03010);border-color:rgba(200,80,20,.2);}
 .tile-trans  {background:linear-gradient(145deg,#261800,#503000);border-color:rgba(200,140,20,.2);}
 .tile-behav  {background:linear-gradient(145deg,#1a0428,#6010a0);border-color:rgba(160,40,180,.2);}
-.tile-behav-neg{background:linear-gradient(145deg,#3a0820,#6a1030);border-color:rgba(200,30,60,.2);}
 .tile-emoji{font-size:54px;line-height:1;position:relative;z-index:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5));}
 .tile-name{font-size:15px;font-weight:700;color:#fff;text-align:center;position:relative;z-index:1;}
 
@@ -154,7 +153,7 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 .detail-body::-webkit-scrollbar{display:none;}
 .detail-pad{padding:10px 14px 50px;}
 
-/* Goal stats strip */
+/* Goal components */
 .goal-stats-strip{display:flex;gap:5px;padding:10px 14px 0;}
 .gstat-card{flex:1;background:var(--card);border-radius:10px;padding:8px 10px;border:1px solid var(--teal-border);text-align:center;}
 .gstat-card.o{border-color:var(--orange-border);}
@@ -162,157 +161,123 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 .gstat-val{font-size:17px;font-weight:800;letter-spacing:-.3px;}
 .gstat-val.t{color:var(--teal);}
 .gstat-val.o{color:var(--amber);}
-.gstat-unit{font-size:8px;color:var(--sub);}
 .gadd-goal-btn{width:52px;background:var(--card);border-radius:10px;border:1px solid var(--teal-border);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;cursor:pointer;}
-.gadd-goal-btn:active{background:var(--card2);}
-.gadd-plus{font-size:20px;color:var(--teal);font-weight:300;line-height:1;}
-.gadd-lbl{font-size:7px;color:rgba(48,213,245,.5);}
-
-/* Goal section */
-.goal-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:0 1px;margin-bottom:6px;}
-.add-goal-btn{font-size:10px;font-weight:600;color:var(--teal);background:var(--teal-dim);border:none;border-radius:8px;padding:4px 10px;cursor:pointer;}
 .goal-card{background:var(--card);border-radius:13px;padding:11px 12px;margin-bottom:6px;border:1px solid var(--teal-border);}
-.goal-card.completed{opacity:.5;border-color:var(--border);border-style:dashed;}
-.goal-freq-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
-.goal-freq-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:6px;background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-border);}
-.goal-freq-badge.recurring{background:rgba(255,213,79,.1);color:#ffd54f;border-color:rgba(255,213,79,.2);}
-.goal-desc{font-size:11px;color:var(--text);margin-bottom:7px;line-height:1.4;}
-.goal-rewards{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
-.goal-reward-pill{font-size:9px;font-weight:600;padding:3px 8px;border-radius:7px;}
-.reward-pass{background:var(--green-dim);color:var(--green);}
-.reward-fail{background:var(--orange-dim);color:var(--amber);}
-.goal-verify-row{display:flex;gap:5px;}
 .btn-pass{flex:1;padding:8px;background:var(--green-dim);color:var(--green);border:1px solid var(--green-border);border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;}
 .btn-fail{flex:1;padding:8px;background:var(--orange-dim);color:var(--amber);border:1px solid var(--orange-border);border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;}
-.goal-completed-badge{font-size:10px;padding:3px 8px;border-radius:7px;background:rgba(255,255,255,.06);color:var(--sub);margin-left:auto;}
-.no-goals{text-align:center;padding:16px;color:var(--sub);font-size:11px;background:var(--card);border-radius:12px;border:1px dashed var(--border);}
 
-/* Records */
-.sec-lbl{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--sub);padding:0 1px;margin-bottom:5px;}
-.add-rec-btn{width:100%;padding:11px;background:var(--card);color:var(--teal);border:1px solid var(--teal-border);border-radius:11px;font-size:12px;font-weight:600;cursor:pointer;margin-bottom:10px;}
-.add-rec-btn:active{background:var(--card2);}
-.add-rec-btn.locked{color:var(--sub);border-color:var(--border);cursor:default;}
-.rec-card{background:var(--card);border-radius:11px;padding:10px 12px;margin-bottom:5px;border:1px solid var(--border);}
-.rec-card.deleted-card{opacity:.6;border-style:dashed;}
-.rec-top{display:flex;align-items:center;gap:5px;margin-bottom:3px;flex-wrap:wrap;}
-.rec-date{font-size:10px;color:var(--sub);}
-.rec-aud{font-size:10px;color:var(--sub);}
-.rec-badge{font-size:9px;padding:1px 7px;border-radius:5px;font-weight:600;}
-.rec-badge.pass{background:var(--green-dim);color:var(--green);}
-.rec-badge.fail{background:var(--orange-dim);color:var(--amber);}
-.tx-type-badge{font-size:9px;padding:2px 7px;border-radius:5px;font-weight:700;}
-.tx-withdraw{background:var(--orange-dim);color:var(--amber);}
-.tx-deposit{background:var(--green-dim);color:var(--green);}
-.rec-actions{display:flex;gap:3px;margin-left:auto;}
-.rec-act{width:26px;height:26px;border:none;border-radius:7px;background:rgba(255,255,255,.05);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;}
-.rec-act.del{background:rgba(255,82,82,.12);}
-.rec-amts{display:flex;gap:7px;margin-bottom:2px;}
-.rec-amt{font-size:12px;font-weight:700;}
-.pos{color:var(--teal);}.neg{color:var(--amber);}
-.rec-note,.rec-edited{font-size:10px;color:var(--sub);}
-.rec-edited{font-style:italic;}
-.restore-btn{font-size:10px;padding:3px 9px;background:var(--teal-dim);color:var(--teal);border:none;border-radius:7px;cursor:pointer;font-weight:600;white-space:nowrap;}
-.days-left{font-size:9px;color:var(--del-red);margin-left:auto;}
-.empty-state{text-align:center;padding:28px 16px;color:var(--sub);font-size:12px;line-height:1.8;}
+/* Toast */
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;z-index:1000;opacity:0;pointer-events:none;transition:opacity .3s;}
+.toast.show{opacity:1;}
+</style>
+</head>
+<body>
 
-/* Transactions */
-.tx-summary{display:flex;gap:5px;margin-bottom:8px;}
-.tx-sum-card{flex:1;background:var(--card);border-radius:10px;padding:8px 10px;border:1px solid var(--teal-border);}
-.tx-sum-card.o{border-color:var(--orange-border);}
-.tx-sum-label{font-size:8px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--sub);margin-bottom:2px;}
-.tx-sum-val{font-size:13px;font-weight:700;}
-.filter-row{display:flex;gap:5px;margin-bottom:8px;}
-.filter-btn{flex:1;padding:6px;border-radius:9px;border:1px solid var(--border);background:transparent;font-size:10px;font-weight:600;color:var(--sub);cursor:pointer;}
-.filter-btn.active{border-color:var(--teal);background:var(--teal-dim);color:var(--teal);}
+<div class="screen active" id="screenHome">
+  <div class="navbar">
+    <div class="aud-chip" id="audChip" onclick="openAuditorModal()">
+      <div class="aud-chip-av" id="audChipAv">👑</div>
+      <div class="aud-chip-name" id="audChipName">訪客</div>
+    </div>
+    <div class="nav-title" id="childName" onclick="switchChild()">載入中...</div>
+    <button class="nav-btn" onclick="openSettings()">⚙️</button>
+  </div>
+  
+  <div class="home-body">
+    <div class="profile-card">
+      <div class="p-avatar-box" id="pAvatar">👦</div>
+      <div class="p-info">
+        <div class="p-name" id="pName">---</div>
+        <div class="p-stats">
+          <div class="p-stat">
+            <span class="p-stat-lbl">Token 餘額</span>
+            <span class="p-stat-num t" id="statNtd">0</span>
+          </div>
+          <div class="p-stat">
+            <span class="p-stat-lbl">學習時間 (Mins)</span>
+            <span class="p-stat-num o" id="statMins">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
-/* Settings */
-.settings-section{background:var(--card);border-radius:14px;overflow:hidden;margin-bottom:12px;border:1px solid var(--border);}
-.settings-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;border-bottom:1px solid var(--border);}
-.settings-section-title{font-size:12px;font-weight:700;color:var(--text);}
-.settings-add-btn{font-size:11px;font-weight:600;color:var(--teal);background:var(--teal-dim);border:none;border-radius:7px;padding:3px 9px;cursor:pointer;}
-.person-row{display:flex;align-items:center;gap:10px;padding:10px 13px;border-bottom:1px solid var(--border);}
-.person-row:last-child{border-bottom:none;}
-.person-av{width:44px;height:44px;border-radius:10px;background:var(--teal-dim);border:1.5px solid var(--teal-border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;overflow:hidden;}
-.person-av img{width:100%;height:100%;object-fit:cover;display:block;}
-.person-name{font-size:13px;font-weight:600;color:var(--text);}
-.person-sub{font-size:10px;color:var(--sub);margin-top:1px;}
-.person-acts{display:flex;gap:5px;margin-left:auto;}
-.person-act{width:28px;height:28px;border:none;border-radius:7px;background:rgba(255,255,255,.05);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
-.person-act.del{background:rgba(255,82,82,.1);}
-.settings-info{background:var(--card);border-radius:14px;padding:14px;border:1px solid var(--border);text-align:center;}
-.settings-info-title{font-size:13px;font-weight:700;margin-bottom:3px;}
-.settings-info-sub{font-size:11px;color:var(--sub);margin-bottom:12px;}
-.cache-clear-btn{width:100%;padding:11px;background:rgba(255,82,82,.1);color:#ff5252;border:1px solid rgba(255,82,82,.22);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;}
+    <div class="sec-hdr">🎯 上層核心目標</div>
+    <div class="grid-section">
+      <div class="cat-grid cat-grid-2row" id="topGrid"></div>
+    </div>
 
-/* Photo picker */
-.photo-picker-area{text-align:center;margin-bottom:14px;}
-.photo-preview-box{width:86px;height:86px;border-radius:17px;background:var(--teal-dim);border:2px solid var(--teal-border);margin:0 auto 8px;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:36px;}
-.photo-preview-box img{width:100%;height:100%;object-fit:cover;display:block;}
-.photo-pick-btn{font-size:11px;color:var(--teal);background:none;border:none;cursor:pointer;}
-.pin-toggle-btn{width:100%;padding:9px 12px;background:var(--card2);border:1px solid var(--border);border-radius:9px;text-align:left;font-size:12px;color:var(--teal);cursor:pointer;margin-bottom:4px;}
-.pin-change-section{background:var(--card2);border-radius:9px;padding:11px;border:1px solid var(--border);margin-bottom:10px;}
-.pin-change-input{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:18px;text-align:center;letter-spacing:6px;background:var(--bg);color:var(--text);outline:none;margin-bottom:7px;font-family:inherit;}
-.pin-change-input:focus{border-color:var(--teal);}
-
-/* Modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
-.modal-overlay.show{opacity:1;pointer-events:all;}
-.modal-sheet{background:#0d1a40;border-radius:22px 22px 0 0;width:100%;max-width:430px;padding:15px 17px 44px;transform:translateY(100%);transition:transform .28s cubic-bezier(.34,1.2,.64,1);max-height:90vh;overflow-y:auto;border-top:1px solid var(--border);}
-.modal-overlay.show .modal-sheet{transform:translateY(0);}
-.modal-handle{width:34px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 15px;}
-.modal-title{font-size:16px;font-weight:700;text-align:center;margin-bottom:13px;color:var(--text);}
-
-/* Auditor list */
-.aud-list{display:flex;flex-direction:column;gap:7px;}
-.aud-item{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--card);border:1px solid var(--border);border-radius:12px;cursor:pointer;}
-.aud-item:active{background:var(--card2);}
-.aud-av{width:38px;height:38px;border-radius:10px;background:var(--teal-dim);display:flex;align-items:center;justify-content:center;font-size:18px;overflow:hidden;flex-shrink:0;}
-.aud-av img{width:100%;height:100%;object-fit:cover;display:block;}
-.aud-item-name{font-size:13px;font-weight:600;color:var(--text);}
-.aud-item-role{font-size:10px;color:var(--sub);}
-.aud-arrow{margin-left:auto;color:var(--border);font-size:16px;}
-.pin-section{display:none;}.pin-section.show{display:block;}
-.pin-dots{display:flex;gap:9px;justify-content:center;margin-bottom:13px;}
-/* ── 修正：補上漏失的 div 開頭標籤 ── */
-.pin-dots{display:flex;gap:9px;justify-content:center;margin-bottom:13px;}
-<div class="pin-dots" id="pinDots"><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div></div>
-<input type="password" inputmode="numeric" maxlength="4" class="pin-input" id="pinInput" placeholder="••••" oninput="handlePinInput()">
-<div class="pin-err" id="pinErr"></div>
-<button class="pin-ok" onclick="confirmPin()">確認登入</button>
-<button class="pin-back" onclick="backToStep1()">← 返回</button>
-</div>
-</div>
+    <div class="sec-hdr">📊 帳戶交易與日常</div>
+    <div class="grid-section-bot">
+      <div class="cat-grid" id="botGrid"></div>
+    </div>
+  </div>
 </div>
 
-<div class="modal-overlay" id="modalPerson" onclick="handleOverlay(event,'modalPerson')">
-<div class="modal-sheet" onclick="event.stopPropagation()">
-<div class="modal-handle"></div>
-<div class="modal-title" id="personTitle">新增孩子</div>
-<div id="personForm"></div>
-</div>
-</div>
-
-<div class="modal-overlay" id="modalGoal" onclick="handleOverlay(event,'modalGoal')">
-<div class="modal-sheet" onclick="event.stopPropagation()">
-<div class="modal-handle"></div>
-<div class="modal-title" id="goalModalTitle">新增目標</div>
-<div id="goalForm"></div>
-</div>
+<div class="screen" id="screenDetail">
+  <div class="navbar">
+    <button class="nav-back" onclick="backToHome()">◀ 返回</button>
+    <div class="nav-center">
+      <span id="detailCatEmoji"></span>
+      <span id="detailCatName"></span>
+    </div>
+  </div>
+  <div class="detail-body" id="detailBody">
+    </div>
 </div>
 
-<div class="modal-overlay" id="modalEntry" onclick="handleOverlay(event,'modalEntry')">
-<div class="modal-sheet" onclick="event.stopPropagation()">
-<div class="modal-handle"></div>
-<div class="modal-title" id="entryTitle">新增記錄</div>
-<div id="entryForm"></div>
-</div>
+<div class="screen" id="screenSettings">
+  <div class="navbar">
+    <button class="nav-back" onclick="backToHome()">◀ 返回</button>
+    <div class="nav-title">系統設定</div>
+  </div>
+  <div class="home-body" style="overflow-y:auto; padding:15px;">
+    <div class="settings-section">
+      <div class="settings-section-hdr">
+        <span class="settings-section-title">孩子管理</span>
+        <button class="settings-add-btn" onclick="showAddPerson('child')">+ 新增</button>
+      </div>
+      <div id="settingsChildrenList"></div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-section-hdr">
+        <span class="settings-section-title">驗證者管理 (Auditors)</span>
+        <button class="settings-add-btn" onclick="showAddPerson('auditor')">+ 新增</button>
+      </div>
+      <div id="settingsAuditorsList"></div>
+    </div>
+    <div class="settings-info">
+      <div class="settings-info-title">KidsAPP 儲存空間</div>
+      <div class="settings-info-sub">清理本地快取將不會影響 Firebase 雲端資料。</div>
+      <button class="cache-clear-btn" onclick="clearLocalCache()">清理本地快取變更</button>
+    </div>
+  </div>
 </div>
 
-<div class="modal-overlay" id="modalConfirm" onclick="handleOverlay(event,'modalConfirm')">
-<div class="modal-sheet" onclick="event.stopPropagation()">
-<div class="modal-handle"></div>
-<div id="confirmBody"></div>
+<div class="modal-overlay" id="modalAuditor" onclick="handleOverlay(event,'modalAuditor')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="auditorModalTitle">選擇身分</div>
+    <div class="pin-section" id="audStep1">
+      <div class="aud-list" id="audLoginList"></div>
+    </div>
+    <div class="pin-section" id="audStep2">
+      <div class="modal-title" id="pinTargetName">輸入密碼</div>
+      <div class="pin-dots" id="pinDots">
+        <div class="pin-dot-el">•</div><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div>
+      </div>
+      <input type="password" inputmode="numeric" maxlength="4" class="pin-input" id="pinInput" placeholder="••••" style="width:100%; text-align:center; font-size:24px; letter-spacing:10px; padding:10px; margin-bottom:15px; background:#07102a; border:1px solid #var(--border); color:#fff;" oninput="handlePinInput()">
+      <button class="btn-pass" style="width:100%; padding:12px; margin-bottom:8px;" onclick="confirmPin()">確認登入</button>
+      <button class="btn-fail" style="width:100%; padding:12px; background:transparent; border:none;" onclick="backToAudStep1()">← 返回身分選擇</button>
+    </div>
+  </div>
 </div>
+
+<div class="modal-overlay" id="modalFormContainer" onclick="handleOverlay(event,'modalFormContainer')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="formModalTitle">資料編輯</div>
+    <div id="dynamicFormBody" style="display:flex; flex-direction:column; gap:12px; padding-bottom:20px;"></div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -331,90 +296,484 @@ const CATS=[
   {id:'behavior',    name:'Behavior',    emoji:'⭐',type:'mixed',       group:'bot'},
 ];
 
-/* Tile CSS class per category */
-const TILE_CLASS={
-  vocab:'tile-vocab',school:'tile-school',housework:'tile-hw',
-  sport:'tile-sport',transactions:'tile-trans',behavior:'tile-behav'
-};
+const TILE_CLASS={vocab:'tile-vocab',school:'tile-school',housework:'tile-hw',sport:'tile-sport',transactions:'tile-trans',behavior:'tile-behav'};
 
 const S={
   children:{},auditors:{},entries:{},goals:{},
   currentChildId:null,currentCat:null,
   currentAuditor:null,pendingAuditor:null,
-  editingEntryId:null,editingGoalId:null,
-  editingPersonType:null,editingPersonId:null,
-  pendingPhoto:null,pendingVerify:null,
-  txFilter:'all',rtMain:null,rtGoal:null
+  txFilter:'all',rtMain:null,rtGoal:null,
+  enteredPin:''
 };
 
-const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const MON_MAP={Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
-const DAY_NAMES=['一','二','三','四','五','六','日'];
-const WEEK_NUMS=['第一','第二','第三','第四','最後'];
-function fmtDate(iso){const[y,m,d]=iso.split('-');return `${y}${MON[+m-1]}${d.padStart(2,'0')}`;}
-function todayISO(){return new Date().toISOString().split('T')[0];}
-function amtStr(v,u){return v===0?'':`${v>0?'+':''}${v.toLocaleString()} ${u}`;}
-function amtCls(v){return v>0?'pos':v<0?'neg':'';}
-function txDirection(e){const n=Number(e.ntd||0),m=Number(e.mins||0);if(n<0||m<0)return 'withdraw';if(n>0||m>0)return 'deposit';return 'unknown';}
-function fmtFreq(g){
-  if(g.freq==='once')return `📅 ${g.dueDate||''}`;
-  if(g.freq==='daily')return '🔄 每天';
-  if(g.freq==='weekly'){const ds=(g.freqDays||[]).map(d=>DAY_NAMES[d]).join('、');return `🔄 每週${ds||'—'}`;}
-  if(g.freq==='monthly')return `🔄 每月${WEEK_NUMS[(g.freqWeekNum||1)-1]}週${DAY_NAMES[g.freqWeekDay||0]}`;return '';
+// Toast 控制
+function showToast(msg, duration=2000){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), duration);
 }
-function isRecurring(g){return g.freq!=='once';}
 
-async function compressImage(file){
-  return new Promise(resolve=>{
-    const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d'),img=new Image(),url=URL.createObjectURL(file);
-    img.onload=()=>{const min=Math.min(img.width,img.height),sx=(img.width-min)/2,sy=(img.height-min)/2;canvas.width=canvas.height=200;ctx.drawImage(img,sx,sy,min,min,0,0,200,200);URL.revokeObjectURL(url);resolve(canvas.toDataURL('image/jpeg',.72));};
-    img.onerror=()=>{URL.revokeObjectURL(url);resolve(null);};img.src=url;
-  });
-}
-async function handlePhotoSelected(e){
-  const file=e.target.files[0];if(!file)return;showToast('壓縮照片中…',1500);
-  const b64=await compressImage(file);S.pendingPhoto=b64;
-  const box=document.getElementById('photoPreviewBox');
-  if(box)box.innerHTML=b64?`<img src="${b64}" style="width:100%;height:100%;object-fit:cover;display:block;">`:`<span style="font-size:32px;">⚠️</span>`;
-  e.target.value='';
-}
-function pickPhoto(){document.getElementById('photoInput').click();}
-
+// 頁面初使化載入
 async function init(){
   try{
     const[as,cs]=await Promise.all([db.ref('/auditors').once('value'),db.ref('/children').once('value')]);
-    S.auditors=as.val()||{};S.children=cs.val()||{};
-    S.currentChildId=Object.keys(S.children)[0]||null;
-    if(S.currentChildId){
-      const[es,gs]=await Promise.all([db.ref(`/entries/${S.currentChildId}`).once('value'),db.ref(`/goals/${S.currentChildId}`).once('value')]);
-      S.entries[S.currentChildId]=es.val()||{};S.goals[S.currentChildId]=gs.val()||{};
-      await migrateWithdraw(S.currentChildId);
-      attachMainListener(S.currentChildId);attachGoalListener(S.currentChildId);cleanupOldDeleted();
+    S.auditors=as.val()||{}; S.children=cs.val()||{};
+    
+    // 預設登入第一個孩子
+    const cids = Object.keys(S.children);
+    if(cids.length > 0){
+      S.currentChildId = cids[0];
+      loadChildData(S.currentChildId);
+    } else {
+      document.getElementById('childName').textContent = "請在設定中建立孩子";
     }
-    renderAll();initSwipe();
-  }catch(err){console.error(err);showToast('⚠️ 連線失敗，請重新整理',4000);document.getElementById('childName').textContent='連線失敗';}
+    renderDashboard();
+  }catch(err){
+    console.error(err);
+    showToast('⚠️ 資料庫連線失敗');
+  }
 }
 
-async function migrateWithdraw(cid){
-  const s=await db.ref(`/entries/${cid}/withdraw`).once('value');
-  if(!s.exists())return;await db.ref(`/entries/${cid}/transactions`).update(s.val());await db.ref(`/entries/${cid}/withdraw`).remove();
-}
-function attachMainListener(cid){
-  if(S.rtMain)db.ref(`/entries/${S.rtMain}`).off();S.rtMain=cid;
-  db.ref(`/entries/${cid}`).on('value',snap=>{S.entries[cid]=snap.val()||{};renderDashboard();if(S.currentCat)renderDetailContent(S.currentCat);});
-}
-function attachGoalListener(cid){
-  if(S.rtGoal)db.ref(`/goals/${S.rtGoal}`).off();S.rtGoal=cid;
-  db.ref(`/goals/${cid}`).on('value',snap=>{S.goals[cid]=snap.val()||{};if(S.currentCat&&['vocab','school','housework','sport'].includes(S.currentCat))renderDetailContent(S.currentCat);});
-}
-async function cleanupOldDeleted(){
-  const cid=S.currentChildId;if(!cid)return;const weekAgo=Date.now()-7*24*60*60*1000;
+function loadChildData(cid){
+  if(S.rtMain) db.ref(`/entries/${S.rtMain}`).off();
+  if(S.rtGoal) db.ref(`/goals/${S.rtGoal}`).off();
+  
+  S.rtMain = cid; S.rtGoal = cid;
+  
+  db.ref(`/entries/${cid}`).on('value', snap => {
+    S.entries[cid] = snap.val() || {};
+    renderDashboard();
+    if(S.currentCat) renderDetailContent(S.currentCat);
+  });
+  
+  db.ref(`/goals/${cid}`).on('value', snap => {
+    S.goals[cid] = snap.val() || {};
+    if(S.currentCat) renderDetailContent(S.currentCat);
+  });
 }
 
-/* ==========================================================================
-   🚨 注意：請在此處下方，貼回你先前專案中包含的其餘 JavaScript 函式
-   （例如：renderAll, renderDashboard, openSettings, initSwipe, showToast 等）
-   ========================================================================== */
+// 切換目前的目標孩子
+function switchChild(){
+  const cids = Object.keys(S.children);
+  if(cids.length <= 1) return;
+  let idx = cids.indexOf(S.currentChildId);
+  idx = (idx + 1) % cids.length;
+  S.currentChildId = cids[idx];
+  loadChildData(S.currentChildId);
+  showToast(`切換至: ${S.children[S.currentChildId].name}`);
+}
+
+// 渲染主畫面九宮格
+function renderDashboard(){
+  const current = S.children[S.currentChildId];
+  if(!current){
+    document.getElementById('pName').textContent = "未選擇孩子";
+    return;
+  }
+  
+  document.getElementById('childName').textContent = current.name || '孩子';
+  document.getElementById('pName').textContent = current.name || '---';
+  document.getElementById('pAvatar').textContent = current.emoji || '👦';
+  
+  // 計算餘額與時間
+  let totalNtd = 0; let totalMins = 0;
+  const childEntries = S.entries[S.currentChildId] || {};
+  Object.values(childEntries).forEach(e => {
+    if(!e.deleted){
+      totalNtd += Number(e.ntd || 0);
+      totalMins += Number(e.mins || 0);
+    }
+  });
+  
+  document.getElementById('statNtd').textContent = totalNtd.toLocaleString();
+  document.getElementById('statMins').textContent = totalMins.toLocaleString();
+  
+  // 注入格位項目
+  const topContainer = document.getElementById('topGrid');
+  const botContainer = document.getElementById('botGrid');
+  topContainer.innerHTML = ''; botContainer.innerHTML = '';
+  
+  CATS.forEach(cat => {
+    const tile = document.createElement('div');
+    tile.className = `cat-tile ${TILE_CLASS[cat.id] || 'tile-vocab'}`;
+    tile.onclick = () => openCategory(cat.id);
+    tile.innerHTML = `<span class="tile-emoji">${cat.emoji}</span><span class="tile-name">${cat.name}</span>`;
+    
+    if(cat.group === 'top') topContainer.appendChild(tile);
+    else botContainer.appendChild(tile);
+  });
+}
+
+// 切換子分頁面
+function openCategory(catId){
+  S.currentCat = catId;
+  const cat = CATS.find(c => c.id === catId);
+  document.getElementById('detailCatEmoji').textContent = cat.emoji;
+  document.getElementById('detailCatName').textContent = cat.name;
+  
+  document.getElementById('screenHome').classList.remove('active');
+  document.getElementById('screenDetail').classList.add('active');
+  renderDetailContent(catId);
+}
+
+function backToHome(){
+  S.currentCat = null;
+  document.getElementById('screenDetail').classList.remove('active');
+  document.getElementById('screenSettings').classList.remove('active');
+  document.getElementById('screenHome').classList.add('active');
+  renderDashboard();
+}
+
+function openSettings(){
+  document.getElementById('screenHome').classList.remove('active');
+  document.getElementById('screenSettings').classList.add('active');
+  renderSettingsLists();
+}
+
+// 渲染細節頁內容 (目標管理/交易明細)
+function renderDetailContent(catId){
+  const body = document.getElementById('detailBody');
+  body.innerHTML = '';
+  
+  const cat = CATS.find(c => c.id === catId);
+  
+  // 基礎骨架：目標專區與歷史紀錄區
+  let html = `<div class="detail-pad">`;
+  
+  if(cat.type === 'goal' || cat.type === 'mixed'){
+    html += `
+      <div class="goal-section-hdr">
+        <span class="sec-lbl">🎯 目前挑戰目標</span>
+        <button class="add-goal-btn" onclick="showAddGoalForm()">+ 新增目標</button>
+      </div>
+      <div id="detailGoalsArea" style="margin-bottom:20px;"></div>
+    `;
+  }
+  
+  html += `
+    <div class="goal-section-hdr">
+      <span class="sec-lbl">📜 歷史執行紀錄</span>
+      <button class="add-goal-btn" style="background:var(--cyan-dim); color:var(--cyan);" onclick="showAddEntryForm()">+ 新增紀錄</button>
+    </div>
+    <div id="detailEntriesArea"></div>
+  </div>`;
+  
+  body.innerHTML = html;
+  
+  // 異步填入細部資料
+  renderGoalsList(catId);
+  renderEntriesList(catId);
+}
+
+function renderGoalsList(catId){
+  const area = document.getElementById('detailGoalsArea');
+  if(!area) return;
+  
+  const childGoals = S.goals[S.currentChildId] || {};
+  const filtered = Object.entries(childGoals).filter(([_, g]) => g.category === catId && !g.deleted);
+  
+  if(filtered.length === 0){
+    area.innerHTML = `<div class="no-goals">目前沒有為本分類設定目標。</div>`;
+    return;
+  }
+  
+  let html = '';
+  filtered.forEach(([gid, g]) => {
+    html += `
+      <div class="goal-card">
+        <div class="goal-freq-row">
+          <span class="goal-freq-badge">${g.type === 'once' ? '單次' : '常規'}</span>
+          <span style="font-size:12px; font-weight:bold; color:#fff;">${g.title}</span>
+        </div>
+        <div class="goal-desc">${g.desc || '無詳細說明資料'}</div>
+        <div class="goal-rewards">
+          <span class="goal-reward-pill reward-pass">成功: +${g.rewardNtd || 0} Token / +${g.rewardMins || 0}Mins</span>
+        </div>
+        <div class="goal-verify-row">
+          <button class="btn-pass" onclick="verifyGoal('${gid}', true)">達成核准</button>
+          <button class="btn-fail" onclick="verifyGoal('${gid}', false)">不通過</button>
+        </div>
+      </div>
+    `;
+  });
+  area.innerHTML = html;
+}
+
+function renderEntriesList(catId){
+  const area = document.getElementById('detailEntriesArea');
+  if(!area) return;
+  
+  const childEntries = S.entries[S.currentChildId] || {};
+  const filtered = Object.entries(childEntries).filter(([_, e]) => e.category === catId && !e.deleted);
+  
+  if(filtered.length === 0){
+    area.innerHTML = `<div class="no-goals" style="border-style:solid;">尚無任何歷史執行紀錄。</div>`;
+    return;
+  }
+  
+  let html = '';
+  filtered.sort((a,b) => b[1].timestamp - a[1].timestamp).forEach(([eid, e]) => {
+    html += `
+      <div class="rec-card">
+        <div class="rec-top">
+          <span class="rec-date">${new Date(e.timestamp).toLocaleDateString()}</span>
+          <span class="rec-aud" style="margin-left:8px;">✍️ 審核人: ${e.auditorName || '系統'}</span>
+          <button class="rec-act del" style="margin-left:auto; color:var(--del-red);" onclick="deleteEntry('${eid}')">🗑️</button>
+        </div>
+        <div style="font-size:13px; font-weight:600; margin:4px 0;">${e.title || '一般常規項目'}</div>
+        <div class="rec-amts">
+          <span class="rec-amt ${e.ntd >= 0 ? 'pos':'neg'}">Token: ${e.ntd >= 0 ? '+':''}${e.ntd || 0}</span>
+          <span class="rec-amt ${e.mins >= 0 ? 'pos':'neg'}" style="color:var(--orange);">時間: ${e.mins >= 0 ? '+':''}${e.mins || 0} 分鐘</span>
+        </div>
+      </div>
+    `;
+  });
+  area.innerHTML = html;
+}
+
+// 目標核准審查
+function verifyGoal(gid, isSuccess){
+  if(!checkAuditorAuthed()) return;
+  
+  const goal = S.goals[S.currentChildId][gid];
+  const ntdGained = isSuccess ? Number(goal.rewardNtd || 0) : 0;
+  const minsGained = isSuccess ? Number(goal.rewardMins || 0) : 0;
+  
+  // 建立歷史新紀錄項
+  const newEntryRef = db.ref(`/entries/${S.currentChildId}`).push();
+  newEntryRef.set({
+    category: S.currentCat,
+    title: `[目標達成] ${goal.title}`,
+    ntd: ntdGained,
+    mins: minsGained,
+    auditorId: S.currentAuditor,
+    auditorName: S.auditors[S.currentAuditor].name,
+    timestamp: firebase.database.ServerValue.TIMESTAMP
+  });
+  
+  if(goal.type === 'once'){
+    db.ref(`/goals/${S.currentChildId}/${gid}`).update({deleted: true});
+  }
+  showToast('🎉 目標審查判定成功，數據已同步');
+}
+
+function deleteEntry(eid){
+  if(!checkAuditorAuthed()) return;
+  if(confirm('確認要刪除此筆記錄嗎？對應的時間及代幣將會被扣回。')){
+    db.ref(`/entries/${S.currentChildId}/${eid}`).update({deleted: true});
+    showToast('❌ 紀錄已成功作廢');
+  }
+}
+
+// 認證身分防護機制
+function checkAuditorAuthed(){
+  if(!S.currentAuditor){
+    openAuditorModal();
+    showToast('🔒 執行此操作需要家長/審核者身分，請先登入');
+    return false;
+  }
+  return true;
+}
+
+// 家長審核人切換登入介面
+function openAuditorModal(){
+  document.getElementById('modalAuditor').classList.add('show');
+  backToAudStep1();
+}
+
+function backToAudStep1(){
+  document.getElementById('audStep1').classList.add('show');
+  document.getElementById('audStep2').classList.remove('show');
+  
+  const list = document.getElementById('audLoginList');
+  list.innerHTML = '';
+  
+  Object.entries(S.auditors).forEach(([aid, a]) => {
+    const item = document.createElement('div');
+    item.className = 'aud-item';
+    item.onclick = () => selectAuditorForPin(aid);
+    item.innerHTML = `<div class="aud-av">🔑</div><div><div class="aud-item-name">${a.name}</div></div>`;
+    list.innerHTML += item.outerHTML;
+  });
+}
+
+function selectAuditorForPin(aid){
+  S.pendingAuditor = aid;
+  document.getElementById('pinTargetName').textContent = `驗證 ${S.auditors[aid].name} 的密碼`;
+  document.getElementById('audStep1').classList.remove('show');
+  document.getElementById('audStep2').classList.add('show');
+  document.getElementById('pinInput').value = '';
+  S.enteredPin = '';
+}
+
+function handlePinInput(){
+  const input = document.getElementById('pinInput');
+  S.enteredPin = input.value;
+  if(S.enteredPin.length === 4){
+    confirmPin();
+  }
+}
+
+function confirmPin(){
+  const targetAud = S.auditors[S.pendingAuditor];
+  if(targetAud && targetAud.pin === S.enteredPin){
+    S.currentAuditor = S.pendingAuditor;
+    document.getElementById('audChipName').textContent = targetAud.name;
+    document.getElementById('modalAuditor').classList.remove('show');
+    showToast(`🔓 歡迎回來，${targetAud.name}`);
+    renderDashboard();
+  } else {
+    showToast('❌ 密碼錯誤，請再試一次');
+    document.getElementById('pinInput').value = '';
+    S.enteredPin = '';
+  }
+}
+
+// 各類彈出表單
+function showAddGoalForm(){
+  if(!checkAuditorAuthed()) return;
+  document.getElementById('formModalTitle').textContent = "建立新目標挑戰";
+  const form = document.getElementById('dynamicFormBody');
+  form.innerHTML = `
+    <input type="text" id="gFormTitle" placeholder="目標名稱 (例如: 背誦英文單字 20 個)" style="padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--card); color:#fff;">
+    <input type="text" id="gFormDesc" placeholder="詳細要求規範描述" style="padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--card); color:#fff;">
+    <select id="gFormType" style="padding:10px; border-radius:8px; background:var(--card); color:#fff;">
+      <option value="once">單次任務</option>
+      <option value="daily">常規每日任務</option>
+    </select>
+    <input type="number" id="gFormNtd" placeholder="獎勵 Token 數量" style="padding:10px; border-radius:8px; background:var(--card); color:#fff;">
+    <input type="number" id="gFormMins" placeholder="獎勵學習分鐘數" style="padding:10px; border-radius:8px; background:var(--card); color:#fff;">
+    <button class="btn-pass" onclick="submitGoalForm()" style="padding:12px;">確認發布目標</button>
+  `;
+  document.getElementById('modalFormContainer').classList.add('show');
+}
+
+function submitGoalForm(){
+  const title = document.getElementById('gFormTitle').value;
+  if(!title) return showToast('請填寫目標標題');
+  
+  db.ref(`/goals/${S.currentChildId}`).push({
+    category: S.currentCat,
+    title: title,
+    desc: document.getElementById('gFormDesc').value,
+    type: document.getElementById('gFormType').value,
+    rewardNtd: Number(document.getElementById('gFormNtd').value || 0),
+    rewardMins: Number(document.getElementById('gFormMins').value || 0),
+    timestamp: firebase.database.ServerValue.TIMESTAMP
+  });
+  
+  document.getElementById('modalFormContainer').classList.remove('show');
+  showToast('🚀 目標已同步發布至雲端');
+}
+
+function showAddEntryForm(){
+  if(!checkAuditorAuthed()) return;
+  document.getElementById('formModalTitle').textContent = "手動新增執行紀錄";
+  const form = document.getElementById('dynamicFormBody');
+  form.innerHTML = `
+    <input type="text" id="eFormTitle" placeholder="項目明細事由" style="padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--card); color:#fff;">
+    <input type="number" id="eFormNtd" placeholder="Token 增減數值 (收支可填負數)" style="padding:10px; border-radius:8px; background:var(--card); color:#fff;">
+    <input type="number" id="eFormMins" placeholder="時間增減 (分鐘)" style="padding:10px; border-radius:8px; background:var(--card); color:#fff;">
+    <button class="btn-pass" onclick="submitEntryForm()" style="padding:12px;">寫入區塊鏈帳本</button>
+  `;
+  document.getElementById('modalFormContainer').classList.add('show');
+}
+
+function submitEntryForm(){
+  const title = document.getElementById('eFormTitle').value;
+  if(!title) return showToast('請填寫明細事由');
+  
+  db.ref(`/entries/${S.currentChildId}`).push({
+    category: S.currentCat,
+    title: title,
+    ntd: Number(document.getElementById('eFormNtd').value || 0),
+    mins: Number(document.getElementById('eFormMins').value || 0),
+    auditorId: S.currentAuditor,
+    auditorName: S.auditors[S.currentAuditor].name,
+    timestamp: firebase.database.ServerValue.TIMESTAMP
+  });
+  
+  document.getElementById('modalFormContainer').classList.remove('show');
+  showToast('💾 歷史流水帳已成功更新');
+}
+
+// 設定頁面動態項目渲染
+function renderSettingsLists(){
+  const childArea = document.getElementById('settingsChildrenList');
+  childArea.innerHTML = '';
+  Object.entries(S.children).forEach(([cid, c]) => {
+    childArea.innerHTML += `
+      <div class="person-row">
+        <div class="person-av">${c.emoji || '👦'}</div>
+        <div class="person-name">${c.name}</div>
+      </div>
+    `;
+  });
+  
+  const audArea = document.getElementById('settingsAuditorsList');
+  audArea.innerHTML = '';
+  Object.entries(S.auditors).forEach(([aid, a]) => {
+    audArea.innerHTML += `
+      <div class="person-row">
+        <div class="person-av">🔑</div>
+        <div class="person-name">${a.name} <span style="font-size:10px; color:var(--sub);">[PIN: ${a.pin}]</span></div>
+      </div>
+    `;
+  });
+}
+
+function showAddPerson(type){
+  if(type === 'child' && !checkAuditorAuthed()) return;
+  document.getElementById('formModalTitle').textContent = type === 'child' ? "新增關聯孩子" : "新增家長管理員";
+  const form = document.getElementById('dynamicFormBody');
+  
+  if(type === 'child'){
+    form.innerHTML = `
+      <input type="text" id="pFormName" placeholder="孩子姓名" style="padding:10px; border-radius:8px; background:var(--card); color:#fff;">
+      <input type="text" id="pFormEmoji" placeholder="大頭貼圖 Emoji (例如: 👦)" style="padding:10px; border-radius:8px; background:var(--card); color:#fff;">
+      <button class="btn-pass" onclick="submitPersonForm('child')" style="padding:12px;">確認新增孩子</button>
+    `;
+  } else {
+    form.innerHTML = `
+      <input type="text" id="pFormName" placeholder="管理員名稱" style="padding:10px; border-radius:8px; background:var(--card); color:#fff;">
+      <input type="password" inputmode="numeric" maxlength="4" id="pFormPin" placeholder="四位數 PIN 登入密碼" style="padding:10px; border-radius:8px; background:var(--card); color:#fff; text-align:center; letter-spacing:4px;">
+      <button class="btn-pass" onclick="submitPersonForm('auditor')" style="padding:12px;">確認新增管理員</button>
+    `;
+  }
+  document.getElementById('modalFormContainer').classList.add('show');
+}
+
+function submitPersonForm(type){
+  const name = document.getElementById('pFormName').value;
+  if(!name) return showToast('請輸入姓名/名稱');
+  
+  if(type === 'child'){
+    const emoji = document.getElementById('pFormEmoji').value || '👦';
+    db.ref('/children').push({name: name, emoji: emoji});
+  } else {
+    const pin = document.getElementById('pFormPin').value;
+    if(pin.length !== 4) return showToast('密碼必須為 4 位數數字');
+    db.ref('/auditors').push({name: name, pin: pin});
+  }
+  
+  document.getElementById('modalFormContainer').classList.remove('show');
+  showToast('✅ 人員名冊資料已異動更新');
+  setTimeout(() => location.reload(), 800);
+}
+
+// 清除快取與遮罩處理
+function clearLocalCache(){
+  if(confirm('確定要清除本地快取並重新與 Firebase 伺服器進行同步嗎？')){
+    showToast('正在重新通訊中...');
+    setTimeout(() => location.reload(), 1000);
+  }
+}
+
+function handleOverlay(e, modalId){
+  if(e.target.id === modalId){
+    document.getElementById(modalId).classList.remove('show');
+  }
+}
 
 window.addEventListener('DOMContentLoaded', init);
 </script>

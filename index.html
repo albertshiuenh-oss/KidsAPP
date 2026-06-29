@@ -28,15 +28,15 @@
   --shadow:0 4px 24px rgba(0,0,0,.5);
 }
 body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100svh;-webkit-font-smoothing:antialiased;}
-.screen{display:none;}.screen.active{display:flex;flex-direction:column;}#screenHome{overflow:hidden;}
+.screen{display:none;}.screen.active{display:flex;flex-direction:column;}#screenHome{overflow:hidden;position:relative;}
 
 /* ── NAVBAR ── */
 .navbar{background:rgba(7,16,42,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:var(--text);padding:13px 16px 11px;display:flex;align-items:center;position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);flex-shrink:0;}
 .nav-title{font-size:18px;font-weight:800;color:#fff;flex:1;letter-spacing:-.3px;}
 .nav-title span{color:#f9c642;}
 .nav-btn{width:34px;height:34px;border-radius:9px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.nav-back{background:none;border:none;color:var(--cyan);font-size:13px;font-weight:500;cursor:pointer;padding:0;opacity:.9;margin-right:8px;}
-.nav-center{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;flex:1;}
+.nav-back{background:none;border:none;color:var(--cyan);font-size:22px;font-weight:600;cursor:pointer;padding:0;margin-right:10px;}
+.nav-center{display:flex;align-items:center;gap:8px;font-size:22px;font-weight:700;flex:1;}
 .nav-badges{display:flex;gap:4px;margin-left:auto;}
 .nav-badge{background:var(--cyan-dim);color:var(--cyan);font-size:9px;padding:2px 7px;border-radius:7px;border:1px solid var(--cyan-border);white-space:nowrap;}
 
@@ -511,7 +511,48 @@ async function init(){
       await migrateWithdraw(S.currentChildId);
       attachMainListener(S.currentChildId);attachGoalListener(S.currentChildId);cleanupOldDeleted();
     }
-    renderAll();initSwipe();fixLayout();
+    
+// ── Face ID (WebAuthn) ──
+function b64ToArr(b64){try{const s=atob(b64.replace(/-/g,'+').replace(/_/g,'/'));const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer;}catch(e){return null;}}
+function arrToB64(buf){return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');}
+async function registerFaceID(audId){
+  if(!window.PublicKeyCredential){showToast('❌ 此裝置不支援 Face ID');return;}
+  const aud=S.auditors[audId];if(!aud)return;
+  try{
+    const ch=crypto.getRandomValues(new Uint8Array(32));
+    const cred=await navigator.credentials.create({publicKey:{
+      challenge:ch,
+      rp:{name:'KidsAPP',id:location.hostname},
+      user:{id:new TextEncoder().encode(audId),name:aud.name,displayName:aud.name},
+      pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],
+      authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},
+      timeout:60000
+    }});
+    const credId=arrToB64(cred.rawId);
+    await db.ref(`/auditors/${audId}/credId`).set(credId);
+    S.auditors[audId].credId=credId;
+    showToast('✅ '+aud.name+' Face ID 已啟用！');
+    renderSettings();
+  }catch(e){
+    if(e.name!=='NotAllowedError')showToast('❌ 設定失敗：'+e.message);
+  }
+}
+async function tryFaceID(audId){
+  const aud=S.auditors[audId];
+  if(!aud?.credId||!window.PublicKeyCredential)return false;
+  try{
+    const ch=crypto.getRandomValues(new Uint8Array(32));
+    const buf=b64ToArr(aud.credId);if(!buf)return false;
+    await navigator.credentials.get({publicKey:{
+      challenge:ch,
+      allowCredentials:[{type:'public-key',id:buf}],
+      userVerification:'required',
+      timeout:60000
+    }});
+    return true;
+  }catch(e){return false;}
+}
+renderAll();initSwipe();initDetailSwipe();fixLayout();
   }catch(err){console.error(err);showToast('⚠️ 連線失敗，請重新整理',4000);document.getElementById('childName').textContent='連線失敗';}
 }
 
@@ -556,13 +597,50 @@ function fixLayout(){
 window.addEventListener('resize',fixLayout);
 window.addEventListener('orientationchange',()=>setTimeout(fixLayout,300));
 
+function buildGhostPanel(childId){
+  const child=S.children[childId];if(!child)return null;
+  const entries=S.entries[childId]||{};
+  let ntd=0,mins=0;
+  CATS.forEach(cat=>Object.values(entries[cat.id]||{}).filter(e=>!e.deletedAt).forEach(e=>{ntd+=Number(e.ntd||0);mins+=Number(e.mins||0);}));
+  const avHtml=child.photoB64?`<img src="${child.photoB64}" style="width:100%;height:100%;object-fit:cover;display:block;">`:(child.emoji||'👤');
+  const ids=Object.keys(S.children),idx=ids.indexOf(childId);
+  const dotsHtml=ids.map((_,i)=>`<div class="sdot ${i===idx?'on':''}"></div>`).join('');
+  const tilesHtml=CATS.filter(c=>c.group==='top').map(cat=>{
+    let cls=TILE_CLASS[cat.id]||'tile-vocab';
+    if(cat.id==='behavior'){const bm=Object.values(entries['behavior']||{}).filter(e=>!e.deletedAt).reduce((s,e)=>s+Number(e.mins||0),0);if(bm<0)cls='tile-behav-neg';}
+    return `<div class="cat-tile ${cls}"><div class="tile-emoji">${cat.emoji}</div><div class="tile-name">${cat.name}</div></div>`;
+  }).join('');
+  const botHtml=CATS.filter(c=>c.group==='bot').map(cat=>{
+    let cls=TILE_CLASS[cat.id]||'tile-trans';
+    if(cat.id==='behavior'){const bm=Object.values(entries['behavior']||{}).filter(e=>!e.deletedAt).reduce((s,e)=>s+Number(e.mins||0),0);if(bm<0)cls='tile-behav-neg';}
+    return `<div class="cat-tile ${cls}"><div class="tile-emoji">${cat.emoji}</div><div class="tile-name">${cat.name}</div></div>`;
+  }).join('');
+  const ghost=document.createElement('div');
+  ghost.className='home-body ghost-panel';
+  ghost.style.cssText='position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;';
+  ghost.innerHTML=`
+    <div class="swipe-dots">${dotsHtml}</div>
+    <div class="profile-card">
+      <div class="p-avatar-box">${avHtml}</div>
+      <div class="p-info"><div class="p-name">${child.name}</div>
+        <div class="p-stats">
+          <div class="p-stat"><div class="p-stat-lbl">NTD</div><div class="p-stat-num t">${ntd.toLocaleString()}</div></div>
+          <div class="p-stat"><div class="p-stat-lbl">mins</div><div class="p-stat-num o">${mins.toLocaleString()}</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="grid-section"><div class="sec-hdr">🎯 Learning &amp; Tasks</div><div class="cat-grid cat-grid-2row">${tilesHtml}</div></div>
+    <div class="grid-section-bot"><div class="sec-hdr">💳 Money &amp; Behavior</div><div class="cat-grid">${botHtml}</div></div>`;
+  return ghost;
+}
+
 function initSwipe(){
-  let sx=0,sy=0,cx=0,drag=false;
+  let sx=0,sy=0,cx=0,drag=false,ghost=null,ghostDir=0;
   const el=document.getElementById('screenHome');
 
   el.addEventListener('touchstart',e=>{
-    sx=e.touches[0].clientX;sy=e.touches[0].clientY;cx=0;drag=true;
-    const b=document.querySelector('.home-body');
+    sx=e.touches[0].clientX;sy=e.touches[0].clientY;cx=0;drag=true;ghost=null;ghostDir=0;
+    const b=document.querySelector('.home-body:not(.ghost-panel)');
     if(b)b.style.transition='none';
   },{passive:true});
 
@@ -570,15 +648,27 @@ function initSwipe(){
     if(!drag)return;
     const dx=e.touches[0].clientX-sx;
     const dy=e.touches[0].clientY-sy;
-    if(Math.abs(dy)>Math.abs(dx)&&Math.abs(cx)<8)return; // vertical scroll takes priority
+    if(Math.abs(dy)>Math.abs(dx)&&Math.abs(cx)<8)return;
     cx=dx;
     const ids=Object.keys(S.children),idx=ids.indexOf(S.currentChildId);
-    // rubber-band at edges
     let move=dx;
     if(dx>0&&idx===0)move=dx*0.25;
     if(dx<0&&idx===ids.length-1)move=dx*0.25;
-    const b=document.querySelector('.home-body');
+    const W=window.innerWidth;
+    // Create ghost panel on first significant move
+    const adjIdx=dx<0?idx+1:idx-1;
+    if(!ghost&&Math.abs(dx)>8&&adjIdx>=0&&adjIdx<ids.length){
+      ghostDir=dx<0?1:-1; // 1=right-side ghost, -1=left-side ghost
+      ghost=buildGhostPanel(ids[adjIdx]);
+      if(ghost){
+        ghost.style.transform=`translateX(${ghostDir>0?W:-W}px)`;
+        el.querySelector('.home-body:not(.ghost-panel)').parentNode.appendChild(ghost);
+      }
+    }
+    const b=document.querySelector('.home-body:not(.ghost-panel)');
     if(b)b.style.transform=`translateX(${move}px)`;
+    // Ghost slides alongside current panel
+    if(ghost)ghost.style.transform=`translateX(${(ghostDir>0?W:-W)+move}px)`;
   },{passive:true});
 
   el.addEventListener('touchend',()=>{
@@ -591,34 +681,27 @@ function initSwipe(){
 
     if(Math.abs(dx)>THRESH){
       if(dx<0&&idx<ids.length-1){
-        // swipe left → next child: slide out left, slide in from right
-        if(b){b.style.transition='transform 0.22s ease-in';b.style.transform='translateX(-110%)';}
+        const W2=window.innerWidth;
+        if(b){b.style.transition='transform 0.25s ease-in-out';b.style.transform='translateX(-100%)';}
+        if(ghost){ghost.style.transition='transform 0.25s ease-in-out';ghost.style.transform='translateX(0)';}
         setTimeout(()=>{
+          if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);ghost=null;
           selectChild(ids[idx+1]);
-          const nb=document.querySelector('.home-body');
-          if(nb){nb.style.transition='none';nb.style.transform='translateX(110%)';
-            requestAnimationFrame(()=>requestAnimationFrame(()=>{
-              nb.style.transition='transform 0.25s ease-out';nb.style.transform='translateX(0)';
-            }));}
-        },220);
+        },260);
       } else if(dx>0&&idx>0){
-        // swipe right → prev child: slide out right, slide in from left
-        if(b){b.style.transition='transform 0.22s ease-in';b.style.transform='translateX(110%)';}
+        if(b){b.style.transition='transform 0.25s ease-in-out';b.style.transform='translateX(100%)';}
+        if(ghost){ghost.style.transition='transform 0.25s ease-in-out';ghost.style.transform='translateX(0)';}
         setTimeout(()=>{
+          if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);ghost=null;
           selectChild(ids[idx-1]);
-          const nb=document.querySelector('.home-body');
-          if(nb){nb.style.transition='none';nb.style.transform='translateX(-110%)';
-            requestAnimationFrame(()=>requestAnimationFrame(()=>{
-              nb.style.transition='transform 0.25s ease-out';nb.style.transform='translateX(0)';
-            }));}
-        },220);
+        },260);
       } else {
-        // at edge: rubber-band bounce back
-        if(b){b.style.transition='transform 0.4s cubic-bezier(0.34,1.56,0.64,1)';b.style.transform='translateX(0)';}
+        if(b){b.style.transition='transform 0.35s cubic-bezier(0.34,1.56,0.64,1)';b.style.transform='translateX(0)';}
+        if(ghost){const W3=window.innerWidth;ghost.style.transition='transform 0.35s cubic-bezier(0.34,1.56,0.64,1)';ghost.style.transform=`translateX(${ghostDir>0?W3:-W3}px)`;setTimeout(()=>{if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);ghost=null;},350);}
       }
     } else {
-      // not enough: spring back
       if(b){b.style.transition='transform 0.3s cubic-bezier(0.34,1.56,0.64,1)';b.style.transform='translateX(0)';}
+      if(ghost){const W4=window.innerWidth;ghost.style.transition='transform 0.3s cubic-bezier(0.34,1.56,0.64,1)';ghost.style.transform=`translateX(${ghostDir>0?W4:-W4}px)`;setTimeout(()=>{if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);ghost=null;},300);}
     }
   },{passive:true});
 }
@@ -688,6 +771,21 @@ function openCat(catId){
   renderDetailContent(catId);showScreen('screenDetail');
 }
 function closeDetail(){S.currentCat=null;showScreen('screenHome');}
+function initDetailSwipe(){
+  let sx=0,cx=0,drag=false;
+  const el=document.getElementById('screenDetail');
+  el.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;cx=0;drag=true;},{passive:true});
+  el.addEventListener('touchmove',e=>{if(!drag)return;cx=e.touches[0].clientX-sx;},{passive:true});
+  el.addEventListener('touchend',()=>{
+    if(!drag)return;drag=false;
+    if(Math.abs(cx)>60){
+      const idx=CATS.findIndex(c=>c.id===S.currentCat);
+      if(cx<0&&idx<CATS.length-1)openCat(CATS[idx+1].id);
+      else if(cx>0&&idx>0)openCat(CATS[idx-1].id);
+    }
+    cx=0;
+  },{passive:true});
+}
 
 function renderDetailContent(catId){
   const cat=CATS.find(c=>c.id===catId);let html='';
@@ -716,8 +814,8 @@ function renderDetailContent(catId){
     html+=`<div class="detail-pad">
       <button class="add-rec-btn ${S.currentAuditor?'':'locked'}" onclick="openAddEntry(null)">${S.currentAuditor?'＋ 新增記錄':'🔐 請先登入審核人'}</button>
       <div class="tx-summary">
-        <div class="tx-sum-card"><div class="tx-sum-label" style="color:var(--amber);">💸 支出</div>${wNTD!==0?`<div class="tx-sum-val neg">${wNTD.toLocaleString()} NTD</div>`:''} ${wMins!==0?`<div class="tx-sum-val neg">${wMins.toLocaleString()} mins</div>`:''} ${wNTD===0&&wMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}</div>
-        <div class="tx-sum-card o"><div class="tx-sum-label" style="color:var(--green);">💰 存入</div>${dNTD!==0?`<div class="tx-sum-val pos">+${dNTD.toLocaleString()} NTD</div>`:''} ${dMins!==0?`<div class="tx-sum-val pos">+${dMins.toLocaleString()} mins</div>`:''} ${dNTD===0&&dMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}</div>
+        <div class="tx-sum-card"><div class="tx-sum-label" style="color:var(--amber);">💸 Withdraw</div>${wNTD!==0?`<div class="tx-sum-val neg">${wNTD.toLocaleString()} NTD</div>`:''} ${wMins!==0?`<div class="tx-sum-val neg">${wMins.toLocaleString()} mins</div>`:''} ${wNTD===0&&wMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}</div>
+        <div class="tx-sum-card o"><div class="tx-sum-label" style="color:var(--green);">💰 Deposit</div>${dNTD!==0?`<div class="tx-sum-val pos">+${dNTD.toLocaleString()} NTD</div>`:''} ${dMins!==0?`<div class="tx-sum-val pos">+${dMins.toLocaleString()} mins</div>`:''} ${dNTD===0&&dMins===0?`<div class="tx-sum-val" style="color:var(--sub);">—</div>`:''}</div>
       </div>
       <div class="filter-row">
         <button class="filter-btn ${S.txFilter==='all'?'active':''}" onclick="setTxFilter('all')">全部</button>
@@ -875,24 +973,12 @@ function buildRecordsList(catId){
   else html+=active.map(([id,e])=>{
     const ns=amtStr(Number(e.ntd||0),'NTD'),ms=amtStr(Number(e.mins||0),'mins');
     const nc=amtCls(Number(e.ntd||0)),mc=amtCls(Number(e.mins||0));
-    let badge='';let showAmts=true;
-    if(cat.type==='transactions'){
-      const dir=txDirection(e);
-      const txAmts=[ns,ms].filter(Boolean).join(' · ');
-      badge=dir==='withdraw'
-        ?`<span class="tx-type-badge tx-withdraw">💸 Withdraw${txAmts?' '+txAmts:''}</span>`
-        :`<span class="tx-type-badge tx-deposit">💰 Deposit${txAmts?' '+txAmts:''}</span>`;
-      showAmts=false; // amounts already inside badge
-    } else {
-      if(e.passed===true)badge=`<span class="rec-badge pass">✅ Passed</span>`;
-      if(e.passed===false)badge=`<span class="rec-badge fail">❌ Failed</span>`;
-    }
+    // No auditor, no badge — just date + amounts + notes
     const editedTag=e.editedAt?`<span class="rec-edited-inline">已編輯</span>`:'';
     const acts=canAct
       ?`<div class="rec-actions">${editedTag}<button class="rec-act" onclick="openAddEntry('${id}')">✏️</button><button class="rec-act del" onclick="confirmDelete('${catId}','${id}')">🗑️</button></div>`
       :(editedTag?`<div class="rec-actions">${editedTag}</div>`:'');
-    const amtRow=showAmts?`<div class="rec-amts">${ns?`<span class="rec-amt ${nc}">${ns}</span>`:''}${ms?`<span class="rec-amt ${mc}">${ms}</span>`:''}</div>`:'';
-    return `<div class="rec-card"><div class="rec-top"><span class="rec-date">${e.date||'—'}</span><span class="rec-aud">· ${e.auditor||'—'}</span>${badge}${acts}</div>${amtRow}${e.note?`<div class="rec-note">${e.note}</div>`:''}</div>`;
+    return `<div class="rec-card"><div class="rec-top"><span class="rec-date">${e.date||'—'}</span>${acts}</div><div class="rec-amts">${ns?`<span class="rec-amt ${nc}">${ns}</span>`:''}${ms?`<span class="rec-amt ${mc}">${ms}</span>`:''}</div>${e.note?`<div class="rec-note">${e.note}</div>`:''}</div>`;
   }).join('');
   if(deleted.length){
     html+=`<div class="sec-lbl" style="margin-top:14px;margin-bottom:6px;color:var(--del-red);">🗑️ 最近刪除（7天內可恢復）</div>`;
@@ -917,7 +1003,8 @@ function renderSettings(){
   Object.entries(S.children).forEach(([id,c])=>{html+=`<div class="person-row"><div class="person-av">${c.photoB64?`<img src="${c.photoB64}">`:(c.emoji||'👤')}</div><div class="person-info"><div class="person-name">${c.name}</div></div><div class="person-acts"><button class="person-act" onclick="openPersonModal('child','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('child','${id}','${c.name}')">🗑️</button></div></div>`;});
   html+=`</div>`;
   html+=`<div class="settings-section"><div class="settings-section-hdr"><span class="settings-section-title">👤 審核人管理</span><button class="settings-add-btn" onclick="openPersonModal('auditor',null)">＋ 新增</button></div>`;
-  Object.entries(S.auditors).forEach(([id,a])=>{html+=`<div class="person-row"><div class="person-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div><div class="person-info"><div class="person-name">${a.name}</div><div class="person-sub">${a.role||''}</div></div><div class="person-acts"><button class="person-act" onclick="openPersonModal('auditor','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('auditor','${id}','${a.name}')">🗑️</button></div></div>`;});
+  Object.entries(S.auditors).forEach(([id,a])=>{const fidBtn=`<button class="person-act" title="${a.credId?'重設 Face ID':'啟用 Face ID'}" onclick="registerFaceID('${id}')">${a.credId?'🔐':'🔓'}</button>`;
+  html+=`<div class="person-row"><div class="person-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div><div class="person-info"><div class="person-name">${a.name}</div><div class="person-sub">${a.credId?'Face ID 已啟用':'PIN 登入'}</div></div><div class="person-acts">${fidBtn}<button class="person-act" onclick="openPersonModal('auditor','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('auditor','${id}','${a.name}')">🗑️</button></div></div>`;});
   html+=`</div>`;
   html+=`<div class="settings-info"><div class="settings-info-title">🏅 KidsAPP</div><div class="settings-info-sub">Firebase Realtime DB</div><button class="cache-clear-btn" onclick="clearCache()">🔄 清除快取並重新載入</button><div style="font-size:10px;color:var(--sub);margin-top:6px;">App 顯示舊版畫面時請點此強制更新</div></div>`;
   document.getElementById('settingsContent').innerHTML=html;
@@ -980,7 +1067,26 @@ function openAuditorModal(){
   document.getElementById('step1').style.display='block';document.getElementById('step2').classList.remove('show');showModal('modalAud');
 }
 function selectAuditor(id){
-  const a=S.auditors[id];S.pendingAuditor={id,...a};
+  const a=S.auditors[id];
+  if(a.credId){
+    showToast('🔐 Face ID 驗證中…',4000);
+    tryFaceID(id).then(ok=>{
+      if(ok){
+        S.currentAuditor={id,...a};closeModal('modalAud');renderAudChip();
+        showToast('✅ 歡迎，'+a.name+'！');
+        if(S.currentCat)renderDetailContent(S.currentCat);
+        if(S.pendingVerify){const pv=S.pendingVerify;S.pendingVerify=null;setTimeout(()=>verifyGoal(pv.catId,pv.goalId,pv.result),400);}
+      } else {
+        showToast('Face ID 失敗，請輸入 PIN',2000);
+        showPinStep(id,a);
+      }
+    });
+  } else {
+    showPinStep(id,a);
+  }
+}
+function showPinStep(id,a){
+  S.pendingAuditor={id,...a};
   document.getElementById('pinTitle').textContent=`${a.emoji||'👤'} ${a.name}`;
   document.getElementById('pinInput').value='';document.getElementById('pinErr').textContent='';updateDots(0);
   document.getElementById('step1').style.display='none';document.getElementById('step2').classList.add('show');

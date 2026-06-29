@@ -521,6 +521,7 @@ function arrToB64(buf){return btoa(String.fromCharCode(...new Uint8Array(buf))).
 async function registerFaceID(audId){
   if(!window.PublicKeyCredential){showToast('❌ 此裝置不支援 Face ID');return;}
   const aud=S.auditors[audId];if(!aud)return;
+  showToast('🔐 請依照系統提示完成 Face ID…',8000);
   try{
     const ch=crypto.getRandomValues(new Uint8Array(32));
     const cred=await navigator.credentials.create({publicKey:{
@@ -537,7 +538,9 @@ async function registerFaceID(audId){
     showToast('✅ '+aud.name+' Face ID 已啟用！');
     renderSettings();
   }catch(e){
-    if(e.name!=='NotAllowedError')showToast('❌ 設定失敗：'+e.message);
+    console.error('FaceID register:',e.name,e.message);
+    if(e.name==='NotAllowedError')showToast('取消設定 Face ID');
+    else showToast('❌ '+e.name+': '+e.message,4000);
   }
 }
 async function tryFaceID(audId){
@@ -620,11 +623,7 @@ function buildGhostPanel(childId){
   }).join('');
   const ghost=document.createElement('div');
   ghost.className='home-body ghost-panel';
-  // Align ghost exactly to home-body position (below navbar)
-  const _hbEl=el.querySelector('.home-body:not(.ghost-panel)');
-  const _elR=el.getBoundingClientRect(),_hbR=_hbEl.getBoundingClientRect();
-  const _top=Math.round(_hbR.top-_elR.top),_h=Math.round(_hbR.height);
-  ghost.style.cssText=`position:absolute;top:${_top}px;left:0;right:0;height:${_h}px;pointer-events:none;overflow:hidden;`;
+  // positioning applied by caller (initSwipe) where el is in scope
   ghost.innerHTML=`
     <div class="swipe-dots">${dotsHtml}</div>
     <div class="profile-card">
@@ -668,8 +667,12 @@ function initSwipe(){
       ghostDir=dx<0?1:-1; // 1=right-side ghost, -1=left-side ghost
       ghost=buildGhostPanel(ids[adjIdx]);
       if(ghost){
+        // Compute alignment here where el IS in scope
+        const _hb2=el.querySelector('.home-body:not(.ghost-panel)');
+        const _er=el.getBoundingClientRect(),_hr=_hb2.getBoundingClientRect();
+        ghost.style.cssText=`position:absolute;top:${Math.round(_hr.top-_er.top)}px;left:0;right:0;height:${Math.round(_hr.height)}px;pointer-events:none;overflow:hidden;`;
         ghost.style.transform=`translateX(${ghostDir>0?W:-W}px)`;
-        el.querySelector('.home-body:not(.ghost-panel)').parentNode.appendChild(ghost);
+        el.appendChild(ghost);
       }
     }
     const b=document.querySelector('.home-body:not(.ghost-panel)');
@@ -771,10 +774,7 @@ function openCat(catId){
   const entries=S.entries[S.currentChildId]||{};let ntd=0,mins=0;
   Object.values(entries[catId]||{}).filter(e=>!e.deletedAt).forEach(e=>{ntd+=Number(e.ntd||0);mins+=Number(e.mins||0);});
   document.getElementById('detailTitle').innerHTML=`<span>${cat.emoji}</span><span>${cat.name}</span>`;
-  const b=[];
-  if(ntd!==0)b.push(`<span class="nav-badge">${ntd>0?'+':''}${ntd.toLocaleString()} NTD</span>`);
-  if(mins!==0)b.push(`<span class="nav-badge">${mins>0?'+':''}${mins.toLocaleString()} mins</span>`);
-  document.getElementById('detailBadges').innerHTML=b.join('');
+  document.getElementById('detailBadges').innerHTML=''; // totals removed from navbar
   renderDetailContent(catId);showScreen('screenDetail');
 }
 function closeDetail(){S.currentCat=null;showScreen('screenHome');}

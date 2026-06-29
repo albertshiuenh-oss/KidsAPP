@@ -90,7 +90,7 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
   height:clamp(190px,34svh,272px);}
 .grid-section-bot{display:flex;flex-direction:column;gap:5px;flex-shrink:0;
   height:clamp(110px,17svh,136px);}
-.cat-grid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.cat-grid{flex:1;min-height:0;height:0;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .cat-grid-2row{grid-template-rows:1fr 1fr;}
 
 /* ── TILES (emoji + name only, no values) ── */
@@ -504,10 +504,20 @@ function fixLayout(){
   const nb=scr?.querySelector('.navbar');
   const hb=scr?.querySelector('.home-body');
   if(!nb||!hb)return;
-  hb.style.height=(window.innerHeight-nb.offsetHeight)+'px';
-  // safety: reset any stuck swipe transform
-  if(!hb.style.transform||hb.style.transform==='none')
-    hb.style.transform='translateX(0)';
+  // Set home-body height
+  const H=window.innerHeight-nb.getBoundingClientRect().height;
+  hb.style.height=H+'px';
+  // Explicitly size grid sections — iOS Safari needs concrete heights for 1fr to work
+  const prof=hb.querySelector('.profile-card');
+  const gs=hb.querySelector('.grid-section');
+  const gsb=hb.querySelector('.grid-section-bot');
+  if(gs&&gsb){
+    const profH=prof?prof.getBoundingClientRect().height:90;
+    const used=profH+14+20+20+7*5; // dots(14)+profile+hdr1(20)+hdr2(20)+gaps(35)
+    const rem=Math.max(H-used, 200);
+    gs.style.height=Math.min(Math.floor(rem*0.66),290)+'px';
+    gsb.style.height=Math.min(Math.floor(rem*0.34),148)+'px';
+  }
 }
 window.addEventListener('resize',fixLayout);
 window.addEventListener('orientationchange',()=>setTimeout(fixLayout,300));

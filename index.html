@@ -543,6 +543,15 @@ async function registerFaceID(audId){
     else showToast('❌ '+e.name+': '+e.message,4000);
   }
 }
+async function removeFaceID(audId){
+  const aud=S.auditors[audId];if(!aud)return;
+  try{
+    await db.ref(`/auditors/${audId}/credId`).remove();
+    delete S.auditors[audId].credId;
+    showToast('🔓 '+aud.name+' Face ID 已移除');
+    renderSettings();
+  }catch(e){showToast('❌ 移除失敗：'+e.message);}
+}
 async function tryFaceID(audId){
   const aud=S.auditors[audId];
   if(!aud?.credId||!window.PublicKeyCredential)return false;
@@ -1010,8 +1019,11 @@ function renderSettings(){
   Object.entries(S.children).forEach(([id,c])=>{html+=`<div class="person-row"><div class="person-av">${c.photoB64?`<img src="${c.photoB64}">`:(c.emoji||'👤')}</div><div class="person-info"><div class="person-name">${c.name}</div></div><div class="person-acts"><button class="person-act" onclick="openPersonModal('child','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('child','${id}','${c.name}')">🗑️</button></div></div>`;});
   html+=`</div>`;
   html+=`<div class="settings-section"><div class="settings-section-hdr"><span class="settings-section-title">👤 審核人管理</span><button class="settings-add-btn" onclick="openPersonModal('auditor',null)">＋ 新增</button></div>`;
-  Object.entries(S.auditors).forEach(([id,a])=>{const fidBtn=`<button class="person-act" title="${a.credId?'重設 Face ID':'啟用 Face ID'}" onclick="registerFaceID('${id}')">${a.credId?'🔐':'🔓'}</button>`;
-  html+=`<div class="person-row"><div class="person-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div><div class="person-info"><div class="person-name">${a.name}</div><div class="person-sub">${a.credId?'Face ID 已啟用':'PIN 登入'}</div></div><div class="person-acts">${fidBtn}<button class="person-act" onclick="openPersonModal('auditor','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('auditor','${id}','${a.name}')">🗑️</button></div></div>`;});
+  Object.entries(S.auditors).forEach(([id,a])=>{// Face ID button: 🔓 setup / 🔐 re-register + ✕ remove
+  const fidActs=a.credId
+    ?`<button class="person-act" title="重新設定 Face ID" onclick="registerFaceID('${id}')">🔐</button><button class="person-act del" title="移除 Face ID" onclick="removeFaceID('${id}')">✕</button>`
+    :`<button class="person-act" title="啟用 Face ID" onclick="registerFaceID('${id}')">🔓</button>`;
+  html+=`<div class="person-row"><div class="person-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div><div class="person-info"><div class="person-name">${a.name}</div><div class="person-sub" style="color:${a.credId?'var(--teal)':'var(--sub)'}">${a.credId?'🔐 Face ID 已啟用':'🔑 PIN 登入'}</div></div><div class="person-acts">${fidActs}<button class="person-act" onclick="openPersonModal('auditor','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('auditor','${id}','${a.name}')">🗑️</button></div></div>`;});
   html+=`</div>`;
   html+=`<div class="settings-info"><div class="settings-info-title">🏅 KidsAPP</div><div class="settings-info-sub">Firebase Realtime DB</div><button class="cache-clear-btn" onclick="clearCache()">🔄 清除快取並重新載入</button><div style="font-size:10px;color:var(--sub);margin-top:6px;">App 顯示舊版畫面時請點此強制更新</div></div>`;
   document.getElementById('settingsContent').innerHTML=html;

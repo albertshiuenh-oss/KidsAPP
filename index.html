@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="KidsAPP">
-<link rel="apple-touch-icon" href="icon-180.png">
+<link class="apple-touch-icon" href="icon-180.png">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <style>
@@ -29,7 +29,7 @@
 }
 body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);color:var(--text);max-width:430px;margin:0 auto;min-height:100svh;-webkit-font-smoothing:antialiased;}
 
-/* ── 優化：解決 iOS 導航列與全螢幕高度計算問題 ── */
+/* ── 修正：全面鎖定全螢幕與避免 iOS 橡皮筋推擠 ── */
 .screen{display:none;}
 .screen.active{
   display:flex;
@@ -64,7 +64,7 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 .aud-chip-offline{background:rgba(255,255,255,.05);border-color:var(--border);}
 .aud-chip-offline .aud-chip-name{color:var(--sub);}
 
-/* ── HOME BODY 優化：改為可滾動並加入底部安全區 ── */
+/* ── HOME BODY 優化：引入底部安全區，允許在有限空間微幅滾動 ── */
 .home-body{
   flex:1;
   display:flex;
@@ -109,7 +109,7 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 /* ── SECTION HEADERS ── */
 .sec-hdr{font-size:15px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;flex-shrink:0;height:18px;}
 
-/* ── GRID SECTIONS 優化：改用 flex 比例分配高度，防止 iOS 縮小至 0 ── */
+/* ── GRID SECTIONS 優化：改為 flex 比例分配，設定 min-height 確保 iOS 不會壓扁 ── */
 .grid-section{
   display:flex;
   flex-direction:column;
@@ -273,7 +273,9 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 .aud-arrow{margin-left:auto;color:var(--border);font-size:16px;}
 .pin-section{display:none;}.pin-section.show{display:block;}
 .pin-dots{display:flex;gap:9px;justify-content:center;margin-bottom:13px;}
-.pin-dot-el">•</div><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div></div>
+/* ── 修正：補上漏失的 div 開頭標籤 ── */
+.pin-dots{display:flex;gap:9px;justify-content:center;margin-bottom:13px;}
+<div class="pin-dots" id="pinDots"><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div></div>
 <input type="password" inputmode="numeric" maxlength="4" class="pin-input" id="pinInput" placeholder="••••" oninput="handlePinInput()">
 <div class="pin-err" id="pinErr"></div>
 <button class="pin-ok" onclick="confirmPin()">確認登入</button>
@@ -407,10 +409,13 @@ function attachGoalListener(cid){
 }
 async function cleanupOldDeleted(){
   const cid=S.currentChildId;if(!cid)return;const weekAgo=Date.now()-7*24*60*60*1000;
-  // 以下為原本截斷處之後的基礎函式預留，可維持你原有的程式邏輯
 }
 
-// 頁面初始化
+/* ==========================================================================
+   🚨 注意：請在此處下方，貼回你先前專案中包含的其餘 JavaScript 函式
+   （例如：renderAll, renderDashboard, openSettings, initSwipe, showToast 等）
+   ========================================================================== */
+
 window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>

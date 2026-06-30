@@ -321,6 +321,25 @@ textarea.form-inp{resize:none;line-height:1.5;}
 .tx-sum-label{font-size:12px;}
 .tx-sum-val{font-size:20px;}
 .filter-btn{font-size:15px;padding:9px;}
+.fid-btn{border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;padding:5px 10px;white-space:nowrap;}
+.fid-add{background:rgba(72,196,255,.18);color:#48c4ff;border:1px solid rgba(72,196,255,.35);}
+.fid-set{background:rgba(255,213,79,.12);color:#ffd54f;border:1px solid rgba(255,213,79,.25);}
+.fid-del{background:rgba(255,82,82,.12);color:#ff5252;border:1px solid rgba(255,82,82,.25);}
+
+/* ── Entry form: ~2x larger fonts for readability ── */
+#modalEntry .modal-title{font-size:30px;}
+#modalEntry .form-lbl{font-size:22px;margin-bottom:8px;}
+#modalEntry .form-inp{font-size:24px;padding:16px 18px;border-radius:14px;}
+#modalEntry textarea.form-inp{font-size:22px;line-height:1.7;}
+#modalEntry .tog-btn{font-size:20px;padding:16px 10px;border-radius:14px;}
+#modalEntry .amt-lbl{font-size:16px;}
+#modalEntry .amt-inp{font-size:28px;padding:16px;border-radius:12px;}
+#modalEntry .form-aud-row{font-size:18px;padding:14px 16px;border-radius:12px;}
+#modalEntry .tx-hint-box{font-size:18px;padding:12px 16px;}
+.form-btn-row{display:flex;gap:10px;margin-top:6px;}
+.form-btn-row .save-btn{flex:1;font-size:22px;padding:17px;border-radius:14px;}
+.cancel-btn{flex:1;font-size:22px;padding:17px;border-radius:14px;background:var(--card2);color:var(--sub);border:1.5px solid var(--border);font-weight:700;cursor:pointer;}
+.cancel-btn:active{background:var(--card);}
 .rec-amts-inline{flex:1;display:flex;gap:8px;align-items:center;justify-content:flex-end;padding-right:2px;}
 .rec-amts-inline .rec-amt{font-size:17px;}
 </style>
@@ -519,9 +538,15 @@ async function init(){
 function b64ToArr(b64){try{const s=atob(b64.replace(/-/g,'+').replace(/_/g,'/'));const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer;}catch(e){return null;}}
 function arrToB64(buf){return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');}
 async function registerFaceID(audId){
-  if(!window.PublicKeyCredential){showToast('❌ 此裝置不支援 Face ID');return;}
-  const aud=S.auditors[audId];if(!aud)return;
-  showToast('🔐 請依照系統提示完成 Face ID…',8000);
+  // Step 1: immediate visible feedback
+  showToast('🔐 Face ID 設定中…',10000);
+  const aud=S.auditors[audId];
+  if(!aud){showToast('❌ 找不到審核人資料');return;}
+  // Step 2: check support
+  if(!window.PublicKeyCredential){showToast('❌ 此裝置或瀏覽器不支援 Face ID / WebAuthn');return;}
+  const ok=await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().catch(()=>false);
+  if(!ok){showToast('❌ 此裝置未設定 Face ID 或 Touch ID');return;}
+  // Step 3: register
   try{
     const ch=crypto.getRandomValues(new Uint8Array(32));
     const cred=await navigator.credentials.create({publicKey:{
@@ -529,8 +554,12 @@ async function registerFaceID(audId){
       rp:{name:'KidsAPP',id:location.hostname},
       user:{id:new TextEncoder().encode(audId),name:aud.name,displayName:aud.name},
       pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],
-      authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},
-      timeout:60000
+      authenticatorSelection:{
+        authenticatorAttachment:'platform',
+        userVerification:'preferred',  // 'preferred' more compatible than 'required'
+        residentKey:'preferred'
+      },
+      timeout:120000
     }});
     const credId=arrToB64(cred.rawId);
     await db.ref(`/auditors/${audId}/credId`).set(credId);
@@ -539,8 +568,10 @@ async function registerFaceID(audId){
     renderSettings();
   }catch(e){
     console.error('FaceID register:',e.name,e.message);
-    if(e.name==='NotAllowedError')showToast('取消設定 Face ID');
-    else showToast('❌ '+e.name+': '+e.message,4000);
+    if(e.name==='NotAllowedError')showToast('已取消或 Face ID 驗證未通過',3000);
+    else if(e.name==='InvalidStateError')showToast('⚠️ 此裝置已有 Face ID 設定，請先移除再重設',4000);
+    else if(e.name==='NotSupportedError')showToast('❌ 此瀏覽器版本不支援，請將 App 加入主畫面後再試',5000);
+    else showToast('❌ '+e.name+': '+e.message,5000);
   }
 }
 async function removeFaceID(audId){
@@ -561,7 +592,7 @@ async function tryFaceID(audId){
     await navigator.credentials.get({publicKey:{
       challenge:ch,
       allowCredentials:[{type:'public-key',id:buf}],
-      userVerification:'required',
+      userVerification:'preferred',
       timeout:60000
     }});
     return true;
@@ -939,9 +970,7 @@ function buildEntryForm(cat,existing){
     h+=`<div class="form-grp"><label class="form-lbl">貨幣類型</label><div class="tog-row"><button class="tog-btn ${existCurr==='money'?'active ':''}t-teal" id="togCurA" onclick="setTxCurr('money')">💰 NTD</button><button class="tog-btn ${existCurr==='time'?'active ':''}t-teal" id="togCurB" onclick="setTxCurr('time')">⏱ Mins</button></div></div>`;
     h+=`<div class="form-grp"><label class="form-lbl">金額（輸入正數）</label><input type="number" class="amt-inp" id="fAmount" placeholder="0" min="0" step="10" value="${existAmt||''}"><div class="tx-hint-box ${existDir}" id="txHintBox">${existDir==='withdraw'?'💸 提領後從總額扣除':'💰 存入後累計至總額'}</div></div>`;
   } else if(cat.type==='goal'){
-    const isPass=ex.passed!==false;
-    h+=`<div class="form-grp"><label class="form-lbl">結果</label><div class="tog-row"><button class="tog-btn ${isPass?'active ':''}t-pass" id="togA" onclick="setTog('pass')">✅ Passed</button><button class="tog-btn ${!isPass?'active ':''}t-fail" id="togB" onclick="setTog('fail')">❌ Failed</button></div></div>`;
-    h+=`<div class="form-grp"><label class="form-lbl">金額（正數）</label><div class="amt-row"><div class="amt-grp"><span class="amt-lbl">NTD</span><input type="number" class="amt-inp" id="fNTD" placeholder="0" min="0" step="10" value="${existing?Math.abs(Number(ex.ntd||0)):''}"></div><div class="amt-grp"><span class="amt-lbl">Mins</span><input type="number" class="amt-inp" id="fMins" placeholder="0" min="0" step="10" value="${existing?Math.abs(Number(ex.mins||0)):''}"></div></div></div>`;
+    h+=`<div class="form-grp"><label class="form-lbl">金額</label><div class="amt-row"><div class="amt-grp"><span class="amt-lbl">NTD</span><input type="number" class="amt-inp" id="fNTD" placeholder="0" min="0" step="10" value="${existing?Math.abs(Number(ex.ntd||0)):''}"></div><div class="amt-grp"><span class="amt-lbl">Mins</span><input type="number" class="amt-inp" id="fMins" placeholder="0" min="0" step="10" value="${existing?Math.abs(Number(ex.mins||0)):''}"></div></div></div>`;
   } else {
     const isReward=!existing||(Number(ex.ntd||0)>=0&&Number(ex.mins||0)>=0);
     h+=`<div class="form-grp"><label class="form-lbl">類型</label><div class="tog-row"><button class="tog-btn ${isReward?'active ':''}t-green" id="togA" onclick="setBTog('reward')">👍 嘉獎</button><button class="tog-btn ${!isReward?'active ':''}t-org" id="togB" onclick="setBTog('punish')">👎 懲罰</button></div></div>`;
@@ -953,7 +982,7 @@ function buildEntryForm(cat,existing){
   const noteRows=isVocab?4:3;
   h+=`<div class="form-grp"><label class="form-lbl">${noteLabel}</label><textarea class="form-inp" id="fNote" rows="${noteRows}" placeholder="${notePlaceholder}" style="resize:none;line-height:1.6;">${ex.note||''}</textarea></div>`;
   h+=`<div class="form-aud-row">審核人：${S.currentAuditor.name}</div>`;
-  h+=`<button class="save-btn" onclick="saveEntry('${cat.id}')">💾 ${existing?'更新記錄':'儲存記錄'}</button>`;
+  h+=`<div class="form-btn-row"><button class="cancel-btn" onclick="closeModal('modalEntry')">取消</button><button class="save-btn" onclick="saveEntry('${cat.id}')">儲存</button></div>`;
   return h;
 }
 function setTog(v){document.getElementById('togA').className=`tog-btn ${v==='pass'?'active ':''}t-pass`;document.getElementById('togB').className=`tog-btn ${v==='fail'?'active ':''}t-fail`;}
@@ -968,11 +997,11 @@ async function saveEntry(catId){
   const dateVal=isEdit?null:document.getElementById('fDate')?.value;if(!isEdit&&!dateVal){showToast('請選擇日期');return;}
   let ntd=0,mins=0;const note=(document.getElementById('fNote')?.value||'').trim();
   if(cat.type==='transactions'){const isW=document.getElementById('togTxA').classList.contains('active');const isM=document.getElementById('togCurA').classList.contains('active');const amt=Math.abs(parseFloat(document.getElementById('fAmount').value)||0);if(!amt){showToast('請輸入金額');return;}if(isM)ntd=(isW?-1:1)*amt;else mins=(isW?-1:1)*amt;}
-  else if(cat.type==='goal'){const isFail=document.getElementById('togB').classList.contains('active');const s=isFail?-1:1;ntd=s*Math.abs(parseFloat(document.getElementById('fNTD').value)||0);mins=s*Math.abs(parseFloat(document.getElementById('fMins').value)||0);if(!ntd&&!mins){showToast('請至少輸入一個金額');return;}}
+  else if(cat.type==='goal'){ntd=Math.abs(parseFloat(document.getElementById('fNTD').value)||0);mins=Math.abs(parseFloat(document.getElementById('fMins').value)||0);if(!ntd&&!mins){showToast('請至少輸入一個金額');return;}}
   else{const isP=document.getElementById('togB').classList.contains('active');const s=isP?-1:1;ntd=s*Math.abs(parseFloat(document.getElementById('fNTD').value)||0);mins=s*Math.abs(parseFloat(document.getElementById('fMins').value)||0);if(!ntd&&!mins){showToast('請至少輸入一個金額');return;}}
   try{
-    if(isEdit){const upd={ntd,mins,auditor:S.currentAuditor.name,note,editedAt:Date.now()};if(cat.type==='goal')upd.passed=document.getElementById('togA').classList.contains('active');await db.ref(`/entries/${S.currentChildId}/${catId}/${S.editingEntryId}`).update(upd);showToast('✅ 記錄已更新！');}
-    else{const entry={date:fmtDate(dateVal),ntd,mins,auditor:S.currentAuditor.name,note,createdAt:Date.now()};if(cat.type==='goal')entry.passed=document.getElementById('togA').classList.contains('active');await db.ref(`/entries/${S.currentChildId}/${catId}`).push(entry);showToast('✅ 記錄已儲存！');}
+    if(isEdit){const upd={ntd,mins,auditor:S.currentAuditor.name,note,editedAt:Date.now()};await db.ref(`/entries/${S.currentChildId}/${catId}/${S.editingEntryId}`).update(upd);showToast('✅ 記錄已更新！');}
+    else{const entry={date:fmtDate(dateVal),ntd,mins,auditor:S.currentAuditor.name,note,createdAt:Date.now()};await db.ref(`/entries/${S.currentChildId}/${catId}`).push(entry);showToast('✅ 記錄已儲存！');}
     S.editingEntryId=null;closeModal('modalEntry');
   }catch(e){console.error(e);showToast('❌ 儲存失敗');}
 }
@@ -1021,8 +1050,8 @@ function renderSettings(){
   html+=`<div class="settings-section"><div class="settings-section-hdr"><span class="settings-section-title">👤 審核人管理</span><button class="settings-add-btn" onclick="openPersonModal('auditor',null)">＋ 新增</button></div>`;
   Object.entries(S.auditors).forEach(([id,a])=>{// Face ID button: 🔓 setup / 🔐 re-register + ✕ remove
   const fidActs=a.credId
-    ?`<button class="person-act" title="重新設定 Face ID" onclick="registerFaceID('${id}')">🔐</button><button class="person-act del" title="移除 Face ID" onclick="removeFaceID('${id}')">✕</button>`
-    :`<button class="person-act" title="啟用 Face ID" onclick="registerFaceID('${id}')">🔓</button>`;
+    ?`<button class="fid-btn fid-set" onclick="registerFaceID('${id}')">🔐 重設</button><button class="fid-btn fid-del" onclick="removeFaceID('${id}')">✕ 移除</button>`
+    :`<button class="fid-btn fid-add" onclick="registerFaceID('${id}')">🔓 設定 Face ID</button>`;
   html+=`<div class="person-row"><div class="person-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div><div class="person-info"><div class="person-name">${a.name}</div><div class="person-sub" style="color:${a.credId?'var(--teal)':'var(--sub)'}">${a.credId?'🔐 Face ID 已啟用':'🔑 PIN 登入'}</div></div><div class="person-acts">${fidActs}<button class="person-act" onclick="openPersonModal('auditor','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('auditor','${id}','${a.name}')">🗑️</button></div></div>`;});
   html+=`</div>`;
   html+=`<div class="settings-info"><div class="settings-info-title">🏅 KidsAPP</div><div class="settings-info-sub">Firebase Realtime DB</div><button class="cache-clear-btn" onclick="clearCache()">🔄 清除快取並重新載入</button><div style="font-size:10px;color:var(--sub);margin-top:6px;">App 顯示舊版畫面時請點此強制更新</div></div>`;

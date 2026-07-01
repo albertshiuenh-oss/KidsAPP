@@ -77,6 +77,10 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 .p-name{font-size:24px;font-weight:800;color:#fff;letter-spacing:-.3px;}
 .p-stats{display:flex;gap:18px;}
 .p-stat{display:flex;flex-direction:column;gap:2px;}
+.p-stat-tap{cursor:pointer;padding:4px 6px;border-radius:10px;transition:background .1s;}
+.p-stat-tap:active{background:rgba(255,255,255,.08);}
+.hist-total{font-size:30px;font-weight:800;text-align:center;padding:16px;margin-bottom:12px;background:var(--card);border-radius:14px;}
+.hist-cat-badge{font-size:13px;padding:2px 8px;background:rgba(255,255,255,.07);border-radius:7px;color:var(--sub);}
 .p-stat-lbl{font-size:12px;color:rgba(255,255,255,.55);font-weight:500;}
 .p-stat-num{font-size:32px;font-weight:800;letter-spacing:-.5px;line-height:1;}
 .p-stat-num.t{color:#48c4ff;}
@@ -256,6 +260,12 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 .pin-err{font-size:11px;color:var(--del-red);text-align:center;min-height:17px;margin:5px 0;}
 .pin-ok{width:100%;padding:13px;background:var(--teal);color:#07102a;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:5px;}
 .pin-back{width:100%;padding:9px;background:transparent;color:var(--sub);border:none;font-size:12px;cursor:pointer;margin-top:3px;}
+.remember-row{display:flex;align-items:center;gap:8px;padding:10px 0 4px;cursor:pointer;}
+.remember-chk{width:18px;height:18px;accent-color:var(--teal);cursor:pointer;flex-shrink:0;}
+.remember-lbl{font-size:13px;color:var(--sub);cursor:pointer;user-select:none;}
+.device-banner{display:flex;align-items:center;background:var(--teal-dim);border:1px solid var(--teal-border);border-radius:12px;padding:10px 13px;margin-bottom:10px;gap:8px;}
+.device-banner-txt{flex:1;font-size:13px;color:var(--teal);}
+.device-logout{background:none;border:1px solid rgba(255,82,82,.3);color:#ff5252;font-size:11px;font-weight:600;padding:4px 10px;border-radius:8px;cursor:pointer;}
 
 /* Forms */
 .form-grp{margin-bottom:11px;}
@@ -303,10 +313,6 @@ textarea.form-inp{resize:none;line-height:1.5;}
 .rec-edited-inline{font-size:13px;color:var(--sub);font-style:italic;white-space:nowrap;}
 .rec-amts{gap:10px;margin-bottom:4px;}
 .add-rec-btn.locked{font-size:18px;}
-.fid-btn{border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;padding:5px 10px;white-space:nowrap;}
-.fid-add{background:rgba(72,196,255,.18);color:#48c4ff;border:1px solid rgba(72,196,255,.35);}
-.fid-set{background:rgba(255,213,79,.12);color:#ffd54f;border:1px solid rgba(255,213,79,.25);}
-.fid-del{background:rgba(255,82,82,.12);color:#ff5252;border:1px solid rgba(255,82,82,.25);}
 /* ── 3-col input row ── */
 .three-col-input{display:flex;height:72px;background:var(--card);border:2px solid var(--teal-border);border-radius:14px;overflow:hidden;margin-bottom:10px;}
 .tci-num{flex:5;display:flex;align-items:center;justify-content:center;}
@@ -340,6 +346,15 @@ textarea.form-inp{resize:none;line-height:1.5;}
 </head>
 <body>
 
+<!-- HISTORY SCREEN -->
+<div id="screenHistory" class="screen">
+  <div class="navbar">
+    <button class="nav-back" onclick="closeHistory()">‹ 返回</button>
+    <div class="nav-center" id="historyTitle" style="font-size:16px;"></div>
+  </div>
+  <div class="detail-body"><div class="detail-pad" id="historyContent"></div></div>
+</div>
+
 <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoSelected(event)">
 
 <!-- HOME -->
@@ -359,12 +374,12 @@ textarea.form-inp{resize:none;line-height:1.5;}
       <div class="p-info">
         <div class="p-name" id="childName">…</div>
         <div class="p-stats">
-          <div class="p-stat">
-            <div class="p-stat-lbl">NTD</div>
+          <div class="p-stat p-stat-tap" onclick="openHistory('ntd')" title="點擊查看明細">
+            <div class="p-stat-lbl">NTD ›</div>
             <div class="p-stat-num t" id="statNTD">—</div>
           </div>
-          <div class="p-stat">
-            <div class="p-stat-lbl">mins</div>
+          <div class="p-stat p-stat-tap" onclick="openHistory('mins')" title="點擊查看明細">
+            <div class="p-stat-lbl">mins ›</div>
             <div class="p-stat-num o" id="statMins">—</div>
           </div>
         </div>
@@ -410,6 +425,10 @@ textarea.form-inp{resize:none;line-height:1.5;}
       <div class="pin-dots" id="pinDots"><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div><div class="pin-dot-el">•</div></div>
       <input type="password" inputmode="numeric" maxlength="4" class="pin-input" id="pinInput" placeholder="••••" oninput="handlePinInput()">
       <div class="pin-err" id="pinErr"></div>
+      <label class="remember-row" for="rememberChk">
+        <input type="checkbox" class="remember-chk" id="rememberChk">
+        <span class="remember-lbl">記住此裝置（下次自動登入）</span>
+      </label>
       <button class="pin-ok" onclick="confirmPin()">確認登入</button>
       <button class="pin-back" onclick="backToStep1()">← 返回</button>
     </div>
@@ -521,6 +540,27 @@ async function handlePhotoSelected(e){
 }
 function pickPhoto(){document.getElementById('photoInput').click();}
 
+function openHistory(type){
+  const child=S.children[S.currentChildId];if(!child)return;
+  const unit=type==='ntd'?'NTD':'mins';
+  document.getElementById('historyTitle').textContent=`${child.name} ${unit} 明細`;
+  const entries=S.entries[S.currentChildId]||{};
+  const all=[];
+  CATS.forEach(cat=>{
+    Object.entries(entries[cat.id]||{}).filter(([,e])=>!e.deletedAt).forEach(([,e])=>{
+      const v=Number(type==='ntd'?e.ntd:e.mins||0);
+      if(v!==0)all.push({cat,e,v});
+    });
+  });
+  all.sort((a,b)=>(b.e.createdAt||0)-(a.e.createdAt||0));
+  const total=all.reduce((s,r)=>s+r.v,0);
+  let html=`<div class="hist-total ${total>=0?'pos':'neg'}">${total>0?'+':''}${total.toLocaleString()} ${unit}</div>`;
+  if(!all.length)html+=`<div class="empty-state">📭 尚無記錄</div>`;
+  else html+=all.map(({cat,e,v})=>`<div class="rcard"><div class="rec-top"><span style="font-size:20px;margin-right:4px;">${cat.emoji}</span><span class="rec-date">${e.date||'—'}</span><span class="hist-cat-badge">${cat.name}</span><div class="rec-amts-inline"><span class="rec-amt ${v>0?'pos':'neg'}">${v>0?'+':''}${v.toLocaleString()} ${unit}</span></div></div>${e.note?`<div class="rec-note">${e.note}</div>`:''}</div>`).join('');
+  document.getElementById('historyContent').innerHTML=html;
+  showScreen('screenHistory');
+}
+function closeHistory(){showScreen('screenHome');}
 async function init(){
   try{
     const[as,cs]=await Promise.all([db.ref('/auditors').once('value'),db.ref('/children').once('value')]);
@@ -534,69 +574,7 @@ async function init(){
     }
     
 // ── Face ID (WebAuthn) ──
-function b64ToArr(b64){try{const s=atob(b64.replace(/-/g,'+').replace(/_/g,'/'));const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u.buffer;}catch(e){return null;}}
-function arrToB64(buf){return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');}
-async function registerFaceID(audId){
-  // Step 1: immediate visible feedback
-  showToast('🔐 Face ID 設定中…',10000);
-  const aud=S.auditors[audId];
-  if(!aud){showToast('❌ 找不到審核人資料');return;}
-  // Step 2: check support
-  if(!window.PublicKeyCredential){showToast('❌ 此裝置或瀏覽器不支援 Face ID / WebAuthn');return;}
-  const ok=await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().catch(()=>false);
-  if(!ok){showToast('❌ 此裝置未設定 Face ID 或 Touch ID');return;}
-  // Step 3: register
-  try{
-    const ch=crypto.getRandomValues(new Uint8Array(32));
-    const cred=await navigator.credentials.create({publicKey:{
-      challenge:ch,
-      rp:{name:'KidsAPP',id:location.hostname},
-      user:{id:new TextEncoder().encode(audId),name:aud.name,displayName:aud.name},
-      pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],
-      authenticatorSelection:{
-        authenticatorAttachment:'platform',
-        userVerification:'preferred',  // 'preferred' more compatible than 'required'
-        residentKey:'preferred'
-      },
-      timeout:120000
-    }});
-    const credId=arrToB64(cred.rawId);
-    await db.ref(`/auditors/${audId}/credId`).set(credId);
-    S.auditors[audId].credId=credId;
-    showToast('✅ '+aud.name+' Face ID 已啟用！');
-    renderSettings();
-  }catch(e){
-    console.error('FaceID register:',e.name,e.message);
-    if(e.name==='NotAllowedError')showToast('已取消或 Face ID 驗證未通過',3000);
-    else if(e.name==='InvalidStateError')showToast('⚠️ 此裝置已有 Face ID 設定，請先移除再重設',4000);
-    else if(e.name==='NotSupportedError')showToast('❌ 此瀏覽器版本不支援，請將 App 加入主畫面後再試',5000);
-    else showToast('❌ '+e.name+': '+e.message,5000);
-  }
-}
-async function removeFaceID(audId){
-  const aud=S.auditors[audId];if(!aud)return;
-  try{
-    await db.ref(`/auditors/${audId}/credId`).remove();
-    delete S.auditors[audId].credId;
-    showToast('🔓 '+aud.name+' Face ID 已移除');
-    renderSettings();
-  }catch(e){showToast('❌ 移除失敗：'+e.message);}
-}
-async function tryFaceID(audId){
-  const aud=S.auditors[audId];
-  if(!aud?.credId||!window.PublicKeyCredential)return false;
-  try{
-    const ch=crypto.getRandomValues(new Uint8Array(32));
-    const buf=b64ToArr(aud.credId);if(!buf)return false;
-    await navigator.credentials.get({publicKey:{
-      challenge:ch,
-      allowCredentials:[{type:'public-key',id:buf}],
-      userVerification:'preferred',
-      timeout:60000
-    }});
-    return true;
-  }catch(e){return false;}
-}
+try{const sv=localStorage.getItem('kidsapp_device_aud');if(sv){const {id}=JSON.parse(sv);if(S.auditors[id]){S.currentAuditor={id,...S.auditors[id]};}}}catch(e){}
 renderAll();initSwipe();initDetailSwipe();fixLayout();
 
   }catch(err){console.error(err);showToast('⚠️ 連線失敗，請重新整理',4000);document.getElementById('childName').textContent='連線失敗';}
@@ -735,15 +713,30 @@ function initSwipe(){
         if(b){b.style.transition='transform 0.25s ease-in-out';b.style.transform='translateX(-100%)';}
         if(ghost){ghost.style.transition='transform 0.25s ease-in-out';ghost.style.transform='translateX(0)';}
         setTimeout(()=>{
-          selectChild(ids[idx+1]);
-          requestAnimationFrame(()=>{if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);ghost=null;});
+          const _nid=ids[idx+1];
+          S.currentChildId=_nid;
+          // Render main panel with whatever data we have (no flicker gap)
+          const _hb=document.querySelector('.home-body:not(.ghost-panel)');
+          if(_hb){_hb.style.transition='none';_hb.style.transform='translateX(0)';}
+          renderDashboard();fixLayout();
+          // Remove ghost AFTER main panel is updated
+          if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);ghost=null;
+          // Load fresh data in background
+          Promise.all([db.ref(`/entries/${_nid}`).once('value'),db.ref(`/goals/${_nid}`).once('value')])
+          .then(([es,gs])=>{S.entries[_nid]=es.val()||{};S.goals[_nid]=gs.val()||{};attachMainListener(_nid);attachGoalListener(_nid);renderDashboard();});
         },260);
       } else if(dx>0&&idx>0){
         if(b){b.style.transition='transform 0.25s ease-in-out';b.style.transform='translateX(100%)';}
         if(ghost){ghost.style.transition='transform 0.25s ease-in-out';ghost.style.transform='translateX(0)';}
         setTimeout(()=>{
-          selectChild(ids[idx-1]);
-          requestAnimationFrame(()=>{if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);ghost=null;});
+          const _nid=ids[idx-1];
+          S.currentChildId=_nid;
+          const _hb=document.querySelector('.home-body:not(.ghost-panel)');
+          if(_hb){_hb.style.transition='none';_hb.style.transform='translateX(0)';}
+          renderDashboard();fixLayout();
+          if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);ghost=null;
+          Promise.all([db.ref(`/entries/${_nid}`).once('value'),db.ref(`/goals/${_nid}`).once('value')])
+          .then(([es,gs])=>{S.entries[_nid]=es.val()||{};S.goals[_nid]=gs.val()||{};attachMainListener(_nid);attachGoalListener(_nid);renderDashboard();});
         },260);
       } else {
         if(b){b.style.transition='transform 0.35s cubic-bezier(0.34,1.56,0.64,1)';b.style.transform='translateX(0)';}
@@ -1084,20 +1077,10 @@ function renderSettings(){
   html+=`</div>`;
   html+=`<div class="settings-section"><div class="settings-section-hdr"><span class="settings-section-title">👤 審核人管理</span><button class="settings-add-btn" onclick="openPersonModal('auditor',null)">＋ 新增</button></div>`;
   Object.entries(S.auditors).forEach(([id,a])=>{// Face ID button: 🔓 setup / 🔐 re-register + ✕ remove
-  const fidActs=a.credId
-    ?`<button id="fr_${id}" class="fid-btn fid-set">🔐 重設</button><button id="fd_${id}" class="fid-btn fid-del">✕ 移除</button>`
-    :`<button id="fr_${id}" class="fid-btn fid-add">🔓 設定 Face ID</button>`;
-  html+=`<div class="person-row"><div class="person-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div><div class="person-info"><div class="person-name">${a.name}</div><div class="person-sub" style="color:${a.credId?'var(--teal)':'var(--sub)'}">${a.credId?'🔐 Face ID 已啟用':'🔑 PIN 登入'}</div></div><div class="person-acts">${fidActs}<button class="person-act" onclick="openPersonModal('auditor','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('auditor','${id}','${a.name}')">🗑️</button></div></div>`;});
+  html+=`<div class="person-row"><div class="person-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div><div class="person-info"><div class="person-name">${a.name}</div><div class="person-sub">${a.role||''}</div></div><div class="person-acts"><button class="person-act" onclick="openPersonModal('auditor','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('auditor','${id}','${a.name}')">🗑️</button></div></div>`;});
   html+=`</div>`;
   html+=`<div class="settings-info"><div class="settings-info-title">🏅 KidsAPP</div><div class="settings-info-sub">Firebase Realtime DB</div><button class="cache-clear-btn" onclick="clearCache()">🔄 清除快取並重新載入</button><div style="font-size:10px;color:var(--sub);margin-top:6px;">App 顯示舊版畫面時請點此強制更新</div></div>`;
   document.getElementById('settingsContent').innerHTML=html;
-  // Wire Face ID buttons via addEventListener (more reliable than onclick in innerHTML)
-  Object.entries(S.auditors).forEach(([id])=>{
-    const r=document.getElementById('fr_'+id);
-    const d=document.getElementById('fd_'+id);
-    if(r)r.addEventListener('click',()=>registerFaceID(id));
-    if(d)d.addEventListener('click',()=>removeFaceID(id));
-  });
 }
 function openPersonModal(type,id){S.editingPersonType=type;S.editingPersonId=id;S.pendingPhoto=null;const existing=id?(type==='child'?S.children[id]:S.auditors[id]):null;document.getElementById('personTitle').textContent=id?(type==='child'?'✏️ 編輯孩子':'✏️ 編輯審核人'):(type==='child'?'➕ 新增孩子':'➕ 新增審核人');document.getElementById('personForm').innerHTML=buildPersonForm(type,existing);showModal('modalPerson');}
 function buildPersonForm(type,ex){
@@ -1153,29 +1136,14 @@ function selectChild(id){
 }
 
 function openAuditorModal(){
-  document.getElementById('audList').innerHTML=Object.entries(S.auditors).map(([id,a])=>`<div class="aud-item" onclick="selectAuditor('${id}')"><div class="aud-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div><div><div class="aud-item-name">${a.name}</div><div class="aud-item-role">${a.role||''}</div></div><div class="aud-arrow">›</div></div>`).join('');
+  let banner='';
+  try{const saved=localStorage.getItem('kidsapp_device_aud');if(saved){const {id}=JSON.parse(saved);if(S.auditors[id])banner=`<div class="device-banner"><span class="device-banner-txt">🔒 已記住：${S.auditors[id].name}</span><button class="device-logout" onclick="forgetDevice()">清除記憶</button></div>`;}}catch(e){}
+  document.getElementById('audList').innerHTML=banner+Object.entries(S.auditors).map(([id,a])=>`<div class="aud-item" onclick="selectAuditor('${id}')"><div class="aud-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div><div><div class="aud-item-name">${a.name}</div><div class="aud-item-role">${a.role||''}</div></div><div class="aud-arrow">›</div></div>`).join('');
   document.getElementById('step1').style.display='block';document.getElementById('step2').classList.remove('show');showModal('modalAud');
 }
+function forgetDevice(){localStorage.removeItem('kidsapp_device_aud');S.currentAuditor=null;renderAudChip();closeModal('modalAud');showToast('已清除裝置記憶');}
 function selectAuditor(id){
   const a=S.auditors[id];
-  if(a.credId){
-    showToast('🔐 Face ID 驗證中…',4000);
-    tryFaceID(id).then(ok=>{
-      if(ok){
-        S.currentAuditor={id,...a};closeModal('modalAud');renderAudChip();
-        showToast('✅ 歡迎，'+a.name+'！');
-        if(S.currentCat)renderDetailContent(S.currentCat);
-        if(S.pendingVerify){const pv=S.pendingVerify;S.pendingVerify=null;setTimeout(()=>verifyGoal(pv.catId,pv.goalId,pv.result),400);}
-      } else {
-        showToast('Face ID 失敗，請輸入 PIN',2000);
-        showPinStep(id,a);
-      }
-    });
-  } else {
-    showPinStep(id,a);
-  }
-}
-function showPinStep(id,a){
   S.pendingAuditor={id,...a};
   document.getElementById('pinTitle').textContent=`${a.emoji||'👤'} ${a.name}`;
   document.getElementById('pinInput').value='';document.getElementById('pinErr').textContent='';updateDots(0);
@@ -1188,7 +1156,9 @@ function confirmPin(){
   const pin=document.getElementById('pinInput').value;
   if(pin!==S.pendingAuditor.pin){document.getElementById('pinErr').textContent='❌ PIN 錯誤，請再試一次';document.getElementById('pinInput').value='';updateDots(0);return;}
   S.currentAuditor={...S.pendingAuditor};S.pendingAuditor=null;
-  closeModal('modalAud');renderAudChip();showToast(`✅ 歡迎，${S.currentAuditor.name}！`);
+  if(document.getElementById('rememberChk')?.checked){localStorage.setItem('kidsapp_device_aud',JSON.stringify({id:S.currentAuditor.id}));showToast(`✅ 歡迎，${S.currentAuditor.name}！已記住此裝置`);}
+  else showToast(`✅ 歡迎，${S.currentAuditor.name}！`);
+  closeModal('modalAud');renderAudChip();
   if(S.currentCat)renderDetailContent(S.currentCat);
   if(S.pendingVerify){const pv=S.pendingVerify;S.pendingVerify=null;setTimeout(()=>verifyGoal(pv.catId,pv.goalId,pv.result),400);}
 }

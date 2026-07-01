@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,interactive-widget=resizes-visual">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>KidsAPP</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#07102a">
@@ -225,18 +225,8 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 .modal-overlay.show{opacity:1;pointer-events:all;}
 .modal-sheet{background:#0d1a40;border-radius:22px 22px 0 0;width:100%;max-width:430px;padding:15px 17px 44px;transform:translateY(100%);transition:transform .28s cubic-bezier(.34,1.2,.64,1);max-height:90vh;overflow-y:auto;border-top:1px solid var(--border);}
 .modal-overlay.show .modal-sheet{transform:translateY(0);}
-/* ── Entry modal: slides from TOP, stops above keyboard ── */
-#modalEntry{align-items:flex-start;}
-#modalEntry .modal-sheet{
-  border-radius:0 0 22px 22px;
-  border-top:none;
-  border-bottom:1px solid var(--border);
-  transform:translateY(-100%);
-  /* Height reserves space for 注音 (tallest keyboard ~300px) */
-  max-height:calc(100svh - 300px);
-  display:flex;flex-direction:column;
-  padding:0;
-}
+/* ── Entry modal: bottom-up sheet, flex layout for header ── */
+#modalEntry .modal-sheet{display:flex;flex-direction:column;padding:0;max-height:90vh;}
 #modalEntry.show .modal-sheet{transform:translateY(0);}
 /* Header: title left, buttons right */
 .modal-header{display:flex;align-items:center;padding:14px 16px 12px;border-bottom:1px solid var(--border);flex-shrink:0;}
@@ -607,16 +597,7 @@ async function tryFaceID(audId){
   }catch(e){return false;}
 }
 renderAll();initSwipe();initDetailSwipe();fixLayout();
-// Safety net: visualViewport keeps entry modal pinned when keyboard appears
-if(window.visualViewport){
-  const pinModal=()=>{
-    const m=document.getElementById('modalEntry');
-    if(!m.classList.contains('show'))return;
-    m.style.top=window.visualViewport.offsetTop+'px';
-  };
-  window.visualViewport.addEventListener('resize',pinModal,{passive:true});
-  window.visualViewport.addEventListener('scroll',pinModal,{passive:true});
-}
+
   }catch(err){console.error(err);showToast('⚠️ 連線失敗，請重新整理',4000);document.getElementById('childName').textContent='連線失敗';}
 }
 
@@ -1215,8 +1196,8 @@ async function clearCache(){
 }
 
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
-function showModal(id){const el=document.getElementById(id);el.style.display='flex';requestAnimationFrame(()=>el.classList.add('show'));if(id==='modalEntry'){document.body.style.position='fixed';document.body.style.width='100%';document.body.style.overflow='hidden';}}
-function closeModal(id){const el=document.getElementById(id);el.classList.remove('show');setTimeout(()=>{el.style.display='none';},300);if(id==='modalEntry'){document.body.style.position='';document.body.style.width='';document.body.style.overflow='';}}
+function showModal(id){const el=document.getElementById(id);el.style.display='flex';requestAnimationFrame(()=>el.classList.add('show'));}
+function closeModal(id){const el=document.getElementById(id);el.classList.remove('show');setTimeout(()=>{el.style.display='none';},300);}
 
 let _tt;
 function showToast(msg,ms=2600){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),ms);}

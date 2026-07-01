@@ -3,164 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>KidsAPP · 輸入方式模擬</title>
+<title>KidsAPP · 輸入模擬 v3</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 body{font-family:-apple-system,sans-serif;background:#04091a;min-height:100vh;
   display:flex;flex-direction:column;align-items:center;gap:14px;padding:24px 12px 48px;}
 h1{font-size:17px;font-weight:700;color:#fff;}
-.sub{font-size:11px;opacity:.35;color:#fff;}
+.sub{font-size:11px;opacity:.35;color:#fff;text-align:center;}
 
-/* Category tabs */
-.tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
-.tab{padding:7px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,.1);
-  background:rgba(255,255,255,.04);font-size:12px;font-weight:600;
-  color:rgba(255,255,255,.45);cursor:pointer;white-space:nowrap;}
+.tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;max-width:360px;}
+.tab{padding:6px 12px;border-radius:20px;border:1.5px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);font-size:11px;font-weight:600;
+  color:rgba(255,255,255,.4);cursor:pointer;white-space:nowrap;}
 .tab.on{border-color:rgba(72,196,255,.5);background:rgba(72,196,255,.14);color:#48c4ff;}
 
-/* iPhone 15 Pro frame — natural display size */
-.iphone{
-  width:300px;
-  background:linear-gradient(145deg,#2f2f2f,#1a1a1a);
+/* iPhone */
+.iphone{width:300px;background:linear-gradient(145deg,#2f2f2f,#1a1a1a);
   border-radius:52px;padding:10px;
-  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 32px 80px rgba(0,0,0,.9);
-  position:relative;
-}
+  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 32px 80px rgba(0,0,0,.9);position:relative;}
 .iphone::before{content:'';position:absolute;left:-3px;top:96px;width:3px;height:30px;
   background:#3c3c3c;border-radius:2px 0 0 2px;box-shadow:0 40px 0 #3c3c3c;}
 .iphone::after{content:'';position:absolute;right:-3px;top:118px;width:3px;height:58px;
   background:#3c3c3c;border-radius:0 2px 2px 0;}
-
-/* Screen */
-.screen{
-  width:280px;height:560px;border-radius:44px;overflow:hidden;
-  position:relative;background:#07102a;
-  display:flex;flex-direction:column;justify-content:flex-end;
-}
+.screen{width:280px;height:560px;border-radius:44px;overflow:hidden;
+  position:relative;background:#07102a;display:flex;flex-direction:column;justify-content:flex-end;}
 .island{position:absolute;top:12px;left:50%;transform:translateX(-50%);
   width:80px;height:24px;background:#000;border-radius:14px;z-index:30;}
-.bg-dim{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:5;}
+.bg-dim{position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:5;}
 
-/* Bottom sheet — direct sizing, no transform tricks */
-.sheet{
-  position:relative;z-index:10;
-  background:#0d1a40;
-  border-radius:22px 22px 0 0;
-  border-top:1px solid rgba(255,255,255,.1);
-  padding:10px 14px 20px;
-}
-.handle{width:32px;height:3px;background:rgba(255,255,255,.22);border-radius:2px;margin:0 auto 10px;}
+/* Sheet */
+.sheet{position:relative;z-index:10;background:#0d1a40;
+  border-radius:22px 22px 0 0;border-top:1px solid rgba(255,255,255,.1);
+  padding:10px 14px 22px;}
+.handle{width:32px;height:3px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 10px;}
 .sh-title{font-size:15px;font-weight:700;text-align:center;color:#e8f4ff;margin-bottom:10px;}
-
-/* Date row */
 .date-row{background:rgba(255,255,255,.05);border-radius:9px;padding:7px 11px;
-  margin-bottom:10px;display:flex;align-items:center;gap:8px;}
-.date-ico{font-size:13px;}
-.date-val{font-size:13px;color:rgba(180,210,230,.7);}
+  margin-bottom:10px;font-size:13px;color:rgba(180,210,230,.65);}
 
-/* Column labels */
-.col-labels{display:flex;gap:6px;margin-bottom:4px;}
-.col-lbl{font-size:10px;font-weight:600;color:rgba(180,210,230,.4);text-align:center;}
+/* ═══ SINGLE-BORDER 3-COLUMN ROW ═══
+   One outer border, internal dividers only, all centered
+   Height: 64px — matches 30px number naturally
+*/
+.input-row{
+  display:flex;
+  height:64px;
+  background:#071830;
+  border:2px solid rgba(72,196,255,.45);
+  border-radius:14px;
+  overflow:hidden;
+  margin-bottom:12px;
+}
 
-/* ═══ THREE-COLUMN INPUT ROW ═══ */
-.input-row{display:flex;gap:6px;height:120px;margin-bottom:10px;}
-
-/* Col 1: Number input */
+/* Number column */
 .col-num{
-  flex:2;background:#071830;
-  border:2px solid rgba(72,196,255,.4);
-  border-radius:12px;
+  flex:5;
   display:flex;align-items:center;justify-content:center;
 }
+
 .col-num input{
   background:none;border:none;outline:none;
   font-size:30px;font-weight:800;color:#48c4ff;
-  width:100%;text-align:center;font-family:-apple-system,sans-serif;padding:4px;
+  width:100%;text-align:center;
+  font-family:-apple-system,sans-serif;
+  padding:0 6px;
 }
-.col-num input::placeholder{color:rgba(72,196,255,.25);}
+.col-num input::placeholder{color:rgba(72,196,255,.2);}
 
-/* Col 2+3: Scroll pickers */
-.col-pick{flex:1;position:relative;}
-
-/* Picker container */
-.picker{
-  width:100%;height:120px;
-  background:#071830;
-  border:1.5px solid rgba(255,255,255,.12);
-  border-radius:12px;
-  overflow:hidden;
-  position:relative;
-}
-/* Highlight band in the center (selected slot) */
-.picker::before{
-  content:'';
-  position:absolute;
-  top:38px;left:0;right:0;height:44px;
-  border-top:1.5px solid rgba(72,196,255,.5);
-  border-bottom:1.5px solid rgba(72,196,255,.5);
-  background:rgba(72,196,255,.07);
-  z-index:3;pointer-events:none;
-}
-/* Fade top & bottom */
-.picker::after{
-  content:'';
-  position:absolute;inset:0;
-  background:
-    linear-gradient(to bottom, #071830 0%, transparent 32%,
-                    transparent 68%, #071830 100%);
-  z-index:4;pointer-events:none;
-}
-/* Scrollable list */
-.picker-list{
-  position:absolute;width:100%;
-  transition:transform .2s cubic-bezier(.34,1.2,.64,1);
-}
-/* Each item = 40px */
-.pi{
-  height:40px;
+/* Picker columns — no inner box, just the value centered */
+.col-pick{
+  flex:3;
   display:flex;align-items:center;justify-content:center;
-  font-size:13px;font-weight:600;
-  color:rgba(255,255,255,.28);
   cursor:pointer;
-  position:relative;z-index:5;
-  white-space:nowrap;
+  position:relative;
+  transition:background .1s;
 }
-.pi.sel{
-  font-size:15px;font-weight:800;color:#fff;
+/* no dividers */
+.col-pick:active{background:rgba(72,196,255,.08);}
+
+/* The selected value text */
+.pick-val{
+  font-size:15px;font-weight:700;color:#fff;
+  text-align:center;
+  pointer-events:none;
+  user-select:none;
+  line-height:1.2;
 }
-/* Spacer items */
-.pi-sp{height:40px;}
+/* Small hint arrows */
+.pick-arrows{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:3px;opacity:.7;
+  pointer-events:none;
+}
+.pick-arrows span{font-size:10px;color:#48c4ff;line-height:1;}
 
 /* Notes */
-.notes-area{
+.notes-box{
   width:100%;background:rgba(255,255,255,.05);
   border:1.5px solid rgba(255,255,255,.08);border-radius:10px;
-  padding:9px 11px;font-size:13px;color:rgba(180,210,230,.6);
+  padding:8px 11px;font-size:13px;color:rgba(180,210,230,.6);
   resize:none;font-family:-apple-system,sans-serif;outline:none;
-  line-height:1.5;margin-bottom:10px;display:block;
+  line-height:1.5;display:block;margin-bottom:10px;
 }
 
 /* Buttons */
-.btn-row{display:flex;gap:8px;}
-.btn-c{flex:1;padding:12px;background:rgba(255,255,255,.06);
-  border:1.5px solid rgba(255,255,255,.12);border-radius:11px;
-  font-size:14px;font-weight:700;color:rgba(255,255,255,.5);cursor:pointer;}
-.btn-s{flex:1;padding:12px;background:#48c4ff;border:none;border-radius:11px;
-  font-size:14px;font-weight:700;color:#07102a;cursor:pointer;}
+.btn-row{display:flex;gap:7px;}
+.btn-c{flex:1;padding:11px;background:rgba(255,255,255,.06);
+  border:1.5px solid rgba(255,255,255,.1);border-radius:11px;
+  font-size:13px;font-weight:700;color:rgba(255,255,255,.5);cursor:pointer;}
+.btn-s{flex:1;padding:11px;background:#48c4ff;border:none;border-radius:11px;
+  font-size:13px;font-weight:700;color:#07102a;cursor:pointer;}
 </style>
 </head>
 <body>
 
-<h1>輸入方式模擬</h1>
-<div class="sub">滑動選擇單位 & 操作類型</div>
+<h1>輸入方式模擬 v3</h1>
+<div class="sub">單一外框 · 文字置中 · 上下滑動或點擊切換</div>
 
 <div class="tabs">
-  <div class="tab on"  onclick="showCat('tx')">💳 Transaction</div>
-  <div class="tab" onclick="showCat('vocab')">📚 Vocabulary</div>
-  <div class="tab" onclick="showCat('school')">📝 School Exam</div>
-  <div class="tab" onclick="showCat('hw')">🏠 Housework</div>
-  <div class="tab" onclick="showCat('sport')">⚽ Sport</div>
-  <div class="tab" onclick="showCat('behav')">⭐ Behavior</div>
+  <div class="tab on"  onclick="go('tx')">💳 Transaction</div>
+  <div class="tab" onclick="go('vocab')">📚 Vocabulary</div>
+  <div class="tab" onclick="go('school')">📝 School Exam</div>
+  <div class="tab" onclick="go('hw')">🏠 Housework</div>
+  <div class="tab" onclick="go('sport')">⚽ Sport</div>
+  <div class="tab" onclick="go('behav')">⭐ Behavior</div>
 </div>
 
 <div class="iphone">
@@ -169,34 +134,25 @@ h1{font-size:17px;font-weight:700;color:#fff;}
     <div class="bg-dim"></div>
     <div class="sheet">
       <div class="handle"></div>
-      <div class="sh-title" id="sh-title">💳 Transaction</div>
+      <div class="sh-title" id="shTitle">💳 Transaction</div>
+      <div class="date-row">📅 2026 Jul 01</div>
 
-      <div class="date-row">
-        <span class="date-ico">📅</span>
-        <span class="date-val">2026 Jul 01</span>
-      </div>
-
-      <!-- Column labels -->
-      <div class="col-labels" id="col-labels">
-        <div class="col-lbl" style="flex:2">數字</div>
-        <div class="col-lbl" style="flex:1">單位</div>
-        <div class="col-lbl" style="flex:1">操作</div>
-      </div>
-
-      <!-- 3-col input -->
+      <!-- Single-border 3-col row -->
       <div class="input-row">
         <div class="col-num">
           <input type="number" inputmode="decimal" placeholder="0" id="numInput">
         </div>
-        <div class="col-pick">
-          <div class="picker" id="pickUnit"></div>
+        <div class="col-pick" id="colUnit" ontouchstart="ts(event,'unit')" ontouchend="te(event,'unit')" onclick="tap('unit')">
+          <div class="pick-val" id="valUnit">NTD</div>
+          <div class="pick-arrows"><span>▲</span><span>▼</span></div>
         </div>
-        <div class="col-pick">
-          <div class="picker" id="pickType"></div>
+        <div class="col-pick" id="colType" ontouchstart="ts(event,'type')" ontouchend="te(event,'type')" onclick="tap('type')">
+          <div class="pick-val" id="valType">Deposit</div>
+          <div class="pick-arrows"><span>▲</span><span>▼</span></div>
         </div>
       </div>
 
-      <textarea class="notes-area" id="notesArea" rows="2" placeholder="備註（選填）"></textarea>
+      <textarea class="notes-box" id="notesEl" rows="2" placeholder="備註（選填）"></textarea>
 
       <div class="btn-row">
         <button class="btn-c">取消</button>
@@ -207,137 +163,59 @@ h1{font-size:17px;font-weight:700;color:#fff;}
 </div>
 
 <script>
-// ═══ Picker class ═══
-class PickerWheel {
-  constructor(el, items, sel=0){
-    this.el=el; this.items=items; this.sel=sel;
-    this.h=40; // item height
-    this.build();
-    this.bindTouch();
-  }
-
-  build(){
-    // padding: 1 empty slot top and bottom so first/last can center
-    const sp='<div class="pi-sp"></div>';
-    const rows=this.items.map((t,i)=>
-      `<div class="pi${i===this.sel?' sel':''}" data-i="${i}">${t}</div>`
-    ).join('');
-    this.el.innerHTML=`<div class="picker-list">${sp}${rows}${sp}</div>`;
-    this.list=this.el.querySelector('.picker-list');
-    this.applyPos(false);
-
-    // Click to select
-    this.el.addEventListener('click',e=>{
-      const it=e.target.closest('[data-i]');
-      if(!it)return;
-      this.setSel(parseInt(it.dataset.i));
-    });
-  }
-
-  applyPos(anim){
-    if(!this.list)return;
-    // offset: center selected item (add 1 for spacer)
-    const y=-((this.sel)*this.h);
-    this.list.style.transition=anim?'transform .22s cubic-bezier(.34,1.2,.64,1)':'none';
-    this.list.style.transform=`translateY(${y}px)`;
-  }
-
-  setSel(i){
-    i=Math.max(0,Math.min(i,this.items.length-1));
-    this.sel=i;
-    this.el.querySelectorAll('.pi').forEach((el,j)=>el.classList.toggle('sel',j===i));
-    this.applyPos(true);
-  }
-
-  bindTouch(){
-    let sy=0,dragging=false;
-    this.el.addEventListener('touchstart',e=>{
-      sy=e.touches[0].clientY;dragging=true;
-    },{passive:true});
-    this.el.addEventListener('touchmove',e=>{
-      if(!dragging)return;
-      // peek: move list with finger
-      const dy=e.touches[0].clientY-sy;
-      const base=-this.sel*this.h;
-      this.list.style.transition='none';
-      this.list.style.transform=`translateY(${base+dy*0.6}px)`;
-    },{passive:true});
-    this.el.addEventListener('touchend',e=>{
-      if(!dragging)return;dragging=false;
-      const dy=e.changedTouches[0].clientY-sy;
-      if(dy<-15)this.setSel(this.sel+1);
-      else if(dy>15)this.setSel(this.sel-1);
-      else this.applyPos(true); // snap back
-    },{passive:true});
-  }
-
-  val(){return this.items[this.sel];}
-}
-
-// ═══ Category configs ═══
 const CATS={
-  tx:{
-    title:'💳 Transaction',
-    units:['NTD','Mins'],
-    types:['Withdraw','Deposit'],
-    uSel:0,tSel:1,
-    notes:'備註（選填）',
-  },
-  vocab:{
-    title:'📚 Vocabulary',
-    units:['Mins','NTD'],
-    types:['+','-'],
-    uSel:0,tSel:0,
-    notes:'今天背的單字，例：apple 蘋果…',
-  },
-  school:{
-    title:'📝 School Exam',
-    units:['Mins','NTD'],
-    types:['+','-'],
-    uSel:1,tSel:0,
-    notes:'備註（選填）',
-  },
-  hw:{
-    title:'🏠 Housework',
-    units:['Mins','NTD'],
-    types:['+','-'],
-    uSel:0,tSel:0,
-    notes:'備註（選填）',
-  },
-  sport:{
-    title:'⚽ Sport',
-    units:['Mins','NTD'],
-    types:['+','-'],
-    uSel:0,tSel:0,
-    notes:'備註（選填）',
-  },
-  behav:{
-    title:'⭐ Behavior',
-    units:['Mins','NTD'],
-    types:['嘉獎','懲罰'],
-    uSel:0,tSel:0,
-    notes:'備註（選填）',
-  },
+  tx:   {title:'💳 Transaction', units:['NTD','Mins'], types:['Deposit','Withdraw'], uI:0, tI:0, note:'備註（選填）'},
+  vocab:{title:'📚 Vocabulary',  units:['Mins','NTD'], types:['+','-'],              uI:0, tI:0, note:'今天背的單字…'},
+  school:{title:'📝 School Exam',units:['Mins','NTD'], types:['+','-'],              uI:1, tI:0, note:'備註（選填）'},
+  hw:   {title:'🏠 Housework',   units:['Mins','NTD'], types:['+','-'],              uI:0, tI:0, note:'備註（選填）'},
+  sport:{title:'⚽ Sport',       units:['Mins','NTD'], types:['+','-'],              uI:0, tI:0, note:'備註（選填）'},
+  behav:{title:'⭐ Behavior',    units:['Mins','NTD'], types:['嘉獎','懲罰'],        uI:0, tI:0, note:'備註（選填）'},
 };
 
-let pU=null,pT=null;
+let cur='tx';
+let uIdx=0, tIdx=0;
+let touchY={unit:0,type:0};
 
-function showCat(key){
-  // Update tabs
+function go(k){
+  cur=k;
   document.querySelectorAll('.tab').forEach((t,i)=>{
-    const ks=['tx','vocab','school','hw','sport','behav'];
-    t.classList.toggle('on',ks[i]===key);
+    t.classList.toggle('on',['tx','vocab','school','hw','sport','behav'][i]===k);
   });
-  const cfg=CATS[key];
-  document.getElementById('sh-title').textContent=cfg.title;
-  document.getElementById('notesArea').placeholder=cfg.notes;
+  const c=CATS[k];
+  document.getElementById('shTitle').textContent=c.title;
+  document.getElementById('notesEl').placeholder=c.note;
   document.getElementById('numInput').value='';
-  // Rebuild pickers
-  pU=new PickerWheel(document.getElementById('pickUnit'),cfg.units,cfg.uSel);
-  pT=new PickerWheel(document.getElementById('pickType'),cfg.types,cfg.tSel);
+  uIdx=c.uI; tIdx=c.tI;
+  render();
 }
 
-showCat('tx');
+function render(){
+  const c=CATS[cur];
+  document.getElementById('valUnit').textContent=c.units[uIdx];
+  document.getElementById('valType').textContent=c.types[tIdx];
+}
+
+/* Touch handlers for swipe */
+function ts(e,which){
+  touchY[which]=e.touches[0].clientY;
+}
+function te(e,which){
+  const dy=touchY[which]-e.changedTouches[0].clientY;
+  const c=CATS[cur];
+  if(Math.abs(dy)<8){return;} // handled by onclick tap
+  if(which==='unit') uIdx=(uIdx+(dy>0?1:-1)+c.units.length)%c.units.length;
+  else               tIdx=(tIdx+(dy>0?1:-1)+c.types.length)%c.types.length;
+  render();
+}
+/* Tap = cycle to next */
+function tap(which){
+  const c=CATS[cur];
+  if(which==='unit') uIdx=(uIdx+1)%c.units.length;
+  else               tIdx=(tIdx+1)%c.types.length;
+  render();
+}
+
+go('tx');
 </script>
 </body>
 </html>

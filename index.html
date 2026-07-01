@@ -232,7 +232,8 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
   border-top:none;
   border-bottom:1px solid var(--border);
   transform:translateY(-100%);
-  max-height:calc(100svh - 295px); /* leave ~280px keyboard + 15px gap */
+  /* Fixed pixel height — keyboard appearance won't affect this */
+  max-height:385px;
   display:flex;flex-direction:column;
   padding:0;
 }
@@ -324,13 +325,13 @@ textarea.form-inp{resize:none;line-height:1.5;}
 .tci-pick{flex:3;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background .1s;user-select:none;}
 .tci-pick:active{background:rgba(72,196,255,.08);}
 .tci-val{font-size:18px;font-weight:700;color:#fff;text-align:center;pointer-events:none;}
-.tci-arrows{position:absolute;right:5px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:1px;opacity:.5;pointer-events:none;}
-.tci-arrows span{font-size:7px;color:#fff;line-height:1;}
+/* tci-arrows removed */
 
 /* ── Entry form: ~2x larger fonts for readability ── */
 #modalEntry .modal-title{font-size:22px;}
 #modalEntry .form-lbl{font-size:14px;margin-bottom:8px;}
 #modalEntry .form-inp{font-size:24px;padding:16px 18px;border-radius:14px;}
+#modalEntry input[type="date"]{font-size:14px;padding:10px 12px;}
 #modalEntry textarea.form-inp{font-size:22px;line-height:1.7;}
 #modalEntry .tog-btn{font-size:20px;padding:16px 10px;border-radius:14px;}
 #modalEntry .amt-lbl{font-size:14px;}
@@ -971,7 +972,7 @@ function openAddEntry(entryId){
 function buildEntryForm(cat,existing){
   const ex=existing||{};let h='';
   if(!existing)h+=`<div class="form-grp"><label class="form-lbl">📅 日期</label><input type="date" class="form-inp" id="fDate" value="${todayISO()}" max="${todayISO()}"></div>`;
-  else h+=`<div class="form-grp"><label class="form-lbl">📅 日期</label><div style="padding:10px 12px;background:var(--card2);border-radius:10px;font-size:14px;color:var(--sub);">${ex.date||'—'}</div></div>`;
+  else h+=`<div class="form-grp"><label class="form-lbl" style="display:inline;">📅 日期 &nbsp;<span style="font-size:14px;color:var(--sub);font-weight:400;">${ex.date||'—'}</span></label></div>`;
   // Determine picker options and initial values
   let units,types,uIdx=0,tIdx=0,numVal='';
   if(cat.type==='transactions'){
@@ -997,11 +998,9 @@ function buildEntryForm(cat,existing){
     <div class="tci-num"><input type="number" inputmode="decimal" id="fAmount" placeholder="0" min="0" step="1" value="${numVal}"></div>
     <div class="tci-pick" data-opts='${JSON.stringify(units)}' data-idx="${uIdx}" id="pickUnit" onclick="tcCycle(this)" ontouchstart="tcTS(event,this)" ontouchend="tcTE(event,this)">
       <div class="tci-val">${units[uIdx]}</div>
-      <div class="tci-arrows"><span>▲</span><span>▼</span></div>
     </div>
     <div class="tci-pick" data-opts='${JSON.stringify(types)}' data-idx="${tIdx}" id="pickType" onclick="tcCycle(this)" ontouchstart="tcTS(event,this)" ontouchend="tcTE(event,this)">
       <div class="tci-val">${types[tIdx]}</div>
-      <div class="tci-arrows"><span>▲</span><span>▼</span></div>
     </div>
   </div></div>`;
   const isVocab=cat.id==='vocab';
@@ -1205,8 +1204,8 @@ async function clearCache(){
 }
 
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
-function showModal(id){const el=document.getElementById(id);el.style.display='flex';requestAnimationFrame(()=>el.classList.add('show'));}
-function closeModal(id){const el=document.getElementById(id);el.classList.remove('show');setTimeout(()=>{el.style.display='none';},300);}
+function showModal(id){const el=document.getElementById(id);el.style.display='flex';requestAnimationFrame(()=>el.classList.add('show'));if(id==='modalEntry'){document.body.style.overflow='hidden';}}
+function closeModal(id){const el=document.getElementById(id);el.classList.remove('show');setTimeout(()=>{el.style.display='none';},300);if(id==='modalEntry'){document.body.style.overflow='';}}
 
 let _tt;
 function showToast(msg,ms=2600){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),ms);}

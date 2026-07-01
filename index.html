@@ -3,272 +3,341 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>KidsAPP · 新輸入方式模擬</title>
+<title>KidsAPP · 輸入方式模擬</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,sans-serif;background:#04091a;min-height:100vh;padding:24px 10px 48px;color:#fff;display:flex;flex-direction:column;align-items:center;gap:14px;}
-h1{font-size:17px;font-weight:700;}
-.sub{font-size:11px;opacity:.35;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:-apple-system,sans-serif;background:#04091a;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;gap:14px;padding:24px 12px 48px;}
+h1{font-size:17px;font-weight:700;color:#fff;}
+.sub{font-size:11px;opacity:.35;color:#fff;}
 
 /* Category tabs */
-.tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:500px;}
-.tab{padding:6px 13px;border-radius:20px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);font-size:11px;font-weight:600;color:rgba(255,255,255,.45);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
+.tab{padding:7px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);font-size:12px;font-weight:600;
+  color:rgba(255,255,255,.45);cursor:pointer;white-space:nowrap;}
 .tab.on{border-color:rgba(72,196,255,.5);background:rgba(72,196,255,.14);color:#48c4ff;}
 
-/* iPhone */
-.iphone{width:232px;background:linear-gradient(145deg,#2f2f2f,#1a1a1a);border-radius:52px;padding:10px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 36px 100px rgba(0,0,0,.9);position:relative;}
-.iphone::before{content:'';position:absolute;left:-3px;top:96px;width:3px;height:30px;background:#3c3c3c;border-radius:2px 0 0 2px;box-shadow:0 40px 0 #3c3c3c;}
-.iphone::after{content:'';position:absolute;right:-3px;top:122px;width:3px;height:58px;background:#3c3c3c;border-radius:0 2px 2px 0;}
-.screen{width:212px;height:460px;border-radius:44px;overflow:hidden;position:relative;background:#070d18;}
-.island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:86px;height:25px;background:#000;border-radius:16px;z-index:30;}
-
-/* Dimmed background */
-.bg-dim{position:absolute;inset:0;background:#07102a;z-index:1;}
-
-/* Bottom sheet modal — real 393×852 scaled 0.540 */
-.sheet-wrap{position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:10;display:flex;flex-direction:column;justify-content:flex-end;}
-.sheet{background:#0d1a40;border-radius:20px 20px 0 0;padding:12px 14px 32px;border-top:1px solid rgba(255,255,255,.1);
-  /* scale 0.540 from real sizes */
-  transform:scale(0.540);transform-origin:bottom center;
-  width:393px;margin-left:calc((212px - 393px*0.540)/2 / 0.540);
+/* iPhone 15 Pro frame — natural display size */
+.iphone{
+  width:300px;
+  background:linear-gradient(145deg,#2f2f2f,#1a1a1a);
+  border-radius:52px;padding:10px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.1),0 32px 80px rgba(0,0,0,.9);
+  position:relative;
 }
-.handle{width:32px;height:3px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 12px;}
-.title{font-size:16px;font-weight:700;text-align:center;margin-bottom:14px;color:#e8f4ff;}
+.iphone::before{content:'';position:absolute;left:-3px;top:96px;width:3px;height:30px;
+  background:#3c3c3c;border-radius:2px 0 0 2px;box-shadow:0 40px 0 #3c3c3c;}
+.iphone::after{content:'';position:absolute;right:-3px;top:118px;width:3px;height:58px;
+  background:#3c3c3c;border-radius:0 2px 2px 0;}
+
+/* Screen */
+.screen{
+  width:280px;height:560px;border-radius:44px;overflow:hidden;
+  position:relative;background:#07102a;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.island{position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  width:80px;height:24px;background:#000;border-radius:14px;z-index:30;}
+.bg-dim{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:5;}
+
+/* Bottom sheet — direct sizing, no transform tricks */
+.sheet{
+  position:relative;z-index:10;
+  background:#0d1a40;
+  border-radius:22px 22px 0 0;
+  border-top:1px solid rgba(255,255,255,.1);
+  padding:10px 14px 20px;
+}
+.handle{width:32px;height:3px;background:rgba(255,255,255,.22);border-radius:2px;margin:0 auto 10px;}
+.sh-title{font-size:15px;font-weight:700;text-align:center;color:#e8f4ff;margin-bottom:10px;}
 
 /* Date row */
-.date-row{background:#0a1535;border:1.5px solid rgba(255,255,255,.08);border-radius:10px;padding:9px 12px;margin-bottom:12px;font-size:14px;color:rgba(180,210,230,.6);}
-.date-lbl{font-size:10px;color:rgba(180,210,230,.4);margin-bottom:3px;font-weight:600;}
+.date-row{background:rgba(255,255,255,.05);border-radius:9px;padding:7px 11px;
+  margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.date-ico{font-size:13px;}
+.date-val{font-size:13px;color:rgba(180,210,230,.7);}
 
-/* ── 3-column input row ── */
-.input-row{display:flex;gap:8px;margin-bottom:12px;height:132px;}
+/* Column labels */
+.col-labels{display:flex;gap:6px;margin-bottom:4px;}
+.col-lbl{font-size:10px;font-weight:600;color:rgba(180,210,230,.4);text-align:center;}
 
-/* Col 1: Number */
-.col-num{flex:2;display:flex;flex-direction:column;}
-.col-lbl{font-size:10px;font-weight:600;color:rgba(180,210,230,.4);margin-bottom:5px;text-align:center;}
-.num-input-box{flex:1;background:#0a1535;border:2px solid rgba(72,196,255,.35);border-radius:12px;display:flex;align-items:center;justify-content:center;position:relative;}
-.num-input-box input{background:none;border:none;outline:none;font-size:32px;font-weight:800;color:#48c4ff;width:100%;text-align:center;font-family:-apple-system,sans-serif;padding:0 6px;}
-.num-input-box input::placeholder{color:rgba(72,196,255,.3);}
+/* ═══ THREE-COLUMN INPUT ROW ═══ */
+.input-row{display:flex;gap:6px;height:120px;margin-bottom:10px;}
 
-/* Col 2+3: Pickers */
-.col-pick{flex:1;display:flex;flex-direction:column;}
-.picker-wrap{
-  flex:1;
-  background:#0a1535;border:1.5px solid rgba(255,255,255,.12);border-radius:12px;
-  overflow:hidden;position:relative;
-  user-select:none;
+/* Col 1: Number input */
+.col-num{
+  flex:2;background:#071830;
+  border:2px solid rgba(72,196,255,.4);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
 }
-/* center highlight band */
-.picker-wrap::before{
-  content:'';position:absolute;top:44px;left:0;right:0;height:44px;
-  border-top:1px solid rgba(72,196,255,.35);
-  border-bottom:1px solid rgba(72,196,255,.35);
+.col-num input{
+  background:none;border:none;outline:none;
+  font-size:30px;font-weight:800;color:#48c4ff;
+  width:100%;text-align:center;font-family:-apple-system,sans-serif;padding:4px;
+}
+.col-num input::placeholder{color:rgba(72,196,255,.25);}
+
+/* Col 2+3: Scroll pickers */
+.col-pick{flex:1;position:relative;}
+
+/* Picker container */
+.picker{
+  width:100%;height:120px;
+  background:#071830;
+  border:1.5px solid rgba(255,255,255,.12);
+  border-radius:12px;
+  overflow:hidden;
+  position:relative;
+}
+/* Highlight band in the center (selected slot) */
+.picker::before{
+  content:'';
+  position:absolute;
+  top:38px;left:0;right:0;height:44px;
+  border-top:1.5px solid rgba(72,196,255,.5);
+  border-bottom:1.5px solid rgba(72,196,255,.5);
+  background:rgba(72,196,255,.07);
   z-index:3;pointer-events:none;
 }
-/* top fade */
-.picker-wrap::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(
-    to bottom,
-    #0a1535 0%,
-    transparent 30%,
-    transparent 70%,
-    #0a1535 100%
-  );
-  z-index:2;pointer-events:none;
+/* Fade top & bottom */
+.picker::after{
+  content:'';
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to bottom, #071830 0%, transparent 32%,
+                    transparent 68%, #071830 100%);
+  z-index:4;pointer-events:none;
 }
+/* Scrollable list */
 .picker-list{
   position:absolute;width:100%;
-  transition:transform .2s cubic-bezier(0.34,1.2,0.64,1);
+  transition:transform .2s cubic-bezier(.34,1.2,.64,1);
 }
-.picker-item{
-  height:44px;display:flex;align-items:center;justify-content:center;
-  font-size:13px;color:rgba(255,255,255,.3);font-weight:500;
-  cursor:pointer;transition:all .15s;z-index:4;position:relative;
+/* Each item = 40px */
+.pi{
+  height:40px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:600;
+  color:rgba(255,255,255,.28);
+  cursor:pointer;
+  position:relative;z-index:5;
   white-space:nowrap;
 }
-.picker-item.sel{
-  font-size:16px;font-weight:700;color:#fff;
+.pi.sel{
+  font-size:15px;font-weight:800;color:#fff;
 }
+/* Spacer items */
+.pi-sp{height:40px;}
 
 /* Notes */
-.notes-row{margin-bottom:12px;}
-.notes-box{width:100%;background:#0a1535;border:1.5px solid rgba(255,255,255,.08);border-radius:10px;
-  padding:10px 12px;font-size:13px;color:rgba(180,210,230,.5);resize:none;font-family:inherit;outline:none;line-height:1.5;}
+.notes-area{
+  width:100%;background:rgba(255,255,255,.05);
+  border:1.5px solid rgba(255,255,255,.08);border-radius:10px;
+  padding:9px 11px;font-size:13px;color:rgba(180,210,230,.6);
+  resize:none;font-family:-apple-system,sans-serif;outline:none;
+  line-height:1.5;margin-bottom:10px;display:block;
+}
 
 /* Buttons */
 .btn-row{display:flex;gap:8px;}
-.btn-cancel{flex:1;padding:13px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:12px;font-size:15px;font-weight:700;color:rgba(255,255,255,.5);cursor:pointer;}
-.btn-save{flex:1;padding:13px;background:#48c4ff;border:none;border-radius:12px;font-size:15px;font-weight:700;color:#07102a;cursor:pointer;}
-
-/* label */
-.cat-label{font-size:12px;color:rgba(180,210,230,.5);text-align:center;max-width:220px;line-height:1.8;}
+.btn-c{flex:1;padding:12px;background:rgba(255,255,255,.06);
+  border:1.5px solid rgba(255,255,255,.12);border-radius:11px;
+  font-size:14px;font-weight:700;color:rgba(255,255,255,.5);cursor:pointer;}
+.btn-s{flex:1;padding:12px;background:#48c4ff;border:none;border-radius:11px;
+  font-size:14px;font-weight:700;color:#07102a;cursor:pointer;}
 </style>
 </head>
 <body>
 
-<h1>新輸入方式模擬</h1>
-<div class="sub">數字 + 單位滾輪 + 類型滾輪 · 三欄並排</div>
+<h1>輸入方式模擬</h1>
+<div class="sub">滑動選擇單位 & 操作類型</div>
 
-<div class="tabs" id="tabs">
-  <div class="tab on" onclick="show('tx')">💳 Transaction</div>
-  <div class="tab" onclick="show('vocab')">📚 Vocabulary</div>
-  <div class="tab" onclick="show('behav')">⭐ Behavior</div>
+<div class="tabs">
+  <div class="tab on"  onclick="showCat('tx')">💳 Transaction</div>
+  <div class="tab" onclick="showCat('vocab')">📚 Vocabulary</div>
+  <div class="tab" onclick="showCat('school')">📝 School Exam</div>
+  <div class="tab" onclick="showCat('hw')">🏠 Housework</div>
+  <div class="tab" onclick="showCat('sport')">⚽ Sport</div>
+  <div class="tab" onclick="showCat('behav')">⭐ Behavior</div>
 </div>
 
 <div class="iphone">
   <div class="screen">
     <div class="island"></div>
     <div class="bg-dim"></div>
-    <div class="sheet-wrap">
-      <div class="sheet" id="sheet">
-        <!-- injected by JS -->
+    <div class="sheet">
+      <div class="handle"></div>
+      <div class="sh-title" id="sh-title">💳 Transaction</div>
+
+      <div class="date-row">
+        <span class="date-ico">📅</span>
+        <span class="date-val">2026 Jul 01</span>
+      </div>
+
+      <!-- Column labels -->
+      <div class="col-labels" id="col-labels">
+        <div class="col-lbl" style="flex:2">數字</div>
+        <div class="col-lbl" style="flex:1">單位</div>
+        <div class="col-lbl" style="flex:1">操作</div>
+      </div>
+
+      <!-- 3-col input -->
+      <div class="input-row">
+        <div class="col-num">
+          <input type="number" inputmode="decimal" placeholder="0" id="numInput">
+        </div>
+        <div class="col-pick">
+          <div class="picker" id="pickUnit"></div>
+        </div>
+        <div class="col-pick">
+          <div class="picker" id="pickType"></div>
+        </div>
+      </div>
+
+      <textarea class="notes-area" id="notesArea" rows="2" placeholder="備註（選填）"></textarea>
+
+      <div class="btn-row">
+        <button class="btn-c">取消</button>
+        <button class="btn-s">儲存</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="cat-label" id="note"></div>
-
 <script>
-// ── Picker class ──
-class Picker {
-  constructor(el, items, selIdx=0, onChange){
-    this.el=el; this.items=items; this.sel=selIdx; this.onChange=onChange;
-    this.itemH=44;
-    this.render();
+// ═══ Picker class ═══
+class PickerWheel {
+  constructor(el, items, sel=0){
+    this.el=el; this.items=items; this.sel=sel;
+    this.h=40; // item height
+    this.build();
+    this.bindTouch();
   }
-  render(){
-    // 3 padding slots top+bottom so selected item sits in center
-    const pad='<div class="picker-item" style="pointer-events:none;height:44px;"></div>';
-    this.el.innerHTML=`<div class="picker-list" id="pl_${Math.random().toString(36).substr(2,5)}">
-      ${pad}
-      ${this.items.map((t,i)=>`<div class="picker-item${i===this.sel?' sel':''}" data-i="${i}">${t}</div>`).join('')}
-      ${pad}
-    </div>`;
+
+  build(){
+    // padding: 1 empty slot top and bottom so first/last can center
+    const sp='<div class="pi-sp"></div>';
+    const rows=this.items.map((t,i)=>
+      `<div class="pi${i===this.sel?' sel':''}" data-i="${i}">${t}</div>`
+    ).join('');
+    this.el.innerHTML=`<div class="picker-list">${sp}${rows}${sp}</div>`;
     this.list=this.el.querySelector('.picker-list');
-    this.updatePos(false);
-    // click
+    this.applyPos(false);
+
+    // Click to select
     this.el.addEventListener('click',e=>{
       const it=e.target.closest('[data-i]');
       if(!it)return;
       this.setSel(parseInt(it.dataset.i));
     });
-    // touch scroll
-    let sy=0,moved=false;
-    this.el.addEventListener('touchstart',e=>{sy=e.touches[0].clientY;moved=false;},{passive:true});
+  }
+
+  applyPos(anim){
+    if(!this.list)return;
+    // offset: center selected item (add 1 for spacer)
+    const y=-((this.sel)*this.h);
+    this.list.style.transition=anim?'transform .22s cubic-bezier(.34,1.2,.64,1)':'none';
+    this.list.style.transform=`translateY(${y}px)`;
+  }
+
+  setSel(i){
+    i=Math.max(0,Math.min(i,this.items.length-1));
+    this.sel=i;
+    this.el.querySelectorAll('.pi').forEach((el,j)=>el.classList.toggle('sel',j===i));
+    this.applyPos(true);
+  }
+
+  bindTouch(){
+    let sy=0,dragging=false;
+    this.el.addEventListener('touchstart',e=>{
+      sy=e.touches[0].clientY;dragging=true;
+    },{passive:true});
     this.el.addEventListener('touchmove',e=>{
-      const dy=sy-e.touches[0].clientY;
-      if(Math.abs(dy)>6)moved=true;
-      if(moved)e.preventDefault();
-    },{passive:false});
+      if(!dragging)return;
+      // peek: move list with finger
+      const dy=e.touches[0].clientY-sy;
+      const base=-this.sel*this.h;
+      this.list.style.transition='none';
+      this.list.style.transform=`translateY(${base+dy*0.6}px)`;
+    },{passive:true});
     this.el.addEventListener('touchend',e=>{
-      if(!moved)return;
-      const dy=sy-e.changedTouches[0].clientY;
-      if(dy>20)this.setSel(Math.min(this.sel+1,this.items.length-1));
-      else if(dy<-20)this.setSel(Math.max(this.sel-1,0));
+      if(!dragging)return;dragging=false;
+      const dy=e.changedTouches[0].clientY-sy;
+      if(dy<-15)this.setSel(this.sel+1);
+      else if(dy>15)this.setSel(this.sel-1);
+      else this.applyPos(true); // snap back
     },{passive:true});
   }
-  setSel(i){
-    this.sel=i;
-    this.el.querySelectorAll('[data-i]').forEach((el,j)=>el.classList.toggle('sel',j===i));
-    this.updatePos(true);
-    if(this.onChange)this.onChange(this.items[i],i);
-  }
-  updatePos(anim){
-    if(!this.list)return;
-    this.list.style.transition=anim?'transform .2s cubic-bezier(0.34,1.2,0.64,1)':'none';
-    this.list.style.transform=`translateY(${-this.sel*this.itemH}px)`;
-  }
+
   val(){return this.items[this.sel];}
 }
 
-const CONFIGS = {
+// ═══ Category configs ═══
+const CATS={
   tx:{
     title:'💳 Transaction',
     units:['NTD','Mins'],
     types:['Withdraw','Deposit'],
-    unitSel:0, typeSel:0,
-    placeholder:'300',
-    note:'Transaction：數字 | NTD/Mins | Withdraw/Deposit\n三欄並排，單位和操作各自滾輪選擇',
-    notesLabel:'📝 備註',
+    uSel:0,tSel:1,
+    notes:'備註（選填）',
   },
   vocab:{
     title:'📚 Vocabulary',
     units:['Mins','NTD'],
     types:['+','-'],
-    unitSel:0, typeSel:0,
-    placeholder:'60',
-    note:'Vocabulary：數字 | Mins/NTD | +/-\n學習類預設 Mins 正值',
-    notesLabel:'📚 今天背的單字',
+    uSel:0,tSel:0,
+    notes:'今天背的單字，例：apple 蘋果…',
+  },
+  school:{
+    title:'📝 School Exam',
+    units:['Mins','NTD'],
+    types:['+','-'],
+    uSel:1,tSel:0,
+    notes:'備註（選填）',
+  },
+  hw:{
+    title:'🏠 Housework',
+    units:['Mins','NTD'],
+    types:['+','-'],
+    uSel:0,tSel:0,
+    notes:'備註（選填）',
+  },
+  sport:{
+    title:'⚽ Sport',
+    units:['Mins','NTD'],
+    types:['+','-'],
+    uSel:0,tSel:0,
+    notes:'備註（選填）',
   },
   behav:{
     title:'⭐ Behavior',
     units:['Mins','NTD'],
     types:['嘉獎','懲罰'],
-    unitSel:0, typeSel:0,
-    placeholder:'30',
-    note:'Behavior：數字 | Mins/NTD | 嘉獎/懲罰\n操作類型用滾輪切換',
-    notesLabel:'📝 備註',
+    uSel:0,tSel:0,
+    notes:'備註（選填）',
   },
 };
 
-let pUnit=null, pType=null;
+let pU=null,pT=null;
 
-function show(key){
+function showCat(key){
+  // Update tabs
   document.querySelectorAll('.tab').forEach((t,i)=>{
-    const keys=['tx','vocab','behav'];
-    t.classList.toggle('on', keys[i]===key);
+    const ks=['tx','vocab','school','hw','sport','behav'];
+    t.classList.toggle('on',ks[i]===key);
   });
-  const cfg=CONFIGS[key];
-  document.getElementById('note').textContent=cfg.note;
-
-  document.getElementById('sheet').innerHTML=`
-    <div class="handle"></div>
-    <div class="title">${cfg.title}</div>
-
-    <div class="date-row">
-      <div class="date-lbl">📅 日期</div>
-      2026 Jul 01
-    </div>
-
-    <div style="display:flex;gap:5px;margin-bottom:5px;">
-      <div style="flex:2;font-size:10px;font-weight:600;color:rgba(180,210,230,.4);text-align:center;">數字</div>
-      <div style="flex:1;font-size:10px;font-weight:600;color:rgba(180,210,230,.4);text-align:center;">單位</div>
-      <div style="flex:1;font-size:10px;font-weight:600;color:rgba(180,210,230,.4);text-align:center;">操作</div>
-    </div>
-
-    <div class="input-row">
-      <!-- Number -->
-      <div class="col-num">
-        <div class="num-input-box">
-          <input type="number" placeholder="${cfg.placeholder}" inputmode="decimal">
-        </div>
-      </div>
-      <!-- Unit picker -->
-      <div class="col-pick">
-        <div class="picker-wrap" id="pickUnit"></div>
-      </div>
-      <!-- Type picker -->
-      <div class="col-pick">
-        <div class="picker-wrap" id="pickType"></div>
-      </div>
-    </div>
-
-    <div class="notes-row">
-      <textarea class="notes-box" rows="3" placeholder="${cfg.notesLabel}…"></textarea>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn-cancel">取消</button>
-      <button class="btn-save">儲存</button>
-    </div>
-  `;
-
-  pUnit = new Picker(document.getElementById('pickUnit'), cfg.units, cfg.unitSel);
-  pType = new Picker(document.getElementById('pickType'), cfg.types, cfg.typeSel);
+  const cfg=CATS[key];
+  document.getElementById('sh-title').textContent=cfg.title;
+  document.getElementById('notesArea').placeholder=cfg.notes;
+  document.getElementById('numInput').value='';
+  // Rebuild pickers
+  pU=new PickerWheel(document.getElementById('pickUnit'),cfg.units,cfg.uSel);
+  pT=new PickerWheel(document.getElementById('pickType'),cfg.types,cfg.tSel);
 }
 
-show('tx');
+showCat('tx');
 </script>
 </body>
 </html>

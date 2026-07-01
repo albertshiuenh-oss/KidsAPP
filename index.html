@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,interactive-widget=resizes-visual">
 <title>KidsAPP</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#07102a">
@@ -325,6 +325,7 @@ textarea.form-inp{resize:none;line-height:1.5;}
 .tci-pick{flex:3;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background .1s;user-select:none;}
 .tci-pick:active{background:rgba(72,196,255,.08);}
 .tci-val{font-size:18px;font-weight:700;color:#fff;text-align:center;pointer-events:none;}
+.tci-pick[data-sign] .tci-val{font-size:28px;font-weight:900;}
 /* tci-arrows removed */
 
 /* ── Entry form: ~2x larger fonts for readability ── */
@@ -606,6 +607,16 @@ async function tryFaceID(audId){
   }catch(e){return false;}
 }
 renderAll();initSwipe();initDetailSwipe();fixLayout();
+// Safety net: visualViewport keeps entry modal pinned when keyboard appears
+if(window.visualViewport){
+  const pinModal=()=>{
+    const m=document.getElementById('modalEntry');
+    if(!m.classList.contains('show'))return;
+    m.style.top=window.visualViewport.offsetTop+'px';
+  };
+  window.visualViewport.addEventListener('resize',pinModal,{passive:true});
+  window.visualViewport.addEventListener('scroll',pinModal,{passive:true});
+}
   }catch(err){console.error(err);showToast('⚠️ 連線失敗，請重新整理',4000);document.getElementById('childName').textContent='連線失敗';}
 }
 
@@ -999,7 +1010,7 @@ function buildEntryForm(cat,existing){
     <div class="tci-pick" data-opts='${JSON.stringify(units)}' data-idx="${uIdx}" id="pickUnit" onclick="tcCycle(this)" ontouchstart="tcTS(event,this)" ontouchend="tcTE(event,this)">
       <div class="tci-val">${units[uIdx]}</div>
     </div>
-    <div class="tci-pick" data-opts='${JSON.stringify(types)}' data-idx="${tIdx}" id="pickType" onclick="tcCycle(this)" ontouchstart="tcTS(event,this)" ontouchend="tcTE(event,this)">
+    <div class="tci-pick" data-opts='${JSON.stringify(types)}' data-idx="${tIdx}" id="pickType" ${cat.type==='goal'?'data-sign="true"':''} onclick="tcCycle(this)" ontouchstart="tcTS(event,this)" ontouchend="tcTE(event,this)">
       <div class="tci-val">${types[tIdx]}</div>
     </div>
   </div></div>`;

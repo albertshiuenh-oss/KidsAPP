@@ -232,8 +232,8 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
   border-top:none;
   border-bottom:1px solid var(--border);
   transform:translateY(-100%);
-  /* Fixed pixel height — keyboard appearance won't affect this */
-  max-height:385px;
+  /* Height reserves space for 注音 (tallest keyboard ~300px) */
+  max-height:calc(100svh - 300px);
   display:flex;flex-direction:column;
   padding:0;
 }
@@ -971,12 +971,12 @@ function openAddEntry(entryId){
 }
 function buildEntryForm(cat,existing){
   const ex=existing||{};let h='';
-  if(!existing)h+=`<div class="form-grp"><label class="form-lbl">📅 日期</label><input type="date" class="form-inp" id="fDate" value="${todayISO()}" max="${todayISO()}"></div>`;
-  else h+=`<div class="form-grp"><label class="form-lbl" style="display:inline;">📅 日期 &nbsp;<span style="font-size:14px;color:var(--sub);font-weight:400;">${ex.date||'—'}</span></label></div>`;
+  if(!existing)h+=`<div class="form-grp" style="display:flex;align-items:center;gap:10px;"><label class="form-lbl" style="margin:0;white-space:nowrap;flex-shrink:0;">📅 日期</label><input type="date" class="form-inp" id="fDate" value="${todayISO()}" max="${todayISO()}" style="flex:1;margin:0;font-size:14px;padding:9px 10px;"></div>`;
+  else h+=`<div class="form-grp" style="display:flex;align-items:center;gap:10px;"><label class="form-lbl" style="margin:0;white-space:nowrap;flex-shrink:0;">📅 日期</label><span style="font-size:14px;color:var(--sub);">${ex.date||'—'}</span></div>`;
   // Determine picker options and initial values
   let units,types,uIdx=0,tIdx=0,numVal='';
   if(cat.type==='transactions'){
-    units=['NTD','Mins'];types=['存','支'];
+    units=['NTD','Mins'];types=['存入','支出'];
     const dir=existing?txDirection(existing):'deposit';
     const useMin=existing&&Math.abs(Number(ex.ntd||0))===0&&Math.abs(Number(ex.mins||0))>0;
     uIdx=useMin?1:0;tIdx=dir==='deposit'?0:1;
@@ -1033,7 +1033,7 @@ async function saveEntry(catId){
   const note=(document.getElementById('fNote')?.value||'').trim();
   let ntd=0,mins=0;
   if(cat.type==='transactions'){
-    const isDeposit=type==='存';const isNTD=unit==='NTD';
+    const isDeposit=type==='存入';const isNTD=unit==='NTD';
     if(isNTD)ntd=(isDeposit?1:-1)*amt;else mins=(isDeposit?1:-1)*amt;
   } else if(cat.type==='goal'){
     if(unit==='NTD')ntd=amt;else mins=amt;
@@ -1204,8 +1204,8 @@ async function clearCache(){
 }
 
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
-function showModal(id){const el=document.getElementById(id);el.style.display='flex';requestAnimationFrame(()=>el.classList.add('show'));if(id==='modalEntry'){document.body.style.overflow='hidden';}}
-function closeModal(id){const el=document.getElementById(id);el.classList.remove('show');setTimeout(()=>{el.style.display='none';},300);if(id==='modalEntry'){document.body.style.overflow='';}}
+function showModal(id){const el=document.getElementById(id);el.style.display='flex';requestAnimationFrame(()=>el.classList.add('show'));if(id==='modalEntry'){document.body.style.position='fixed';document.body.style.width='100%';document.body.style.overflow='hidden';}}
+function closeModal(id){const el=document.getElementById(id);el.classList.remove('show');setTimeout(()=>{el.style.display='none';},300);if(id==='modalEntry'){document.body.style.position='';document.body.style.width='';document.body.style.overflow='';}}
 
 let _tt;
 function showToast(msg,ms=2600){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),ms);}

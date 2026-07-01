@@ -315,7 +315,8 @@ textarea.form-inp{resize:none;line-height:1.5;}
 .tci-pick{flex:3;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background .1s;user-select:none;}
 .tci-pick:active{background:rgba(72,196,255,.08);}
 .tci-val{font-size:18px;font-weight:700;color:#fff;text-align:center;pointer-events:none;}
-.tci-pick[data-sign] .tci-val{font-size:28px;font-weight:900;}
+.tci-pick[data-sign]{display:flex;align-items:center;justify-content:center;}
+.tci-pick[data-sign] .tci-val{font-size:28px;font-weight:900;line-height:1;display:flex;align-items:center;justify-content:center;width:100%;height:100%;}
 /* tci-arrows removed */
 
 /* ── Entry form: ~2x larger fonts for readability ── */
@@ -734,15 +735,15 @@ function initSwipe(){
         if(b){b.style.transition='transform 0.25s ease-in-out';b.style.transform='translateX(-100%)';}
         if(ghost){ghost.style.transition='transform 0.25s ease-in-out';ghost.style.transform='translateX(0)';}
         setTimeout(()=>{
-          if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);ghost=null;
           selectChild(ids[idx+1]);
+          requestAnimationFrame(()=>{if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);ghost=null;});
         },260);
       } else if(dx>0&&idx>0){
         if(b){b.style.transition='transform 0.25s ease-in-out';b.style.transform='translateX(100%)';}
         if(ghost){ghost.style.transition='transform 0.25s ease-in-out';ghost.style.transform='translateX(0)';}
         setTimeout(()=>{
-          if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);ghost=null;
           selectChild(ids[idx-1]);
+          requestAnimationFrame(()=>{if(ghost&&ghost.parentNode)ghost.parentNode.removeChild(ghost);ghost=null;});
         },260);
       } else {
         if(b){b.style.transition='transform 0.35s cubic-bezier(0.34,1.56,0.64,1)';b.style.transform='translateX(0)';}
@@ -1084,12 +1085,19 @@ function renderSettings(){
   html+=`<div class="settings-section"><div class="settings-section-hdr"><span class="settings-section-title">👤 審核人管理</span><button class="settings-add-btn" onclick="openPersonModal('auditor',null)">＋ 新增</button></div>`;
   Object.entries(S.auditors).forEach(([id,a])=>{// Face ID button: 🔓 setup / 🔐 re-register + ✕ remove
   const fidActs=a.credId
-    ?`<button class="fid-btn fid-set" onclick="registerFaceID('${id}')">🔐 重設</button><button class="fid-btn fid-del" onclick="removeFaceID('${id}')">✕ 移除</button>`
-    :`<button class="fid-btn fid-add" onclick="registerFaceID('${id}')">🔓 設定 Face ID</button>`;
+    ?`<button id="fr_${id}" class="fid-btn fid-set">🔐 重設</button><button id="fd_${id}" class="fid-btn fid-del">✕ 移除</button>`
+    :`<button id="fr_${id}" class="fid-btn fid-add">🔓 設定 Face ID</button>`;
   html+=`<div class="person-row"><div class="person-av">${a.photoB64?`<img src="${a.photoB64}">`:(a.emoji||'👤')}</div><div class="person-info"><div class="person-name">${a.name}</div><div class="person-sub" style="color:${a.credId?'var(--teal)':'var(--sub)'}">${a.credId?'🔐 Face ID 已啟用':'🔑 PIN 登入'}</div></div><div class="person-acts">${fidActs}<button class="person-act" onclick="openPersonModal('auditor','${id}')">✏️</button><button class="person-act del" onclick="confirmDeletePerson('auditor','${id}','${a.name}')">🗑️</button></div></div>`;});
   html+=`</div>`;
   html+=`<div class="settings-info"><div class="settings-info-title">🏅 KidsAPP</div><div class="settings-info-sub">Firebase Realtime DB</div><button class="cache-clear-btn" onclick="clearCache()">🔄 清除快取並重新載入</button><div style="font-size:10px;color:var(--sub);margin-top:6px;">App 顯示舊版畫面時請點此強制更新</div></div>`;
   document.getElementById('settingsContent').innerHTML=html;
+  // Wire Face ID buttons via addEventListener (more reliable than onclick in innerHTML)
+  Object.entries(S.auditors).forEach(([id])=>{
+    const r=document.getElementById('fr_'+id);
+    const d=document.getElementById('fd_'+id);
+    if(r)r.addEventListener('click',()=>registerFaceID(id));
+    if(d)d.addEventListener('click',()=>removeFaceID(id));
+  });
 }
 function openPersonModal(type,id){S.editingPersonType=type;S.editingPersonId=id;S.pendingPhoto=null;const existing=id?(type==='child'?S.children[id]:S.auditors[id]):null;document.getElementById('personTitle').textContent=id?(type==='child'?'✏️ 編輯孩子':'✏️ 編輯審核人'):(type==='child'?'➕ 新增孩子':'➕ 新增審核人');document.getElementById('personForm').innerHTML=buildPersonForm(type,existing);showModal('modalPerson');}
 function buildPersonForm(type,ex){

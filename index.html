@@ -156,6 +156,16 @@ body{font-family:-apple-system,'SF Pro Text',sans-serif;background:var(--bg);col
 .btn-fail{flex:1;padding:11px;background:var(--orange-dim);color:var(--amber);border:1px solid var(--orange-border);border-radius:9px;font-size:16px;font-weight:700;cursor:pointer;}
 .goal-completed-badge{font-size:14px;padding:3px 8px;border-radius:7px;background:rgba(255,255,255,.06);color:var(--sub);margin-left:auto;}
 .no-goals{text-align:center;padding:16px;color:var(--sub);font-size:16px;background:var(--card);border-radius:12px;border:1px dashed var(--border);}
+/* New goal card — same style as record card */
+.gc-card{background:var(--card);border-radius:14px;padding:12px 14px;margin-bottom:8px;border:1px solid var(--border);}
+.gc-card.gc-done{opacity:.55;border-style:dashed;}
+.gc-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.gc-freq{font-size:13px;color:var(--sub);flex-shrink:0;min-width:0;}
+.gc-chk{width:22px;height:22px;border-radius:6px;border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:13px;font-weight:700;transition:all .15s;}
+.gc-chk.gc-pass{background:var(--green);border-color:var(--green);color:#fff;}
+.gc-chk.gc-fail{background:var(--amber);border-color:var(--amber);color:#fff;}
+.gc-chk:not(.gc-pass):not(.gc-fail):hover{border-color:var(--teal);}
+.gc-desc{font-size:15px;color:var(--text);line-height:1.4;}
 
 /* Records */
 .sec-lbl{font-size:14px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--sub);padding:0 1px;margin-bottom:6px;}
@@ -873,14 +883,65 @@ function renderDetailContent(catId){
 }
 
 function buildGoalCard(gid,g,catId,isCompleted){
-  const pills=[];
-  if(g.rewardNTD)pills.push(`<span class="goal-reward-pill reward-pass">✅ +${g.rewardNTD} NTD</span>`);
-  if(g.rewardMins)pills.push(`<span class="goal-reward-pill reward-pass">✅ +${g.rewardMins} mins</span>`);
-  if(g.penaltyNTD)pills.push(`<span class="goal-reward-pill reward-fail">❌ -${g.penaltyNTD} NTD</span>`);
-  if(g.penaltyMins)pills.push(`<span class="goal-reward-pill reward-fail">❌ -${g.penaltyMins} mins</span>`);
-  const bottom=isCompleted?`<span class="goal-completed-badge">${g.completedResult==='pass'?'✅ Passed':'❌ Failed'}</span>`:
-    `<div class="goal-verify-row"><button class="btn-pass" onclick="verifyGoal('${catId}','${gid}','pass')" ${S.currentAuditor?'':'disabled style="opacity:.4;"'}>✅ Passed</button><button class="btn-fail" onclick="verifyGoal('${catId}','${gid}','fail')" ${S.currentAuditor?'':'disabled style="opacity:.4;"'}>❌ Failed</button><button style="width:30px;border:none;background:rgba(255,255,255,.05);border-radius:7px;cursor:pointer;font-size:13px;" onclick="openAddGoal('${gid}','${catId}')">✏️</button></div>`;
-  return `<div class="goal-card ${isCompleted?'completed':''}"><div class="goal-freq-row"><span class="goal-freq-badge ${isRecurring(g)?'recurring':''}">${fmtFreq(g)}</span></div><div class="goal-desc">${g.desc||'—'}</div><div class="goal-rewards">${pills.join('')||'<span style="font-size:10px;color:var(--sub);">（無獎懲設定）</span>'}</div>${bottom}</div>`;
+  const canAct=!!S.currentAuditor;
+  // Checkbox: empty=active, green✓=pass, orange✗=fail
+  let chkCls='',chkTxt='',chkEvt='';
+  if(isCompleted){
+    if(g.completedResult==='pass'){chkCls='gc-pass';chkTxt='✓';}
+    else{chkCls='gc-fail';chkTxt='✗';}
+  } else if(canAct){
+    chkEvt=`onclick="completeGoal('${catId}','${gid}')"`;
+  }
+  // Amount: active→potential reward (faded), pass→reward green, fail→penalty red
+  let amtHtml='';
+  if(isCompleted){
+    if(g.completedResult==='pass'){
+      const r=[g.rewardMins?`+${g.rewardMins} mins`:'',g.rewardNTD?`+${g.rewardNTD} NTD`:''].filter(Boolean).join(' ');
+      if(r)amtHtml=`<span class="rec-amt pos">${r}</span>`;
+    } else {
+      const p=[g.penaltyMins?`-${g.penaltyMins} mins`:'',g.penaltyNTD?`-${g.penaltyNTD} NTD`:''].filter(Boolean).join(' ');
+      if(p)amtHtml=`<span class="rec-amt neg">${p}</span>`;
+    }
+  } else {
+    const r=[g.rewardMins?`+${g.rewardMins} mins`:'',g.rewardNTD?`+${g.rewardNTD} NTD`:''].filter(Boolean).join(' ');
+    if(r)amtHtml=`<span class="rec-amt pos" style="opacity:.55;">${r}</span>`;
+  }
+  // Freq/date label
+  const freqLbl=fmtFreq(g);
+  // Edit + delete buttons
+  const acts=canAct?`<div class="rec-actions"><button class="rec-act" onclick="openAddGoal('${gid}','${catId}')">✏️</button><button class="rec-act del" onclick="confirmDeleteGoal('${catId}','${gid}')">🗑️</button></div>`:'';
+  return `<div class="gc-card${isCompleted?' gc-done':''}">
+    <div class="gc-head">
+      <span class="gc-freq">${freqLbl}</span>
+      <div class="gc-chk ${chkCls}" ${chkEvt}>${chkTxt}</div>
+      <div class="rec-amts-inline">${amtHtml}</div>
+      ${acts}
+    </div>
+    <div class="gc-desc">${g.desc||'—'}</div>
+  </div>`;
+}
+function confirmDeleteGoal(catId,goalId){
+  document.getElementById('confirmBody').innerHTML=`<div class="confirm-box"><div class="confirm-msg">確定刪除此目標？<br><span style="font-size:12px;color:var(--sub);">（不影響已有的記錄）</span></div><div class="confirm-row"><button class="confirm-cancel" onclick="closeModal('modalConfirm')">取消</button><button class="confirm-del" onclick="deleteGoal('${catId}','${goalId}')">刪除</button></div></div>`;
+  showModal('modalConfirm');
+}
+async function deleteGoal(catId,goalId){
+  closeModal('modalConfirm');
+  try{await db.ref(`/goals/${S.currentChildId}/${catId}/${goalId}`).remove();showToast('✅ 目標已刪除');}
+  catch(e){showToast('❌ 刪除失敗');}
+}
+async function completeGoal(catId,goalId){
+  if(!S.currentAuditor){showToast('⚠️ 請先登入審核人');return;}
+  const g=S.goals[S.currentChildId]?.[catId]?.[goalId];if(!g)return;
+  try{
+    if(g.rewardNTD||g.rewardMins){
+      await db.ref(`/entries/${S.currentChildId}/${catId}`).push({
+        date:fmtDate(todayISO()),ntd:Number(g.rewardNTD||0),mins:Number(g.rewardMins||0),
+        auditor:S.currentAuditor.name,note:`[目標完成] ${g.desc}`,passed:true,goalId,createdAt:Date.now()
+      });
+    }
+    if(!isRecurring(g))await db.ref(`/goals/${S.currentChildId}/${catId}/${goalId}`).update({active:false,completedAt:Date.now(),completedResult:'pass'});
+    showToast('✅ 目標完成！獎勵已記錄');
+  }catch(e){showToast('❌ 操作失敗');}
 }
 
 function openAddGoal(goalId,catId){

@@ -530,10 +530,10 @@ function amtStr(v,u){return v===0?'':`${v>0?'+':''}${v.toLocaleString()} ${u}`;}
 function amtCls(v){return v>0?'pos':v<0?'neg':'';}
 function txDirection(e){const n=Number(e.ntd||0),m=Number(e.mins||0);if(n<0||m<0)return 'withdraw';if(n>0||m>0)return 'deposit';return 'unknown';}
 function fmtFreq(g){
-  if(g.freq==='once')return `📅 ${g.dueDate||''}`;
-  if(g.freq==='daily')return '🔄 每天';
-  if(g.freq==='weekly'){const ds=(g.freqDays||[]).map(d=>DAY_NAMES[d]).join('、');return `🔄 每週${ds||'—'}`;}
-  if(g.freq==='monthly')return `🔄 每月${WEEK_NUMS[(g.freqWeekNum||1)-1]}週${DAY_NAMES[g.freqWeekDay||0]}`;return '';
+  if(g.freq==='once')return g.dueDate||'';
+  if(g.freq==='daily')return '每天';
+  if(g.freq==='weekly'){const ds=(g.freqDays||[]).map(d=>DAY_NAMES[d]).join('、');return `每週${ds||'—'}`;}
+  if(g.freq==='monthly')return `每月${WEEK_NUMS[(g.freqWeekNum||1)-1]}週${DAY_NAMES[g.freqWeekDay||0]}`;return '';
 }
 function isRecurring(g){return g.freq!=='once';}
 
@@ -852,11 +852,11 @@ function renderDetailContent(catId){
     </div>`;
     html+=`<div class="detail-pad">`;
     const goals=S.goals[S.currentChildId]?.[catId]||{};
-    const active=Object.entries(goals).filter(([,g])=>g.active!==false).sort((a,b)=>a[1].createdAt-b[1].createdAt);
-    const completed=Object.entries(goals).filter(([,g])=>g.active===false).sort((a,b)=>(b[1].completedAt||0)-(a[1].completedAt||0));
-    html+=`<div class="sec-lbl" style="margin-bottom:7px;">🎯 Active Goals</div>`;
+    // Sort by dueDate for once goals, createdAt for recurring; ascending
+    const goalSort=g=>g.freq==='once'&&g.dueDate?new Date(g.dueDate).getTime():(g.createdAt||0);
+    const active=Object.entries(goals).filter(([,g])=>g.active!==false).sort((a,b)=>goalSort(a[1])-goalSort(b[1]));
+    html+=`<div class="sec-lbl" style="margin-bottom:7px;">Active Goals</div>`;
     html+=active.length?active.map(([gid,g])=>buildGoalCard(gid,g,catId,false)).join(''):`<div class="no-goals">目前沒有進行中的目標</div>`;
-    if(completed.length){html+=`<div class="sec-lbl" style="margin-top:12px;margin-bottom:6px;">✅ 已完成</div>`;html+=completed.slice(0,3).map(([gid,g])=>buildGoalCard(gid,g,catId,true)).join('');}
     html+=`<div class="sec-lbl" style="margin-top:12px;margin-bottom:7px;">📋 記錄歷史</div>`;
     html+=`<button class="add-rec-btn ${S.currentAuditor?'':'locked'}" onclick="openAddEntry(null)">${S.currentAuditor?'＋ 手動新增記錄':'🔐 請先登入審核人'}</button>`;
     html+=buildRecordsList(catId)+`</div>`;
@@ -1111,10 +1111,9 @@ function buildRecordsList(catId){
     const ns=amtStr(Number(e.ntd||0),'NTD'),ms=amtStr(Number(e.mins||0),'mins');
     const nc=amtCls(Number(e.ntd||0)),mc=amtCls(Number(e.mins||0));
     // No auditor, no badge — just date + amounts + notes
-    const editedTag=e.editedAt?`<span class="rec-edited-inline">已編輯</span>`:'';
     const acts=canAct
-      ?`<div class="rec-actions">${editedTag}<button class="rec-act" onclick="openAddEntry('${id}')">✏️</button><button class="rec-act del" onclick="confirmDelete('${catId}','${id}')">🗑️</button></div>`
-      :(editedTag?`<div class="rec-actions">${editedTag}</div>`:'');
+      ?`<div class="rec-actions"><button class="rec-act" onclick="openAddEntry('${id}')">✏️</button><button class="rec-act del" onclick="confirmDelete('${catId}','${id}')">🗑️</button></div>`
+      :'';
     // Goal records: use green/red based on passed field
     const isGoalRec=cat.type==='goal'&&e.passed!==undefined;
     const nc2=isGoalRec?(e.passed?'gpass':'gfail'):nc;

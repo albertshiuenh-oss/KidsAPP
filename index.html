@@ -342,6 +342,9 @@ textarea.form-inp{resize:none;line-height:1.5;}
 .cancel-btn:active{background:var(--card);}
 .rec-amts-inline{flex:1;display:flex;gap:8px;align-items:center;justify-content:flex-end;padding-right:2px;}
 .rec-amts-inline .rec-amt{font-size:17px;}
+.gpass{color:var(--sys-green)!important;}
+.gfail{color:var(--del-red)!important;}
+.rec-goal-desc{font-size:15px;color:rgba(180,210,230,.6);margin-top:4px;padding-top:4px;border-top:1px solid rgba(255,255,255,.05);}
 </style>
 </head>
 <body>
@@ -1051,7 +1054,14 @@ function buildRecordsList(catId){
     const acts=canAct
       ?`<div class="rec-actions">${editedTag}<button class="rec-act" onclick="openAddEntry('${id}')">✏️</button><button class="rec-act del" onclick="confirmDelete('${catId}','${id}')">🗑️</button></div>`
       :(editedTag?`<div class="rec-actions">${editedTag}</div>`:'');
-    return `<div class="rec-card"><div class="rec-top"><span class="rec-date">${e.date||'—'}</span><div class="rec-amts-inline">${ns?`<span class="rec-amt ${nc}">${ns}</span>`:''}${ms?`<span class="rec-amt ${mc}">${ms}</span>`:''}</div>${acts}</div>${e.note?`<div class="rec-note">${e.note}</div>`:''}</div>`;
+    // Goal records: use green/red based on passed field
+    const isGoalRec=cat.type==='goal'&&e.passed!==undefined;
+    const nc2=isGoalRec?(e.passed?'gpass':'gfail'):nc;
+    const mc2=isGoalRec?(e.passed?'gpass':'gfail'):mc;
+    // Strip [目標] prefix for cleaner display
+    const noteDisplay=e.note?(e.note.startsWith('[目標] ')?e.note.slice(5):e.note):'';
+    const noteHtml=noteDisplay?`<div class="${isGoalRec?'rec-goal-desc':'rec-note'}">${noteDisplay}</div>`:'';
+    return `<div class="rec-card"><div class="rec-top"><span class="rec-date">${e.date||'—'}</span><div class="rec-amts-inline">${ns?`<span class="rec-amt ${nc2}">${ns}</span>`:''}${ms?`<span class="rec-amt ${mc2}">${ms}</span>`:''}</div>${acts}</div>${noteHtml}</div>`;
   }).join('');
   if(deleted.length){
     html+=`<div class="sec-lbl" style="margin-top:14px;margin-bottom:6px;color:var(--del-red);">🗑️ 最近刪除（7天內可恢復）</div>`;
